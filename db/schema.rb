@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_124448) do
   end
 
   create_table "deck_permissions", force: :cascade do |t|
-    t.integer "access_level"
+    t.integer "access_level", default: 0
     t.boolean "creator", default: false
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
