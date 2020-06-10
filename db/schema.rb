@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_124448) do
+ActiveRecord::Schema.define(version: 2020_06_10_125909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,8 +104,9 @@ ActiveRecord::Schema.define(version: 2020_06_09_124448) do
   end
 
   create_table "deck_permissions", force: :cascade do |t|
-    t.integer "access_level", default: 0
-    t.boolean "creator", default: false
+    t.boolean "read_access", default: false
+    t.boolean "write_access", default: false
+    t.boolean "clone_access", default: false
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -125,8 +126,10 @@ ActiveRecord::Schema.define(version: 2020_06_09_124448) do
   end
 
   create_table "decks", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_decks_on_user_id"
   end
 
   create_table "question_sets", force: :cascade do |t|
@@ -165,6 +168,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_124448) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -188,6 +192,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_124448) do
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"
+  add_foreign_key "decks", "users"
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_strings", "questions"
 end
