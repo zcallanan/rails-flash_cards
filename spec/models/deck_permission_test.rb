@@ -3,13 +3,12 @@ require 'rails_helper'
 RSpec.describe Deck, type: :model do
   let!(:user) { create(:user) }
   let!(:deck) { create(:deck) }
-  let!(:deck_permission) { DeckPermission.new(user: user, deck: deck) }
+  let!(:deck_permission) { create(:deck_permission) }
 
   before { sign_in user }
-  it "is valid with valid attributes" do
-    expect(deck_permission).to be_valid
+  context 'validations' do
+    it "is valid with valid attributes" do
+      expect(deck_permission).to be_valid
+    end
   end
-
-  # it "is valid with an access level assigned" do
-  # end
 end
