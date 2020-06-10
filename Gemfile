@@ -30,6 +30,8 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 # User authentication
 gem 'devise'
+# User authorization
+gem 'pundit'
 
 gem 'autoprefixer-rails'
 gem 'font-awesome-sass'
