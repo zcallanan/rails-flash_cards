@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_10_125909) do
+ActiveRecord::Schema.define(version: 2020_06_11_183717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,12 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
     t.index ["deck_id"], name: "index_cards_on_deck_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "collection_cards", force: :cascade do |t|
     t.integer "priority"
     t.integer "view_count", default: 0
@@ -75,6 +81,18 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["card_id"], name: "index_collection_cards_on_card_id"
     t.index ["collection_id"], name: "index_collection_cards_on_collection_id"
+  end
+
+  create_table "collection_permissions", force: :cascade do |t|
+    t.boolean "read_access"
+    t.boolean "update_access"
+    t.boolean "clone_access"
+    t.bigint "user_id", null: false
+    t.bigint "deck_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deck_id"], name: "index_collection_permissions_on_deck_id"
+    t.index ["user_id"], name: "index_collection_permissions_on_user_id"
   end
 
   create_table "collection_strings", force: :cascade do |t|
@@ -98,14 +116,26 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
 
   create_table "collections", force: :cascade do |t|
     t.bigint "deck_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "global_collection_read", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_collections_on_deck_id"
+    t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
+  create_table "deck_categories", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.bigint "deck_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_deck_categories_on_category_id"
+    t.index ["deck_id"], name: "index_deck_categories_on_deck_id"
   end
 
   create_table "deck_permissions", force: :cascade do |t|
     t.boolean "read_access", default: false
-    t.boolean "write_access", default: false
+    t.boolean "update_access", default: false
     t.boolean "clone_access", default: false
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
@@ -127,9 +157,19 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
 
   create_table "decks", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.boolean "global_deck_read", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_decks_on_user_id"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "user_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_group_id"], name: "index_memberships_on_user_group_id"
+    t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
   create_table "question_sets", force: :cascade do |t|
@@ -160,6 +200,14 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "user_groups", force: :cascade do |t|
+    t.string "name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -185,14 +233,22 @@ ActiveRecord::Schema.define(version: 2020_06_10_125909) do
   add_foreign_key "cards", "decks"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
+  add_foreign_key "collection_permissions", "decks"
+  add_foreign_key "collection_permissions", "users"
   add_foreign_key "collection_strings", "collections"
   add_foreign_key "collection_tags", "collections"
   add_foreign_key "collection_tags", "tags"
   add_foreign_key "collections", "decks"
+  add_foreign_key "collections", "users"
+  add_foreign_key "deck_categories", "categories"
+  add_foreign_key "deck_categories", "decks"
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"
   add_foreign_key "decks", "users"
+  add_foreign_key "memberships", "user_groups"
+  add_foreign_key "memberships", "users"
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_strings", "questions"
+  add_foreign_key "user_groups", "users"
 end
