@@ -1,4 +1,4 @@
- CollectionPermission.destroy_all
+CollectionPermission.destroy_all
 DeckPermission.destroy_all
 Collection.destroy_all
 Deck.destroy_all
@@ -30,7 +30,7 @@ end
 
 
 15.times do
-  user = User.create!(email: Faker::Internet.email, password: Faker::Internet.password(min_length: 6))
+  user = User.create!(email: Faker::Internet.email, password: 'secret')
   deck = Deck.create!(user: user)
   collection = Collection.create!(user: user, deck: deck)
   DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
