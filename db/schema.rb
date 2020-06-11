@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_11_182222) do
+ActiveRecord::Schema.define(version: 2020_06_11_183717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,12 @@ ActiveRecord::Schema.define(version: 2020_06_11_182222) do
     t.index ["deck_id"], name: "index_cards_on_deck_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "collection_cards", force: :cascade do |t|
     t.integer "priority"
     t.integer "view_count", default: 0
@@ -116,6 +122,15 @@ ActiveRecord::Schema.define(version: 2020_06_11_182222) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_collections_on_deck_id"
     t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
+  create_table "deck_categories", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.bigint "deck_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_deck_categories_on_category_id"
+    t.index ["deck_id"], name: "index_deck_categories_on_deck_id"
   end
 
   create_table "deck_permissions", force: :cascade do |t|
@@ -225,6 +240,8 @@ ActiveRecord::Schema.define(version: 2020_06_11_182222) do
   add_foreign_key "collection_tags", "tags"
   add_foreign_key "collections", "decks"
   add_foreign_key "collections", "users"
+  add_foreign_key "deck_categories", "categories"
+  add_foreign_key "deck_categories", "decks"
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"

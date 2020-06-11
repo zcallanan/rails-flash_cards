@@ -9,6 +9,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   has_many :deck_permissions
   has_many :decks, through: :deck_permissions
+  has_many :memberships
+  has_many :user_groups, through: :memberships
+  has_many :collection_permissions
+  has_many :collections, through: :collection_permissions
+  has_many :answers
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
