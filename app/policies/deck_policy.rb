@@ -40,6 +40,6 @@ class DeckPolicy < ApplicationPolicy
 
   def user_can_update?
     # check if user can make updates to the deck
-    record.deck_permissions.where(user_id: user.id, deck_id: record.id, write_access: true).present?
+    record.deck_permissions.where(user_id: user.id, deck_id: record.id, update_access: true).present?
   end
 end
