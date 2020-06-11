@@ -13,10 +13,33 @@ Deck.destroy_all
 User.destroy_all
 
 
-10.times do
+15.times do
   user = User.create!(email: Faker::Internet.email, password: Faker::Internet.password(min_length: 6))
   deck = Deck.create!(user: user)
   collection = Collection.create!(user: user, deck: deck)
   DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
   CollectionPermission.create!(user: user, collection: collection, read_access: true, update_access: true, clone_access: true)
+  if Deck.count >= 7
+    permission = false
+    until permission
+      deck_random = Deck.all.sample
+      if deck_random.user != user
+        DeckPermission.create!(user: user, deck: deck_random, read_access: true)
+        CollectionPermission.create!(user: user, collection: collection, read_access: true)
+        puts "read access given to #{deck_random}"
+        permission = true
+      end
+    end
+    permission = false
+    until permission
+      deck_random = Deck.all.sample
+      if deck_random.user != user
+        DeckPermission.create!(user: user, deck: deck_random, read_access: true, update_access: true)
+        CollectionPermission.create!(user: user, collection: collection, read_access: true, update_access: true)
+        puts "read & write access given to #{deck_random}"
+        permission = true
+      end
+    end
+  end
 end
+
