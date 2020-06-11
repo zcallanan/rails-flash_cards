@@ -11,10 +11,6 @@ class DeckPolicy < ApplicationPolicy
     end
   end
 
-  def index?
-    user_owns_record? || user_is_admin?
-  end
-
   def show?
     user_owns_record? || user_is_admin?
   end
@@ -24,7 +20,7 @@ class DeckPolicy < ApplicationPolicy
   end
 
   def update?
-    user_owns_record? || user_is_admin?
+    user_owns_record? || user_is_admin? || user_can_update?
   end
 
   def destroy?
@@ -34,11 +30,16 @@ class DeckPolicy < ApplicationPolicy
   private
 
   def user_owns_record?
-    record.user == user # user here is the current_user
+    record.user == user
   end
 
   def user_is_admin?
-    # check if current_user (user) is an admin
+    # check if user is an admin
     user.admin?
+  end
+
+  def user_can_update?
+    # check if user can make updates to the deck
+    record.deck_permissions.where(user_id: user.id, deck_id: record.id, write_access: true).present?
   end
 end
