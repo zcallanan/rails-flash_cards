@@ -5,7 +5,5 @@ class DecksController < ApplicationController
 
   def show
     @deck = Deck.find(params[:id])
-    authorize @deck
-
   end
 end
