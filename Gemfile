@@ -35,6 +35,8 @@ gem 'pundit'
 
 gem 'faker'
 
+gem "haml-rails", "~> 2.0"
+
 gem 'autoprefixer-rails'
 gem 'font-awesome-sass'
 gem 'simple_form'
