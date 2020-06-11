@@ -88,10 +88,10 @@ ActiveRecord::Schema.define(version: 2020_06_11_183717) do
     t.boolean "update_access"
     t.boolean "clone_access"
     t.bigint "user_id", null: false
-    t.bigint "deck_id", null: false
+    t.bigint "collection_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["deck_id"], name: "index_collection_permissions_on_deck_id"
+    t.index ["collection_id"], name: "index_collection_permissions_on_collection_id"
     t.index ["user_id"], name: "index_collection_permissions_on_user_id"
   end
 
@@ -233,7 +233,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_183717) do
   add_foreign_key "cards", "decks"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
-  add_foreign_key "collection_permissions", "decks"
+  add_foreign_key "collection_permissions", "collections"
   add_foreign_key "collection_permissions", "users"
   add_foreign_key "collection_strings", "collections"
   add_foreign_key "collection_tags", "collections"

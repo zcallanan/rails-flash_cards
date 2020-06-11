@@ -5,7 +5,7 @@ class CreateCollectionPermissions < ActiveRecord::Migration[6.0]
       t.boolean :update_access
       t.boolean :clone_access
       t.references :user, null: false, foreign_key: true
-      t.references :deck, null: false, foreign_key: true
+      t.references :collection, null: false, foreign_key: true
 
       t.timestamps
     end
