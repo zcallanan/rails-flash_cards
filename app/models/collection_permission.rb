@@ -1,3 +1,4 @@
 class CollectionPermission < ApplicationRecord
-  belongs_to :deck
+  belongs_to :collection
+  belongs_to :user
 end
