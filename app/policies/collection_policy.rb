@@ -1,13 +1,13 @@
-class DeckPolicy < ApplicationPolicy
+class CollectionPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.admin?
         scope.all
       elsif user
         # user has read access
-        scope.joins(:deck_permissions).where({ deck_permissions: { user_id: user.id, read_access: true } })
+        scope.joins(collection_permissions: { user: :deck_permissions }).where({ deck_permissions: { user_id: user.id, read_access: true } })
       elsif user
-        # owner of that deck
+        # owner of that collection
         scope.where(user_id: user.id)
       end
     end
@@ -41,12 +41,12 @@ class DeckPolicy < ApplicationPolicy
   end
 
   def user_can_read?
-    # check if user can view the deck
-    record.deck_permissions.where(user_id: user.id, deck_id: record.id, read_access: true).present?
+    # check if user can view the collection
+    record.collection_permissions.where(user_id: user.id, collection_id: record.id, read_access: true).present?
   end
 
   def user_can_update?
-    # check if user can make updates to the deck
-    record.deck_permissions.where(user_id: user.id, deck_id: record.id, update_access: true).present?
+    # check if user can make updates to the collection
+    record.collection_permissions.where(user_id: user.id, collection_id: record.id, update_access: true).present?
   end
 end
