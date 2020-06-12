@@ -18,7 +18,7 @@ class CollectionPolicy < ApplicationPolicy
   end
 
   def create?
-    user_owns_record? || user_is_admin?
+    user_owns_record? || user_is_admin? || user_can_update?
   end
 
   def update?
