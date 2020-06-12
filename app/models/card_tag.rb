@@ -1,4 +1,4 @@
 class CardTag < ApplicationRecord
+  belongs_to :tag_set
   belongs_to :card
-  belongs_to :tag
 end
