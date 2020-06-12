@@ -27,7 +27,7 @@ def generate_permissions(value, user, deck, collection, user_group = nil)
       DeckPermission.create!(deck_hash)
       CollectionPermission.create!(collection_hash)
       Membership.create!(user_group_hash) unless user_group.nil?
-      puts "read access given to #{deck_random}"
+      puts "#{value} access given to #{deck_random}"
       permission = true
     end
   end
