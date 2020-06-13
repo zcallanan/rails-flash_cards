@@ -7,4 +7,5 @@ class Collection < ApplicationRecord
   has_many :tags, through: :collection_tags
   has_many :collection_permissions
   has_many :users, through: :collection_permissions
+  has_many :collection_strings
 end

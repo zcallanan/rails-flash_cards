@@ -8,12 +8,11 @@ class UserGroupsController < ApplicationController
     @user_group = UserGroup.new
     @user_group.decks.build
     @deck_strings = []
-    @user.decks.each do |deck|
-      deck.deck_strings.each do |string|
-        @deck_strings << string
-      end
-    end
+    @collection_strings = []
+    @user.decks.each { |deck| deck.deck_strings.each { |string| @deck_strings << string } }
+    @user.collections.each { |collection| collection.collection_strings.each { |string| @collection_strings << string } }
     @deck_select = generate_options(@deck_strings)
+    @collection_select = generate_options(@collection_strings)
   end
 
   def show; end
