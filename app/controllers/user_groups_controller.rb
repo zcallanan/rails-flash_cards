@@ -9,10 +9,13 @@ class UserGroupsController < ApplicationController
     @user_group.decks.build
     @deck_strings = []
     @collection_strings = []
+    @question_set_strings = []
     @user.decks.each { |deck| deck.deck_strings.each { |string| @deck_strings << string } }
     @user.collections.each { |collection| collection.collection_strings.each { |string| @collection_strings << string } }
+    @user.question_sets.each { |question_set| question_set.question_set_strings.each { |string| @question_set_strings << string } }
     @deck_select = generate_options(@deck_strings)
     @collection_select = generate_options(@collection_strings)
+    @question_set_select = generate_options(@question_set_strings)
   end
 
   def show; end

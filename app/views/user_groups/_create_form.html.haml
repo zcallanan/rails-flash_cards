@@ -4,11 +4,13 @@
   = f.input :name
 
   = f.simple_fields_for :user_group_deck do |ugd|
-    = ugd.input :deck_id, collection: @deck_select, input_html: { multiple: true, checked: true }, label: "Select the decks for users to manage:", as: :check_boxes, include_hidden: false
+    = ugd.input :deck_id, collection: @deck_select, input_html: { multiple: true, checked: true }, label: "Select the deck(s) for users to manage:", as: :check_boxes, include_hidden: false
 
   = f.simple_fields_for :user_group_collection do |ugc|
-    = ugc.input :collection_id, collection: @collection_select, input_html: { multiple: true, checked: true }, label: "Select the collections for users to manage:", as: :check_boxes, include_hidden: false
+    = ugc.input :collection_id, collection: @collection_select, input_html: { multiple: true, checked: true }, label: "Select the collection(s) for users to manage:", as: :check_boxes, include_hidden: false
 
+  = f.simple_fields_for :question_set_group_collection do |ugq|
+    = ugq.input :question_set_id, collection: @question_set_select, input_html: { multiple: true, checked: true }, label: "Select the question set(s) for users to manage:", as: :check_boxes, include_hidden: false
 
   = f.submit class: "btn btn-primary"
 

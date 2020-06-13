@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_171820) do
+ActiveRecord::Schema.define(version: 2020_06_13_184459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,6 +188,16 @@ ActiveRecord::Schema.define(version: 2020_06_12_171820) do
     t.index ["user_id"], name: "index_question_set_permissions_on_user_id"
   end
 
+  create_table "question_set_strings", force: :cascade do |t|
+    t.string "language"
+    t.string "title"
+    t.string "description"
+    t.bigint "question_set_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_set_id"], name: "index_question_set_strings_on_question_set_id"
+  end
+
   create_table "question_sets", force: :cascade do |t|
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
@@ -332,6 +342,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_171820) do
   add_foreign_key "memberships", "users"
   add_foreign_key "question_set_permissions", "question_sets"
   add_foreign_key "question_set_permissions", "users"
+  add_foreign_key "question_set_strings", "question_sets"
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
