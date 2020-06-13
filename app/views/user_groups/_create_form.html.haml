@@ -4,7 +4,6 @@
   = f.input :name
 
   = f.simple_fields_for :user_group_deck do |ugd|
-    =# ugd.input :deck_id, collection: @deck_string_hash, as: :grouped_select, group_method: :last, group_label_method: :first
     = ugd.input :deck_id, collection: @array, input_html: { multiple: true, checked: true }, label: "Select the decks for users to manage:", as: :check_boxes, include_hidden: false
 
 
