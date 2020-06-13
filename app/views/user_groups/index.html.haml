@@ -1,4 +1,5 @@
 - @user_groups.each do |user_group|
+  %p
   = link_to user_group.name, user_group_path(user_group)
 
 = render 'create_form', user_group: @user_group

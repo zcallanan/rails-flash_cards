@@ -44,7 +44,14 @@ class UserGroupsController < ApplicationController
     @user_group.user = current_user
 
     if @user_group.save
-      # TODO: Create owner's permission for user group
+      Membership.create!(
+        user: current_user,
+        user_group: @user_group,
+        user_label: "Group Owner",
+        confirmed: true,
+        read_access: true,
+        update_access: true
+      )
       params['user_group']['user_group_deck']['deck_id'].each do |deck_id|
         UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(deck_id))
       end
