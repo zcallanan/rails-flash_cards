@@ -13,8 +13,8 @@ class UserGroupsController < ApplicationController
         @deck_strings << string
       end
     end
-    # @deck_string_hash = {}
-    # TODO: Build a string of card titles separated by |, per deck
+
+    # TODO: Generalize this as a method
     deck_id = 0
     @array = []
     chars = ''
@@ -35,13 +35,6 @@ class UserGroupsController < ApplicationController
       @array << [chars, string.deck_id] if index == @deck_strings.length - 1
     end
 
-    # @deck_strings.each do |string|
-    #   if @deck_string_hash.key?("Deck-#{string.deck_id}")
-    #     @deck_string_hash["Deck-#{string.deck_id}"] << string.title
-    #   else
-    #     @deck_string_hash["Deck-#{string.deck_id}"] = [string.title]
-    #   end
-    # end
   end
 
   def show; end
@@ -51,6 +44,7 @@ class UserGroupsController < ApplicationController
     @user_group.user = current_user
 
     if @user_group.save
+      # TODO: Create owner's permission for user group
       params['user_group']['user_group_deck']['deck_id'].each do |deck_id|
         UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(deck_id))
       end
