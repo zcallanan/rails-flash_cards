@@ -57,7 +57,7 @@ class UserGroupsController < ApplicationController
 
   def generate_options(object_list)
     num_id = 0
-    @array = []
+    array = []
     chars = ''
     string_obj = nil
     object_list.each_with_index do |string, index|
@@ -68,13 +68,13 @@ class UserGroupsController < ApplicationController
       elsif num_id == string.deck_id
         chars += " | #{string.title}"
       elsif num_id != string.deck_id
-        @array << [chars, string_obj.deck_id]
+        array << [chars, string_obj.deck_id]
         string_obj = string
         chars = string.title
         num_id = string.deck_id
       end
-      @array << [chars, string.deck_id] if index == @deck_strings.length - 1
+      array << [chars, string.deck_id] if index == object_list.length - 1
     end
-    @array
+    array
   end
 end
