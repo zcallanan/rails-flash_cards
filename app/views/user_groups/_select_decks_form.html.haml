@@ -1,0 +1,9 @@
+// TODO
+// Display deck list
+// user multi-selects decks - get decks
+// create join with user_group_decks with selections
+
+= simple_form_for(user_group, method: :post, url: user_groups_path) do |f|
+  select_tag "Decks", options_from_collection_for_select()
+
+  = f.submit class: "btn btn-primary"
