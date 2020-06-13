@@ -13,28 +13,7 @@ class UserGroupsController < ApplicationController
         @deck_strings << string
       end
     end
-
-    # TODO: Generalize this as a method
-    deck_id = 0
-    @array = []
-    chars = ''
-    string_obj = nil
-    @deck_strings.each_with_index do |string, index|
-      if deck_id.zero?
-        chars = string.title
-        deck_id = string.deck_id
-        string_obj = string
-      elsif deck_id == string.deck_id
-        chars += " | #{string.title}"
-      elsif deck_id != string.deck_id
-        @array << [chars, string_obj.deck_id]
-        string_obj = string
-        chars = string.title
-        deck_id = string.deck_id
-      end
-      @array << [chars, string.deck_id] if index == @deck_strings.length - 1
-    end
-
+    @deck_select = generate_options(@deck_strings)
   end
 
   def show; end
@@ -72,5 +51,28 @@ class UserGroupsController < ApplicationController
 
   def user_group_params
     params.require(:user_group).permit(:name, deck_ids: [])
+  end
+
+  def generate_options(object_list)
+    num_id = 0
+    @array = []
+    chars = ''
+    string_obj = nil
+    object_list.each_with_index do |string, index|
+      if num_id.zero?
+        chars = string.title
+        num_id = string.deck_id
+        string_obj = string
+      elsif num_id == string.deck_id
+        chars += " | #{string.title}"
+      elsif num_id != string.deck_id
+        @array << [chars, string_obj.deck_id]
+        string_obj = string
+        chars = string.title
+        num_id = string.deck_id
+      end
+      @array << [chars, string.deck_id] if index == @deck_strings.length - 1
+    end
+    @array
   end
 end

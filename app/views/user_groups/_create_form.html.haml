@@ -4,7 +4,7 @@
   = f.input :name
 
   = f.simple_fields_for :user_group_deck do |ugd|
-    = ugd.input :deck_id, collection: @array, input_html: { multiple: true, checked: true }, label: "Select the decks for users to manage:", as: :check_boxes, include_hidden: false
+    = ugd.input :deck_id, collection: @deck_select, input_html: { multiple: true, checked: true }, label: "Select the decks for users to manage:", as: :check_boxes, include_hidden: false
 
 
   = f.submit class: "btn btn-primary"
