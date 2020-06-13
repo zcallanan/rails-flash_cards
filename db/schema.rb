@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_143923) do
+ActiveRecord::Schema.define(version: 2020_06_12_171820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,6 +176,18 @@ ActiveRecord::Schema.define(version: 2020_06_12_143923) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
+  create_table "question_set_permissions", force: :cascade do |t|
+    t.boolean "read_access"
+    t.boolean "update_access"
+    t.boolean "clone_access"
+    t.bigint "user_id", null: false
+    t.bigint "question_set_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_set_id"], name: "index_question_set_permissions_on_question_set_id"
+    t.index ["user_id"], name: "index_question_set_permissions_on_user_id"
+  end
+
   create_table "question_sets", force: :cascade do |t|
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
@@ -234,6 +246,42 @@ ActiveRecord::Schema.define(version: 2020_06_12_143923) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "user_group_collections", force: :cascade do |t|
+    t.bigint "user_group_id", null: false
+    t.bigint "collection_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["collection_id"], name: "index_user_group_collections_on_collection_id"
+    t.index ["user_group_id"], name: "index_user_group_collections_on_user_group_id"
+  end
+
+  create_table "user_group_decks", force: :cascade do |t|
+    t.bigint "user_group_id", null: false
+    t.bigint "deck_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deck_id"], name: "index_user_group_decks_on_deck_id"
+    t.index ["user_group_id"], name: "index_user_group_decks_on_user_group_id"
+  end
+
+  create_table "user_group_question_sets", force: :cascade do |t|
+    t.bigint "user_group_id", null: false
+    t.bigint "question_set_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_set_id"], name: "index_user_group_question_sets_on_question_set_id"
+    t.index ["user_group_id"], name: "index_user_group_question_sets_on_user_group_id"
+  end
+
+  create_table "user_group_tag_sets", force: :cascade do |t|
+    t.bigint "user_group_id", null: false
+    t.bigint "tag_set_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_set_id"], name: "index_user_group_tag_sets_on_tag_set_id"
+    t.index ["user_group_id"], name: "index_user_group_tag_sets_on_user_group_id"
+  end
+
   create_table "user_groups", force: :cascade do |t|
     t.string "name"
     t.bigint "user_id", null: false
@@ -282,6 +330,8 @@ ActiveRecord::Schema.define(version: 2020_06_12_143923) do
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"
+  add_foreign_key "question_set_permissions", "question_sets"
+  add_foreign_key "question_set_permissions", "users"
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
@@ -290,5 +340,13 @@ ActiveRecord::Schema.define(version: 2020_06_12_143923) do
   add_foreign_key "tag_relations", "tag_sets"
   add_foreign_key "tag_relations", "tags"
   add_foreign_key "tag_sets", "users"
+  add_foreign_key "user_group_collections", "collections"
+  add_foreign_key "user_group_collections", "user_groups"
+  add_foreign_key "user_group_decks", "decks"
+  add_foreign_key "user_group_decks", "user_groups"
+  add_foreign_key "user_group_question_sets", "question_sets"
+  add_foreign_key "user_group_question_sets", "user_groups"
+  add_foreign_key "user_group_tag_sets", "tag_sets"
+  add_foreign_key "user_group_tag_sets", "user_groups"
   add_foreign_key "user_groups", "users"
 end
