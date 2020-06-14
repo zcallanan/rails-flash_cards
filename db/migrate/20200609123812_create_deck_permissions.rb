@@ -1,6 +1,7 @@
 class CreateDeckPermissions < ActiveRecord::Migration[6.0]
   def change
     create_table :deck_permissions do |t|
+      t.string :language
       t.boolean :read_access, default: false
       t.boolean :update_access, default: false
       t.boolean :clone_access, default: false
