@@ -13,6 +13,7 @@ class UserGroupsController < ApplicationController
     @deck_select = select_options(@user, 'decks', 'deck_strings', 'deck_id')
     @collection_select = select_options(@user, 'collections', 'collection_strings', 'collection_id')
     @question_set_select = select_options(@user, 'question_sets', 'question_set_strings', 'question_set_id')
+    @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'tag_set_id')
   end
 
   def show; end
@@ -33,6 +34,7 @@ class UserGroupsController < ApplicationController
       params['user_group']['user_group_deck']['deck_id'].each { |id| UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(id)) }
       params['user_group']['user_group_collection']['collection_id'].each { |id| UserGroupCollection.create!(user_group: @user_group, collection: Collection.find(id)) }
       params['user_group']['user_group_question_set']['question_set_id'].each { |id| UserGroupQuestionSet.create!(user_group: @user_group, question_set: QuestionSet.find(id)) }
+      params['user_group']['user_group_tag_set']['tag_set_id'].each { |id| UserGroupTagSet.create!(user_group: @user_group, tag_set: TagSet.find(id)) }
       redirect_to user_group_path(@user_group)
     # else
     #   render :index

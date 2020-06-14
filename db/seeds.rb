@@ -1,11 +1,16 @@
 CollectionPermission.destroy_all
 DeckPermission.destroy_all
 QuestionSetPermission.destroy_all
+TagSetPermission.destroy_all
 Membership.destroy_all
 DeckString.destroy_all
 CollectionString.destroy_all
 QuestionSetString.destroy_all
 TagSetString.destroy_all
+UserGroupDeck.destroy_all
+UserGroupCollection.destroy_all
+UserGroupQuestionSet.destroy_all
+UserGroupTagSet.destroy_all
 TagSet.destroy_all
 QuestionSet.destroy_all
 Collection.destroy_all
@@ -14,15 +19,17 @@ UserGroup.destroy_all
 User.destroy_all
 
 
-def generate_permissions(value, user, deck, collection, question_set, user_group = nil)
+def generate_permissions(value, user, deck, collection, question_set, tag_set = nil, user_group = nil)
   deck_hash = { user: user, deck: deck, read_access: true }
   collection_hash = { user: user, collection: collection, read_access: true }
   question_set_hash = { user: user, question_set: question_set, read_access: true }
+  tag_set_hash = { user: user, tag_set: tag_set, read_access: true } unless tag_set.nil?
   user_group_hash = { user: user, user_group: user_group, read_access: true } unless user_group.nil?
   if value == 'update'
     deck_hash[:update_access] = true
     collection_hash[:update_access] = true
     question_set_hash[:update_access] = true
+    tag_set_hash[:update_access] = true
     user_group_hash[:update_access] = true
   elsif value == 'clone'
     deck_hash[:clone_access] = true
@@ -37,6 +44,7 @@ def generate_permissions(value, user, deck, collection, question_set, user_group
       DeckPermission.create!(deck_hash)
       CollectionPermission.create!(collection_hash)
       QuestionSetPermission.create!(question_set_hash)
+      TagSetPermission.create!(tag_set_hash) unless tag_set.nil?
       Membership.create!(user_group_hash) unless user_group.nil?
       puts "#{value} access given to #{deck_random}"
       permission = true
@@ -75,10 +83,11 @@ x = 0
     DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
     CollectionPermission.create!(user: user, collection: collection, read_access: true, update_access: true, clone_access: true)
     QuestionSetPermission.create!(user: user, question_set: question_set, read_access: true, update_access: true, clone_access: true)
+    TagSetPermission.create!(user: user, tag_set: tag_set, read_access: true, update_access: true)
     Membership.create!(user: user, user_group: user_group, read_access: true, update_access: true)
     if Deck.count > 5
-      generate_permissions('read', user, deck, collection, question_set, user_group)
-      generate_permissions('update', user, deck, collection, question_set, user_group)
+      generate_permissions('read', user, deck, collection, question_set, tag_set, user_group)
+      generate_permissions('update', user, deck, collection, question_set, tag_set, user_group)
       generate_permissions('clone', user, deck, collection, question_set)
     end
   end

@@ -239,10 +239,12 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.boolean "read_access", default: false
     t.boolean "update_access", default: false
     t.bigint "tag_set_id", null: false
+    t.bigint "user_id", null: false
     t.string "user_references"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_set_id"], name: "index_tag_set_permissions_on_tag_set_id"
+    t.index ["user_id"], name: "index_tag_set_permissions_on_user_id"
   end
 
   create_table "tag_set_strings", force: :cascade do |t|
@@ -361,6 +363,7 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
   add_foreign_key "tag_relations", "tag_sets"
   add_foreign_key "tag_relations", "tags"
   add_foreign_key "tag_set_permissions", "tag_sets"
+  add_foreign_key "tag_set_permissions", "users"
   add_foreign_key "tag_set_strings", "tag_sets"
   add_foreign_key "tag_sets", "users"
   add_foreign_key "user_group_collections", "collections"

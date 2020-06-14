@@ -12,6 +12,9 @@
   = f.simple_fields_for :user_group_question_set do |ugq|
     = ugq.input :question_set_id, collection: @question_set_select, input_html: { multiple: true, checked: true }, label: "Select the question set(s) for users to manage:", as: :check_boxes, include_hidden: false
 
+  = f.simple_fields_for :user_group_tag_set do |ugt|
+    = ugt.input :tag_set_id, collection: @tag_set_select, input_html: { multiple: true, checked: true }, label: "Select the tag set(s) for users to manage:", as: :check_boxes, include_hidden: false
+
   = f.submit class: "btn btn-primary"
 
 
