@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_13_184459) do
+ActiveRecord::Schema.define(version: 2020_06_14_113137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,9 +84,10 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
   end
 
   create_table "collection_permissions", force: :cascade do |t|
-    t.boolean "read_access"
-    t.boolean "update_access"
-    t.boolean "clone_access"
+    t.string "language"
+    t.boolean "read_access", default: false
+    t.boolean "update_access", default: false
+    t.boolean "clone_access", default: false
     t.bigint "user_id", null: false
     t.bigint "collection_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -134,6 +135,7 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
   end
 
   create_table "deck_permissions", force: :cascade do |t|
+    t.string "language"
     t.boolean "read_access", default: false
     t.boolean "update_access", default: false
     t.boolean "clone_access", default: false
@@ -168,7 +170,7 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
     t.boolean "confirmed"
     t.boolean "read_access"
     t.boolean "update_access"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "user_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -177,9 +179,10 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
   end
 
   create_table "question_set_permissions", force: :cascade do |t|
-    t.boolean "read_access"
-    t.boolean "update_access"
-    t.boolean "clone_access"
+    t.string "language"
+    t.boolean "read_access", default: false
+    t.boolean "update_access", default: false
+    t.boolean "clone_access", default: false
     t.bigint "user_id", null: false
     t.bigint "question_set_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -222,17 +225,6 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tag_permissions", force: :cascade do |t|
-    t.boolean "read_access"
-    t.boolean "write_access"
-    t.bigint "user_id", null: false
-    t.bigint "tag_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_set_id"], name: "index_tag_permissions_on_tag_set_id"
-    t.index ["user_id"], name: "index_tag_permissions_on_user_id"
-  end
-
   create_table "tag_relations", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "tag_set_id", null: false
@@ -242,8 +234,28 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
     t.index ["tag_set_id"], name: "index_tag_relations_on_tag_set_id"
   end
 
+  create_table "tag_set_permissions", force: :cascade do |t|
+    t.string "language"
+    t.boolean "read_access", default: false
+    t.boolean "update_access", default: false
+    t.bigint "tag_set_id", null: false
+    t.string "user_references"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_set_id"], name: "index_tag_set_permissions_on_tag_set_id"
+  end
+
+  create_table "tag_set_strings", force: :cascade do |t|
+    t.string "title"
+    t.string "language"
+    t.string "description"
+    t.bigint "tag_set_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_set_id"], name: "index_tag_set_strings_on_tag_set_id"
+  end
+
   create_table "tag_sets", force: :cascade do |t|
-    t.string "name"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -346,10 +358,10 @@ ActiveRecord::Schema.define(version: 2020_06_13_184459) do
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
-  add_foreign_key "tag_permissions", "tag_sets"
-  add_foreign_key "tag_permissions", "users"
   add_foreign_key "tag_relations", "tag_sets"
   add_foreign_key "tag_relations", "tags"
+  add_foreign_key "tag_set_permissions", "tag_sets"
+  add_foreign_key "tag_set_strings", "tag_sets"
   add_foreign_key "tag_sets", "users"
   add_foreign_key "user_group_collections", "collections"
   add_foreign_key "user_group_collections", "user_groups"
