@@ -4,18 +4,15 @@ class UserGroupsController < ApplicationController
   def index
     @user = current_user
     @user_groups = policy_scope(UserGroup)
-
     @user_group = UserGroup.new
+    # prepare simple_field usage
     @user_group.decks.build
-    @deck_strings = []
-    @collection_strings = []
-    @question_set_strings = []
-    @user.decks.each { |deck| deck.deck_strings.each { |string| @deck_strings << string } }
-    @user.collections.each { |collection| collection.collection_strings.each { |string| @collection_strings << string } }
-    @user.question_sets.each { |question_set| question_set.question_set_strings.each { |string| @question_set_strings << string } }
-    @deck_select = generate_options(@deck_strings, 'deck_id')
-    @collection_select = generate_options(@collection_strings, 'collection_id')
-    @question_set_select = generate_options(@question_set_strings, 'question_set_id')
+    @user_group.collections.build
+    @user_group.question_sets.build
+    # generate option arrays for form fields
+    @deck_select = select_options(@user, 'decks', 'deck_strings', 'deck_id')
+    @collection_select = select_options(@user, 'collections', 'collection_strings', 'collection_id')
+    @question_set_select = select_options(@user, 'question_sets', 'question_set_strings', 'question_set_id')
   end
 
   def show; end
@@ -33,9 +30,9 @@ class UserGroupsController < ApplicationController
         read_access: true,
         update_access: true
       )
-      params['user_group']['user_group_deck']['deck_id'].each do |deck_id|
-        UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(deck_id))
-      end
+      params['user_group']['user_group_deck']['deck_id'].each { |id| UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(id)) }
+      params['user_group']['user_group_collection']['collection_id'].each { |id| UserGroupCollection.create!(user_group: @user_group, collection: Collection.find(id)) }
+      params['user_group']['user_group_question_set']['question_set_id'].each { |id| UserGroupQuestionSet.create!(user_group: @user_group, question_set: QuestionSet.find(id)) }
       redirect_to user_group_path(@user_group)
     # else
     #   render :index
@@ -52,10 +49,11 @@ class UserGroupsController < ApplicationController
   end
 
   def user_group_params
-    params.require(:user_group).permit(:name, deck_ids: [])
+    params.require(:user_group).permit(:name, deck_ids: [], collection_ids: [], question_set_ids: [])
   end
 
   def generate_options(object_list, id_string)
+    # returns an array of object titles for select form fields
     num_id = 0
     array = []
     chars = ''
@@ -76,5 +74,12 @@ class UserGroupsController < ApplicationController
       array << [chars, string.send(id_string)] if index == object_list.length - 1
     end
     array
+  end
+
+  def select_options(user, objects, method, id_string)
+    # objects ~ decks, method ~ deck_strings, id_string ~ deck_id
+    object_list = []
+    user.send(objects).each { |object| object.send(method).each { |string| object_list << string } }
+    generate_options(object_list, id_string)
   end
 end
