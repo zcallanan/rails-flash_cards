@@ -13,9 +13,9 @@ class UserGroupsController < ApplicationController
     @user.decks.each { |deck| deck.deck_strings.each { |string| @deck_strings << string } }
     @user.collections.each { |collection| collection.collection_strings.each { |string| @collection_strings << string } }
     @user.question_sets.each { |question_set| question_set.question_set_strings.each { |string| @question_set_strings << string } }
-    @deck_select = generate_options(@deck_strings)
-    @collection_select = generate_options(@collection_strings)
-    @question_set_select = generate_options(@question_set_strings)
+    @deck_select = generate_options(@deck_strings, 'deck_id')
+    @collection_select = generate_options(@collection_strings, 'collection_id')
+    @question_set_select = generate_options(@question_set_strings, 'question_set_id')
   end
 
   def show; end
@@ -55,7 +55,7 @@ class UserGroupsController < ApplicationController
     params.require(:user_group).permit(:name, deck_ids: [])
   end
 
-  def generate_options(object_list)
+  def generate_options(object_list, id_string)
     num_id = 0
     array = []
     chars = ''
@@ -63,17 +63,17 @@ class UserGroupsController < ApplicationController
     object_list.each_with_index do |string, index|
       if num_id.zero?
         chars = string.title
-        num_id = string.deck_id
+        num_id = string.send(id_string)
         string_obj = string
-      elsif num_id == string.deck_id
+      elsif num_id == string.send(id_string)
         chars += " | #{string.title}"
-      elsif num_id != string.deck_id
-        array << [chars, string_obj.deck_id]
+      elsif num_id != string.send(id_string)
+        array << [chars, string_obj.send(id_string)]
         string_obj = string
         chars = string.title
-        num_id = string.deck_id
+        num_id = string.send(id_string)
       end
-      array << [chars, string.deck_id] if index == object_list.length - 1
+      array << [chars, string.send(id_string)] if index == object_list.length - 1
     end
     array
   end
