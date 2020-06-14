@@ -1,6 +1,7 @@
 class CreateQuestionSetPermissions < ActiveRecord::Migration[6.0]
   def change
     create_table :question_set_permissions do |t|
+      t.string :language
       t.boolean :read_access
       t.boolean :update_access
       t.boolean :clone_access
