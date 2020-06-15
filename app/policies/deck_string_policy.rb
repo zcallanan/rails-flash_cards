@@ -4,11 +4,7 @@ class DeckStringPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user
-        # user has read access
-        scope.joins(decks: :deck_permissions).where({ deck_permissions: { user_id: user.id, read_access: true } })
-      elsif user
-        # owner of that deck
-        scope.joins(:decks).where(decks: { user_id: user.id })
+        scope.joins(decks: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.language = ? OR decks.user_id = ?', user.id, true, scope.language, user.id).distinct
       end
     end
   end

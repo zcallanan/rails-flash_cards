@@ -19,6 +19,7 @@ class DecksController < ApplicationController
   end
 
   def show
+    @deck_strings = @deck.deck_strings
     authorize @deck
     @languages = Languages.list
   end

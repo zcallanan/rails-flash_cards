@@ -5,13 +5,13 @@ class DeckPolicy < ApplicationPolicy
         scope.all
       elsif user
         scope.joins(:deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND decks.user_id != ? OR decks.global_deck_read = ? OR decks.user_id = ?', user.id, true, user.id, true, user.id).distinct
+        # scope.joins(deck_permissions: :deck_strings).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? deck_permissions.language = ? AND decks.user_id != ? OR decks.global_deck_read = ? OR decks.user_id = ?', user.id, true, deck_strings.language, user.id, true, user.id).distinct
       end
     end
   end
 
-
   def show?
-    user_owns_record? || user_is_admin? || user_can_read?
+    user_owns_record? || user_is_admin? || user_can_read? || record_is_global?
   end
 
   def create?
@@ -27,6 +27,10 @@ class DeckPolicy < ApplicationPolicy
   end
 
   private
+
+  def record_is_global?
+    record.global_deck_read == true
+  end
 
   def user_owns_record?
     record.user == user
