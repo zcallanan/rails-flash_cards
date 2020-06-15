@@ -20,7 +20,7 @@ User.destroy_all
 
 
 def generate_permissions(value, user, deck, collection, question_set, tag_set = nil, user_group = nil)
-  deck_hash = { user: user, deck: deck, read_access: true }
+  deck_hash = { user: user, deck: deck, language: 'en', read_access: true }
   collection_hash = { user: user, collection: collection, read_access: true }
   question_set_hash = { user: user, question_set: question_set, read_access: true }
   tag_set_hash = { user: user, tag_set: tag_set, read_access: true } unless tag_set.nil?
