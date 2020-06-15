@@ -1,7 +1,23 @@
-- @decks.each do |deck|
+%h3 Decks owned
+%ul
+- @decks_owned.each do |deck|
   - deck.deck_strings. each do |string|
-    %p
-    = link_to string.title, deck_path(deck)
+    %li
+      = link_to string.title, deck_path(deck)
+
+%h3 Decks you can view
+%ul
+- @decks_read.each do |deck|
+  - deck.deck_strings. each do |string|
+    %li
+      = link_to string.title, deck_path(deck)
+
+%h3 Globally available
+%ul
+- @decks_global.each do |deck|
+  - deck.deck_strings. each do |string|
+    %li
+      = link_to string.title, deck_path(deck)
 
 = render 'create_deck_form', deck: @deck
 
