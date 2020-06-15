@@ -1,2 +1,7 @@
 - @decks.each do |deck|
-  %p= deck
+  - deck.deck_strings. each do |string|
+    %p
+    = link_to string.title, deck_path(deck)
+
+= render 'create_deck_form', deck: @deck
+

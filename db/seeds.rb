@@ -60,7 +60,7 @@ def create_strings(deck, collection, question_set, tag_set, number)
     ru: ["заглавие первое #{number}", "первое описание #{number}"]
   }
   strings.each do |key, value|
-    DeckString.create!(deck: deck, language: key, title: "Deck #{value[0]} #{(1..100).to_a.sample}", description: "Deck #{value[1]} #{[1..100].sample}" )
+    DeckString.create!(deck: deck, language: key, title: "Deck #{value[0]} #{(1..100).to_a.sample}", description: "Deck #{value[1]} #{[1..100].to_a.sample}" )
     CollectionString.create!(collection: collection, language: key, title: "Collection #{value[0]} #{(1..100).to_a.sample}", description: "Collection #{value[1]} #{(1..100).to_a.sample}" )
     QuestionSetString.create!(question_set: question_set, language: key, title: "Question Set #{value[0]} #{(1..100).to_a.sample}", description: "Question Set #{value[1]} #{(1..100).to_a.sample}" )
     TagSetString.create!(tag_set: tag_set, language: key, title: "Tag Set #{value[0]} #{(1..100).to_a.sample}", description: "Tag Set #{value[1]} #{(1..100).to_a.sample}" )

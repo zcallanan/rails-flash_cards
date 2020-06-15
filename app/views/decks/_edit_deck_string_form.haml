@@ -1,0 +1,5 @@
+= simple_form_for(deck_string, method: :patch, url: deck_deck_string_path(deck_string)) do |f|
+  = f.input :language, collection: @languages.map { |key, value| [key, value] }
+  = f.input :title
+  = f.input :description
+  = f.submit class: "btn btn-primary"
