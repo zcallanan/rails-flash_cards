@@ -2,7 +2,16 @@ class DecksController < ApplicationController
   include Languages
   before_action :set_deck, only: %i[show]
   def index
-    @decks = policy_scope(Deck)
+    @user = current_user
+    # list of decks the user owns
+    @decks_owned = policy_scope(Deck).where(user: @user)
+    # list of decks the user can read but does not own
+    @decks_read = policy_scope(Deck)
+                  .joins(:deck_permissions)
+                  .where({ deck_permissions: { user_id: @user.id, read_access: true } })
+                  .where.not(user: @user)
+    # list of decks that are globally available
+    @decks_global = policy_scope(Deck).where(global_deck_read: true)
     @collections = policy_scope(Collection)
 
     @deck = Deck.new
