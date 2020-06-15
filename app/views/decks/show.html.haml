@@ -1,2 +1,4 @@
-- @decks.each do |deck|
-  %p= deck.name
+- @deck.deck_strings.each do |deck_string|
+  %p
+  = deck_string.title
+  = render 'edit_deck_string_form', deck_string: deck_string
