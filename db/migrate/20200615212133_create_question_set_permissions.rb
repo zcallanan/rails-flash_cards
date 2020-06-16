@@ -7,6 +7,7 @@ class CreateQuestionSetPermissions < ActiveRecord::Migration[6.0]
       t.boolean :clone_access, default: false
       t.references :user, null: false, foreign_key: true
       t.references :question_set, null: false, foreign_key: true
+      t.references :question_set_string, null: false, foreign_key: true
 
       t.timestamps
     end

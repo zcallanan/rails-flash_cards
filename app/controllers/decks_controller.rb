@@ -10,8 +10,24 @@ class DecksController < ApplicationController
                   .joins(:deck_permissions)
                   .where({ deck_permissions: { user_id: @user.id, read_access: true } })
                   .where.not(user: @user)
+    @decks_read_strings = []
+    @decks_read.each do |deck|
+      deck.deck_strings.each do |string|
+        string.deck_permissions.each do |permission|
+          @decks_read_strings << string if string.language == permission.language && permission.user_id == @user.id
+        end
+      end
+    end
+
     # list of decks that are globally available
+    @decks_global_strings = []
     @decks_global = policy_scope(Deck).where(global_deck_read: true)
+    @decks_global.each do |deck|
+      deck.deck_strings.each do |string|
+        @decks_global_strings << string if string.global_access == true
+      end
+    end
+
     @collections = policy_scope(Collection)
 
     @deck = Deck.new

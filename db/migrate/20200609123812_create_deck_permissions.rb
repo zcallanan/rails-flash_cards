@@ -7,6 +7,7 @@ class CreateDeckPermissions < ActiveRecord::Migration[6.0]
       t.boolean :clone_access, default: false
       t.references :deck, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
+      t.references :deck_string, null: false, foreign_key: true
 
       t.timestamps
     end
