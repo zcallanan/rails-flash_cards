@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_14_113137) do
+ActiveRecord::Schema.define(version: 2020_06_15_212133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,9 +90,11 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.boolean "clone_access", default: false
     t.bigint "user_id", null: false
     t.bigint "collection_id", null: false
+    t.bigint "collection_string_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["collection_id"], name: "index_collection_permissions_on_collection_id"
+    t.index ["collection_string_id"], name: "index_collection_permissions_on_collection_string_id"
     t.index ["user_id"], name: "index_collection_permissions_on_user_id"
   end
 
@@ -141,9 +143,11 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.boolean "clone_access", default: false
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
+    t.bigint "deck_string_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_deck_permissions_on_deck_id"
+    t.index ["deck_string_id"], name: "index_deck_permissions_on_deck_string_id"
     t.index ["user_id"], name: "index_deck_permissions_on_user_id"
   end
 
@@ -151,6 +155,7 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.string "language"
     t.string "title"
     t.string "description"
+    t.boolean "global_access", default: false
     t.bigint "deck_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -185,9 +190,11 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.boolean "clone_access", default: false
     t.bigint "user_id", null: false
     t.bigint "question_set_id", null: false
+    t.bigint "question_set_string_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_set_id"], name: "index_question_set_permissions_on_question_set_id"
+    t.index ["question_set_string_id"], name: "index_question_set_permissions_on_question_set_string_id"
     t.index ["user_id"], name: "index_question_set_permissions_on_user_id"
   end
 
@@ -240,10 +247,11 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
     t.boolean "update_access", default: false
     t.bigint "tag_set_id", null: false
     t.bigint "user_id", null: false
-    t.string "user_references"
+    t.bigint "tag_set_string_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_set_id"], name: "index_tag_set_permissions_on_tag_set_id"
+    t.index ["tag_set_string_id"], name: "index_tag_set_permissions_on_tag_set_string_id"
     t.index ["user_id"], name: "index_tag_set_permissions_on_user_id"
   end
 
@@ -339,6 +347,7 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
   add_foreign_key "cards", "decks"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
+  add_foreign_key "collection_permissions", "collection_strings"
   add_foreign_key "collection_permissions", "collections"
   add_foreign_key "collection_permissions", "users"
   add_foreign_key "collection_strings", "collections"
@@ -348,12 +357,14 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
   add_foreign_key "collections", "users"
   add_foreign_key "deck_categories", "categories"
   add_foreign_key "deck_categories", "decks"
+  add_foreign_key "deck_permissions", "deck_strings"
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"
+  add_foreign_key "question_set_permissions", "question_set_strings"
   add_foreign_key "question_set_permissions", "question_sets"
   add_foreign_key "question_set_permissions", "users"
   add_foreign_key "question_set_strings", "question_sets"
@@ -362,6 +373,7 @@ ActiveRecord::Schema.define(version: 2020_06_14_113137) do
   add_foreign_key "question_strings", "questions"
   add_foreign_key "tag_relations", "tag_sets"
   add_foreign_key "tag_relations", "tags"
+  add_foreign_key "tag_set_permissions", "tag_set_strings"
   add_foreign_key "tag_set_permissions", "tag_sets"
   add_foreign_key "tag_set_permissions", "users"
   add_foreign_key "tag_set_strings", "tag_sets"

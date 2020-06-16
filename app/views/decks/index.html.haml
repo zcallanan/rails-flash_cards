@@ -7,16 +7,14 @@
 
 %h3 Decks you can view
 %ul
-- @decks_read.each do |deck|
-  - deck.deck_strings. each do |string|
-    %li
-      = link_to string.title, deck_path(deck)
+- @decks_read_strings.each do |string|
+  %li
+    = link_to string.title, deck_path(string.deck)
 
 %h3 Globally available
 %ul
-- @decks_global.each do |deck|
-  - deck.deck_strings. each do |string|
-    %li
-      = link_to string.title, deck_path(deck)
+- @decks_global_strings.each do |string|
+  %li
+    = link_to string.title, deck_path(string.deck)
 = render 'create_deck_form', deck: @deck
 
