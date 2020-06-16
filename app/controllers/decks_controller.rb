@@ -43,10 +43,22 @@ class DecksController < ApplicationController
     # TODO: Account for language
     # list of decks that are globally available
     @decks_global_strings = []
-    @decks_global = policy_scope(Deck).where(global_deck_read: true).distinct
+    @decks_global = policy_scope(Deck).where(global_deck_read: true)
     @decks_global.each do |deck|
-      deck.deck_strings.each do |string|
-        @decks_global_strings << string if string.global_access == true
+      next if @decks_global_strings.pluck(:deck_id).include?(deck.id)
+
+      languages = deck.deck_strings.pluck(:language)
+      if languages.include?(@user.language)
+        deck.deck_strings.each do |string|
+          @decks_global_strings << string if string.global_access == true
+        end
+      else
+        deck.deck_strings.each do |string|
+          if string.global_access?
+            @decks_global_strings << string
+            break
+          end
+        end
       end
     end
 
