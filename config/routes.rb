@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'users/registrations' } # custom devise registration
   root to: 'pages#home'
   resources :decks, only: %i[index show create] do
     resources :deck_strings, only: %i[update]
