@@ -2,8 +2,4 @@
   = f.input :language, collection: @languages.map { |key, value| [key, value] }
   = f.input :title
   = f.input :description
-  - if deck_string.deck.global_deck_read?
-    = f.input :global_access, label: 'Make this deck information visible to all users?'
-  - else
-    = f.input :global_access, disabled: true, as: :hidden
   = f.submit 'Update Deck Information', class: "btn btn-primary"
