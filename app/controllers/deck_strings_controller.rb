@@ -8,7 +8,7 @@ class DeckStringsController < ApplicationController
     if @deck_string.update(deck_string_params)
       redirect_to deck_path(@deck)
     else
-      redirect_to 'decks_path'
+      redirect_to decks_path
     end
     return
   end

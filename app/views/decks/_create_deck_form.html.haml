@@ -3,5 +3,5 @@
     = ds.input :language, collection: @languages.map { |key, value| [key, value] }
     = ds.input :title
     = ds.input :description
-  = f.input :global_deck_read, label: 'Make this deck of cards accessible to all users?'
+  = f.input :global_deck_read, label: 'Allow all users to view this deck of cards?'
   = f.submit class: "btn btn-primary"
