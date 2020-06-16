@@ -1,6 +1,6 @@
 class DecksController < ApplicationController
   include Languages
-  before_action :set_deck, only: %i[show]
+  before_action :set_deck, only: %i[show update]
   def index
     @user = current_user
 
@@ -26,8 +26,8 @@ class DecksController < ApplicationController
   end
 
   def show
-    @deck_strings = @deck.deck_strings
     authorize @deck
+    @deck_strings = @deck.deck_strings
     @languages = Languages.list
   end
 
@@ -37,6 +37,15 @@ class DecksController < ApplicationController
     @deck = Deck.new(deck_params)
     # prepare simple_field usage
     @deck.deck_strings.build
+  end
+
+  def update
+    authorize(@deck)
+    if @deck.update(deck_params)
+      redirect_to decks_path
+    else
+      redirect_to deck_path(@deck), flash[:alert] = "Unable to update"
+    end
   end
 
   private
@@ -65,7 +74,7 @@ class DecksController < ApplicationController
   end
 
   def deck_params
-    params.require(:deck).permit(:id_decks, :language, :title, :description)
+    params.require(:deck).permit(:id_decks, :language, :title, :description, :global_deck_read)
   end
 
   def set_deck

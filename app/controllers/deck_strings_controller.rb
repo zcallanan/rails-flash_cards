@@ -4,11 +4,13 @@ class DeckStringsController < ApplicationController
   def update
     @user = current_user
     @deck_string = DeckString.find(params[:deck_id])
+    # prepare simple_field usage
+    @deck_string.deck.build
     authorize @deck_string
     if @deck_string.update(deck_string_params)
       redirect_to deck_path(@deck)
     else
-      redirect_to 'decks_path'
+      redirect_to decks_path
     end
     return
   end
