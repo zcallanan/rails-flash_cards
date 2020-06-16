@@ -1,9 +1,8 @@
 %h3 Decks owned
 %ul
-- @decks_owned.each do |deck|
-  - deck.deck_strings. each do |string|
-    %li
-      = link_to string.title, deck_path(deck)
+- @decks_owned_strings. each do |string|
+  %li
+    = link_to string.title, deck_path(string.deck)
 
 %h3 Decks you can view
 %ul
