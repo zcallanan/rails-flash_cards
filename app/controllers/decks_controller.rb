@@ -3,58 +3,21 @@ class DecksController < ApplicationController
   before_action :set_deck, only: %i[show]
   def index
     @user = current_user
-    # TODO: break out string definition into a generalized method
+
     # list of decks the user owns
     @decks_owned = policy_scope(Deck).where(user: @user)
-    @decks_owned_strings = []
-    @decks_owned.each do |deck|
-      next if @decks_owned_strings.pluck(:deck_id).include?(deck.id)
+    @decks_owned_strings = populate_strings(@decks_owned, @user)
 
-      languages = deck.deck_strings.pluck(:language)
-      if languages.include?(@user.language)
-        deck.deck_strings.each { |string| @decks_owned_strings << string if string.language == @user.language }
-      else
-        @decks_owned_strings << deck.deck_string[0]
-      end
-    end
     # list of decks the user can read but does not own
     @decks_read = policy_scope(Deck)
                   .joins(:deck_permissions)
                   .where({ deck_permissions: { user_id: @user.id, read_access: true } })
                   .where.not(user: @user).distinct
-    @decks_read_strings = []
-    @decks_read.each do |deck|
-      next if @decks_read_strings.pluck(:deck_id).include?(deck.id)
-
-      languages = deck.deck_strings.pluck(:language)
-      if languages.include?(@user.language)
-        deck.deck_strings.each do |string|
-          string.deck_permissions.each do |permission|
-            if string.language == @user.language && string.language == permission.language && permission.user_id == @user.id
-              @decks_read_strings << string
-            end
-          end
-        end
-      else
-        @decks_owned_strings << deck.deck_string[0]
-      end
-    end
+    @decks_read_strings = populate_strings(@decks_read, @user, 1)
 
     # list of decks that are globally available
-    @decks_global_strings = []
     @decks_global = policy_scope(Deck).where(global_deck_read: true)
-    @decks_global.each do |deck|
-      next if @decks_global_strings.pluck(:deck_id).include?(deck.id)
-
-      languages = deck.deck_strings.pluck(:language)
-      if languages.include?(@user.language)
-        deck.deck_strings.each do |string|
-          @decks_global_strings << string if string.language == @user.language
-        end
-      else
-        @decks_owned_strings << deck.deck_string[0]
-      end
-    end
+    @decks_global_strings = populate_strings(@decks_global, @user)
 
     @collections = policy_scope(Collection)
 
@@ -77,6 +40,29 @@ class DecksController < ApplicationController
   end
 
   private
+
+  def populate_strings(decks, user, permissions = nil)
+    object_strings = []
+    decks.each do |deck|
+      next if object_strings.pluck(:deck_id).include?(deck.id)
+
+      languages = deck.deck_strings.pluck(:language)
+      if languages.include?(user.language)
+        deck.deck_strings.each do |string|
+          if string.language == user.language && permissions.nil?
+            object_strings << string
+          elsif string.language == user.language
+            string.deck_permissions.each do |permission|
+              object_strings << string if string.language == permission.language && permission.user_id == user.id
+            end
+          end
+        end
+      else
+        object_strings << deck.deck_string[0]
+      end
+    end
+    object_strings
+  end
 
   def deck_params
     params.require(:deck).permit(:id_decks, :language, :title, :description)
