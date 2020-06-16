@@ -10,13 +10,13 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  # def configure_permitted_parameters
-  #   # For additional fields in app/views/devise/registrations/new.html.erb
-  #   devise_parameter_sanitizer.permit(:sign_up, keys: [])
+  def configure_permitted_parameters
+    # For additional fields in app/views/devise/registrations/new.html.erb
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:language])
 
-  #   # For additional in app/views/devise/registrations/edit.html.erb
-  #   devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password])
-  # end
+    # For additional in app/views/devise/registrations/edit.html.erb
+    devise_parameter_sanitizer.permit(:account_update, keys: [:language])
+  end
 
   private
 

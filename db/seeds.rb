@@ -71,8 +71,9 @@ end
 
 n = 0
 x = 0
+languages = ['en', 'fr']
 15.times do
-  user = User.create!(email: "z#{n}@example.com", password: 'secret')
+  user = User.create!(email: "z#{n}@example.com", password: 'secret', language: languages.sample)
   n += 1
   2.times do
     n <= 14 ? deck = Deck.create!(user: user) : deck = Deck.create!(user: user, global_deck_read: true)
