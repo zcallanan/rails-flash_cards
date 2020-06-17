@@ -1,3 +1,4 @@
+// TODO: Display a title
 - if policy(@deck).update?
   = render 'update_deck_form', deck: @deck
 - @deck_strings.each do |deck_string|
@@ -5,3 +6,26 @@
   = deck_string.title
   - if policy(deck_string).update?
     = render 'update_deck_string_form', deck_string: deck_string
+
+// show only collections that belong to the deck
+%h3 Deck Collections
+%ul
+
+- @collections_owned_strings. each do |string|
+  - if @deck.id == string.collection.deck_id
+    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+
+%h3 Shared collections you can view
+%ul
+- @collections_read_strings.each do |string|
+  - if @deck.id == string.collection.deck_id
+    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+
+%h3 Shared collections you can view & update
+%ul
+- @collections_update_strings.each do |string|
+  - if @deck.id == string.collection.deck_id
+    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+// check if the user has a right to create a collection
+- if policy(@collection).create?
+  = render 'collections/create_collection_form', deck: @deck, collection: @collection

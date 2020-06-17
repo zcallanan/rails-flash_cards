@@ -5,6 +5,10 @@ class Deck < ApplicationRecord
   has_many :question_sets
   has_many :card_question_sets, through: :question_sets
   has_many :deck_strings
+  has_many :collections
+  has_many :cards
+  has_many :deck_categories
+  has_many :categories, through: :deck_categories
   accepts_nested_attributes_for :deck_strings
 
   def owner

@@ -1,0 +1,7 @@
+%h3 Create a Collection
+= simple_form_for(collection, method: :post, url: deck_collections_path(@deck)) do |f|
+  = f.simple_fields_for :collection_string do |cs|
+    = cs.input :language, collection: @languages.map { |key, value| [key, value] }
+    = cs.input :title
+    = cs.input :description
+  = f.submit class: "btn btn-primary"
