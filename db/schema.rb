@@ -155,7 +155,6 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
     t.string "language"
     t.string "title"
     t.string "description"
-    t.boolean "global_access", default: false
     t.bigint "deck_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -165,6 +164,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   create_table "decks", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.boolean "global_deck_read", default: false
+    t.boolean "archived", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_decks_on_user_id"
