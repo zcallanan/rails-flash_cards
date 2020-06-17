@@ -8,4 +8,5 @@ class Collection < ApplicationRecord
   has_many :collection_permissions
   has_many :users, through: :collection_permissions
   has_many :collection_strings
+  accepts_nested_attributes_for :collection_strings
 end

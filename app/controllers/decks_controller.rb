@@ -6,40 +6,57 @@ class DecksController < ApplicationController
 
     # list of decks the user owns
     @decks_owned = policy_scope(Deck).where(user: @user).where.not(archived: true)
-    @decks_owned_strings = populate_strings(@decks_owned, @user)
+    @decks_owned_strings = populate_strings(@decks_owned, @user, 'deck_strings', :deck_id)
 
     # list of archived decks
     @decks_archived = policy_scope(Deck).where(user: @user, archived: true)
-    @decks_archived_strings = populate_strings(@decks_archived, @user)
+    @decks_archived_strings = populate_strings(@decks_archived, @user, 'deck_strings', :deck_id)
 
     # list of decks the user can read but does not own
     @decks_read = policy_scope(Deck)
                   .joins(:deck_permissions)
                   .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                   .where.not(user: @user).distinct
-    @decks_read_strings = populate_strings(@decks_read, @user, 1)
+    @decks_read_strings = populate_strings(@decks_read, @user, 'deck_strings', :deck_id, 'deck_permissions')
 
     # list of decks the user can read & update but do not own
     @decks_update = policy_scope(Deck)
                     .joins(:deck_permissions)
                     .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
                     .where.not(user: @user).distinct
-    @decks_update_strings = populate_strings(@decks_update, @user, 1)
+    @decks_update_strings = populate_strings(@decks_update, @user, 'deck_strings', :deck_id, 'deck_permissions')
 
     # list of decks that are globally available
     @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)
-    @decks_global_strings = populate_strings(@decks_global, @user)
-
-    @collections = policy_scope(Collection)
+    @decks_global_strings = populate_strings(@decks_global, @user, 'deck_strings', :deck_id)
 
     @deck = Deck.new
     @languages = Languages.list
   end
 
   def show
+    @user = current_user
     authorize @deck
     @deck_strings = @deck.deck_strings
     @languages = Languages.list
+    @collection = Collection.new
+    # TODO: may require a joins to eliminate archived deck data
+    @collections_owned = policy_scope(Collection).where(user: @user)
+    @collections_owned_strings = populate_strings(@collections_owned, @user, 'collection_strings', :collection_id)
+
+    # list of decks the user can read but does not own
+    @collections_read = policy_scope(Collection)
+                        .joins(:collection_permissions)
+                        .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: false } })
+                        .where.not(user: @user).distinct
+    @collections_read_strings = populate_strings(@collections_read, @user, 'collection_strings', :collection_id, 'collection_permissions')
+
+    # list of decks the user can read & update but do not own
+    @collections_update = policy_scope(Collection)
+                          .joins(:collection_permissions)
+                          .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: true } })
+                          .where.not(user: @user).distinct
+    @collections_update_strings = populate_strings(@collections_update, @user, 'collection_strings', :collection_id, 'collection_permissions')
   end
 
   def create
@@ -61,31 +78,31 @@ class DecksController < ApplicationController
 
   private
 
-  def populate_strings(decks, user, permissions = nil)
+  def populate_strings(objects, user, string_type, id_type, permission_type = nil)
     object_strings = []
-    decks.each do |deck|
-      next if object_strings.pluck(:deck_id).include?(deck.id)
+    objects.each do |object|
+      next if object_strings.pluck(id_type).include?(object.id)
 
-      languages = deck.deck_strings.pluck(:language)
+      languages = object.send(string_type).pluck(:language)
       if languages.include?(user.language)
-        deck.deck_strings.each do |string|
-          if string.language == user.language && permissions.nil?
+        object.send(string_type).each do |string|
+          if string.language == user.language && permission_type.nil?
             object_strings << string
           elsif string.language == user.language
-            string.deck_permissions.each do |permission|
+            string.send(permission_type).each do |permission|
               object_strings << string if string.language == permission.language && permission.user_id == user.id
             end
           end
         end
       else
-        object_strings << deck.deck_string[0]
+        object_strings << object.send(string_type)[0]
       end
     end
     object_strings
   end
 
   def deck_params
-    params.require(:deck).permit(:id_decks, :language, :title, :description, :global_deck_read, :archived)
+    params.require(:deck).permit(:deck_id, :language, :title, :description, :global_deck_read, :archived)
   end
 
   def set_deck
