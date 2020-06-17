@@ -4,9 +4,21 @@
   %li
     = link_to string.title, deck_path(string.deck)
 
-%h3 Decks you can view
+%h3 Decks archived
+%ul
+- @decks_archived_strings. each do |string|
+  %li
+    = link_to string.title, deck_path(string.deck)
+
+%h3 Shared decks you can view
 %ul
 - @decks_read_strings.each do |string|
+  %li
+    = link_to string.title, deck_path(string.deck)
+
+%h3 Shared decks you can view & update
+%ul
+- @decks_update_strings.each do |string|
   %li
     = link_to string.title, deck_path(string.deck)
 

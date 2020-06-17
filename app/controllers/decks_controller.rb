@@ -5,18 +5,29 @@ class DecksController < ApplicationController
     @user = current_user
 
     # list of decks the user owns
-    @decks_owned = policy_scope(Deck).where(user: @user)
+    @decks_owned = policy_scope(Deck).where(user: @user).where.not(archived: true)
     @decks_owned_strings = populate_strings(@decks_owned, @user)
+
+    # list of archived decks
+    @decks_archived = policy_scope(Deck).where(user: @user, archived: true)
+    @decks_archived_strings = populate_strings(@decks_archived, @user)
 
     # list of decks the user can read but does not own
     @decks_read = policy_scope(Deck)
                   .joins(:deck_permissions)
-                  .where({ deck_permissions: { user_id: @user.id, read_access: true } })
+                  .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                   .where.not(user: @user).distinct
     @decks_read_strings = populate_strings(@decks_read, @user, 1)
 
+    # list of decks the user can read & update but do not own
+    @decks_update = policy_scope(Deck)
+                    .joins(:deck_permissions)
+                    .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
+                    .where.not(user: @user).distinct
+    @decks_update_strings = populate_strings(@decks_update, @user, 1)
+
     # list of decks that are globally available
-    @decks_global = policy_scope(Deck).where(global_deck_read: true)
+    @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)
     @decks_global_strings = populate_strings(@decks_global, @user)
 
     @collections = policy_scope(Collection)
@@ -74,7 +85,7 @@ class DecksController < ApplicationController
   end
 
   def deck_params
-    params.require(:deck).permit(:id_decks, :language, :title, :description, :global_deck_read)
+    params.require(:deck).permit(:id_decks, :language, :title, :description, :global_deck_read, :archived)
   end
 
   def set_deck
