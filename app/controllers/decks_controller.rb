@@ -15,9 +15,16 @@ class DecksController < ApplicationController
     # list of decks the user can read but does not own
     @decks_read = policy_scope(Deck)
                   .joins(:deck_permissions)
-                  .where({ deck_permissions: { user_id: @user.id, read_access: true } })
+                  .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                   .where.not(user: @user).distinct
     @decks_read_strings = populate_strings(@decks_read, @user, 1)
+
+    # list of decks the user can read & update but do not own
+    @decks_update = policy_scope(Deck)
+                    .joins(:deck_permissions)
+                    .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
+                    .where.not(user: @user).distinct
+    @decks_update_strings = populate_strings(@decks_update, @user, 1)
 
     # list of decks that are globally available
     @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)

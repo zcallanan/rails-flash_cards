@@ -91,13 +91,21 @@ languages = [:en, :fr]
     QuestionSetPermission.create!(user: user, question_set: question_set, question_set_string: string_hash[language][2], read_access: true, update_access: true, clone_access: true)
     TagSetPermission.create!(user: user, tag_set: tag_set, tag_set_string: string_hash[language][3], read_access: true, update_access: true)
     Membership.create!(user: user, user_group: user_group, read_access: true, update_access: true)
-    if Deck.count > 10
-      user = User.all.sample
-      generate_permissions('read', string_hash, user, deck, collection, question_set, tag_set, user_group)
-      user = User.all.sample
-      generate_permissions('update', string_hash, user, deck, collection, question_set, tag_set, user_group)
-      user = User.all.sample
-      generate_permissions('clone', string_hash, user, deck, collection, question_set)
+    if User.count > 10 # prevent the same user getting multiple permissions on the same deck et al.
+      go = 0
+      while go <= 2
+        user = User.all.sample
+        if go.zero? && deck.deck_permissions.pluck(:user_id).exclude?(user.id)
+          generate_permissions('read', string_hash, user, deck, collection, question_set, tag_set, user_group)
+          go += 1
+        elsif go == 1 && deck.deck_permissions.pluck(:user_id).exclude?(user.id)
+          generate_permissions('update', string_hash, user, deck, collection, question_set, tag_set, user_group)
+          go += 1
+        elsif go == 2 && deck.deck_permissions.pluck(:user_id).exclude?(user.id)
+          generate_permissions('clone', string_hash, user, deck, collection, question_set)
+          go += 1
+        end
+      end
     end
   end
 end
