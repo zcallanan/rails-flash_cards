@@ -31,6 +31,8 @@ class DecksController < ApplicationController
     @decks_global_strings = populate_strings(@decks_global, @user, 'deck_strings', :deck_id)
 
     @deck = Deck.new
+    # prepare simple_field usage
+    @deck.deck_strings.build
     @languages = Languages.list
   end
 
@@ -40,6 +42,9 @@ class DecksController < ApplicationController
     @deck_strings = @deck.deck_strings
     @languages = Languages.list
     @collection = Collection.new
+    @collection.user = @user # enable view's evaluation of collection policy create?
+    # prepare simple_field usage
+    @collection.collection_strings.build
     # TODO: may require a joins to eliminate archived deck data
     @collections_owned = policy_scope(Collection).where(user: @user)
     @collections_owned_strings = populate_strings(@collections_owned, @user, 'collection_strings', :collection_id)
@@ -60,11 +65,23 @@ class DecksController < ApplicationController
   end
 
   def create
-    authorize @deck
     @user = current_user
     @deck = Deck.new(deck_params)
-    # prepare simple_field usage
-    @deck.deck_strings.build
+    @deck.user = @user
+    authorize @deck
+    if @deck.save!
+      DeckPermission.create(
+        deck: @deck,
+        user: @user,
+        deck_string: @deck.deck_strings.first,
+        read_access: true,
+        update_access: true,
+        clone_access: true
+      )
+      redirect_to deck_path(@deck)
+    else
+      redirect_to decks_path
+    end
   end
 
   def update
@@ -102,7 +119,7 @@ class DecksController < ApplicationController
   end
 
   def deck_params
-    params.require(:deck).permit(:deck_id, :language, :title, :description, :global_deck_read, :archived)
+    params.require(:deck).permit(:global_deck_read, :archived, deck_strings_attributes: [:language, :title, :description])
   end
 
   def set_deck
