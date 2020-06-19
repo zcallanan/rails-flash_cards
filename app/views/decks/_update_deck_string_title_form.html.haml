@@ -1,0 +1,5 @@
+#deck-title-form
+  = simple_form_for(deck_string, remote: true, input_html: {id: 'title-form-field'}, url: deck_deck_string_path(deck, deck_string)) do |f|
+    = f.input :title, label: false
+
+// TODO: add an edit button

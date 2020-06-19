@@ -1,0 +1,5 @@
+#deck-description-form
+  = simple_form_for(deck_string, remote: true, input_html: {id: 'description-form-field'}, url: deck_deck_string_path(deck, deck_string)) do |f|
+    = f.input :description, label: false
+
+// TODO: add an edit button

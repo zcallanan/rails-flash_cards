@@ -2,6 +2,7 @@ class CollectionsController < ApplicationController
   before_action :set_deck, only: %i[show create]
   before_action :set_collection, only: %i[show]
   def show
+    @user = current_user
     authorize @collection
   end
 
