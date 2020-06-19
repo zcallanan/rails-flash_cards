@@ -1,1 +1,7 @@
-// TODO: Display a title
+- @collection.collection_strings.each do |string|
+  - if string.language == @user.language
+    %h1= string.title
+    - break
+  - elsif string.language == @collection.deck.default_language
+    %h1= string.title
+    - break

@@ -1,4 +1,11 @@
-// TODO: Display a title
+- @deck.deck_strings.each do |string|
+  - if string.language == @user.language
+    %h1= string.title
+    - break
+  - elsif string.language == @deck.default_language
+    %h1= string.title
+    - break
+
 - if policy(@deck).update?
   = render 'update_deck_form', deck: @deck, language_options: @language_options, deck_string: @deck_string
 - @deck_strings.each do |deck_string|

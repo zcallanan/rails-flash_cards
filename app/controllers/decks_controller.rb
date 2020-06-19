@@ -122,9 +122,9 @@ class DecksController < ApplicationController
   def update
     authorize(@deck)
     if @deck.update!(deck_params)
-      redirect_to decks_path
+      redirect_to deck_path(@deck)
     else
-      redirect_to deck_path(@deck), flash[:alert] = "Unable to update"
+      redirect_to decks_path, flash[:alert] = "Unable to update"
     end
   end
 
