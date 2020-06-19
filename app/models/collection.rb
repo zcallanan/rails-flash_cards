@@ -7,6 +7,6 @@ class Collection < ApplicationRecord
   has_many :tags, through: :collection_tags
   has_many :collection_permissions
   has_many :users, through: :collection_permissions
-  has_many :collection_strings
+  has_many :collection_strings, inverse_of: :collection
   accepts_nested_attributes_for :collection_strings
 end

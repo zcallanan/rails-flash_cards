@@ -1,4 +1,10 @@
 = simple_form_for(deck, method: :patch) do |f|
+  - if language_options.length == 1
+    = f.input :default_language, collection: language_options, disabled: true, hint: 'Add deck information in other languages in order to change this value.'
+  - else
+    = f.input :default_language, collection: language_options
   = f.input :global_deck_read, label: 'Allow all users to view this deck of cards?'
   = f.input :archived, label: 'Archive the deck of cards?'
   = f.submit class: "btn btn-primary"
+
+= render 'create_deck_string_form', deck: deck, deck_string: deck_string

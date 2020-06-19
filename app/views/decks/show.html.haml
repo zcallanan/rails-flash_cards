@@ -1,6 +1,6 @@
 // TODO: Display a title
 - if policy(@deck).update?
-  = render 'update_deck_form', deck: @deck
+  = render 'update_deck_form', deck: @deck, language_options: @language_options, deck_string: @deck_string
 - @deck_strings.each do |deck_string|
   %p
   = deck_string.title

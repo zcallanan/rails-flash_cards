@@ -54,7 +54,7 @@ def generate_permissions(value, string_hash, user, deck, collection, question_se
   end
 end
 
-def create_strings(deck, collection, question_set, tag_set, number)
+def create_strings(user, deck, collection, question_set, tag_set, number)
   strings = {
     en: ["title one #{number}", "description one #{number}", true],
     fr: ["titre premier #{number}", "description un #{number}", false]
@@ -63,7 +63,7 @@ def create_strings(deck, collection, question_set, tag_set, number)
   }
   string_hash = {en: [], fr: []}
   strings.each do |key, value|
-    string_hash[key] << DeckString.create!(deck: deck, language: key, title: "Deck #{value[0]} #{deck.id}", description: "Deck #{value[1]} #{deck.id}" )
+    string_hash[key] << DeckString.create!(user: user, deck: deck, language: key, title: "Deck #{value[0]} #{deck.id}", description: "Deck #{value[1]} #{deck.id}" )
     string_hash[key] << CollectionString.create!(collection: collection, language: key, title: "Collection #{value[0]} #{collection.id}", description: "Collection #{value[1]} #{collection.id}" )
     string_hash[key] << QuestionSetString.create!(question_set: question_set, language: key, title: "Question Set #{value[0]} #{question_set.id}", description: "Question Set #{value[1]} #{question_set.id}" )
     string_hash[key] << TagSetString.create!(tag_set: tag_set, language: key, title: "Tag Set #{value[0]} #{tag_set.id}", description: "Tag Set #{value[1]} #{tag_set.id}" )
@@ -79,11 +79,11 @@ languages = [:en, :fr]
   user = User.create!(email: "z#{n}@example.com", password: 'secret', language: languages.sample)
   n += 1
   languages.each do |language|
-    n <= 14 ? deck = Deck.create!(user: user) : deck = Deck.create!(user: user, global_deck_read: true)
+    n <= 14 ? deck = Deck.create!(user: user, default_language: language) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true)
     collection = Collection.create!(user: user, deck: deck)
     question_set = QuestionSet.create!(user: user, deck: deck)
     tag_set = TagSet.create!(user: user)
-    string_hash = create_strings(deck, collection, question_set, tag_set, x)
+    string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
     DeckPermission.create!(user: user, deck: deck, deck_string: string_hash[language][0], language: language, read_access: true, update_access: true, clone_access: true)

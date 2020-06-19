@@ -19,7 +19,7 @@ class DecksController < ApplicationController
                   .where.not(user: @user).distinct
     @decks_read_strings = populate_strings(@decks_read, @user, 'deck_strings', :deck_id, 'deck_permissions')
 
-    # list of decks the user can read & update but do not own
+    # list of decks the user can read & update but does not own
     @decks_update = policy_scope(Deck)
                     .joins(:deck_permissions)
                     .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
@@ -41,6 +41,7 @@ class DecksController < ApplicationController
     authorize @deck
     @deck_strings = @deck.deck_strings
     @languages = Languages.list
+    @deck_string = DeckString.new
     @collection = Collection.new
     @collection.user = @user # enable view's evaluation of collection policy create?
     # prepare simple_field usage
@@ -49,19 +50,27 @@ class DecksController < ApplicationController
     @collections_owned = policy_scope(Collection).where(user: @user)
     @collections_owned_strings = populate_strings(@collections_owned, @user, 'collection_strings', :collection_id)
 
-    # list of decks the user can read but does not own
+    # list of collections the user can read but does not own
     @collections_read = policy_scope(Collection)
                         .joins(:collection_permissions)
                         .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                         .where.not(user: @user).distinct
     @collections_read_strings = populate_strings(@collections_read, @user, 'collection_strings', :collection_id, 'collection_permissions')
 
-    # list of decks the user can read & update but do not own
+    # list of collections the user can read & update but does not own
     @collections_update = policy_scope(Collection)
                           .joins(:collection_permissions)
                           .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: true } })
                           .where.not(user: @user).distinct
     @collections_update_strings = populate_strings(@collections_update, @user, 'collection_strings', :collection_id, 'collection_permissions')
+
+    @languages = Languages.list
+    @language_options = [] # when updating a deck, user can change what language strings users see by default, if they exist. User preference overrides this
+    @reduced_languages = {} # remove language options from language list if a string exists in that language
+    language_collection = @deck.deck_strings.pluck(:language)
+    @languages.each do |key, value|
+      language_collection.include?(value) ? @language_options << [key, value] : @reduced_languages[key] = value
+    end
   end
 
   def create
@@ -70,7 +79,8 @@ class DecksController < ApplicationController
     @deck.user = @user
     authorize @deck
     if @deck.save!
-      DeckPermission.create(
+      @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
+      DeckPermission.create!(
         deck: @deck,
         user: @user,
         deck_string: @deck.deck_strings.first,
@@ -82,11 +92,12 @@ class DecksController < ApplicationController
     else
       redirect_to decks_path
     end
+
   end
 
   def update
     authorize(@deck)
-    if @deck.update(deck_params)
+    if @deck.update!(deck_params)
       redirect_to decks_path
     else
       redirect_to deck_path(@deck), flash[:alert] = "Unable to update"
@@ -119,7 +130,7 @@ class DecksController < ApplicationController
   end
 
   def deck_params
-    params.require(:deck).permit(:global_deck_read, :archived, deck_strings_attributes: [:language, :title, :description])
+    params.require(:deck).permit(:default_language, :global_deck_read, :archived, deck_strings_attributes: [:language, :title, :description])
   end
 
   def set_deck
