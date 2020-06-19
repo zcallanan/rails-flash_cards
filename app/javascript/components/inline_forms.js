@@ -1,5 +1,4 @@
 const ToggleFormInline = (string, form) => {
-  console.log(string)
   if (window.getComputedStyle(string).getPropertyValue('display') == 'block') {
       string.style.display = 'none';
       form.style.display = 'block';
