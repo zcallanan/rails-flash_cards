@@ -1,13 +1,17 @@
 - @deck.deck_strings.each do |string|
   - if string.language == @user.language
-    %h1= string.title
-    %p= string.description
+    %h1{id: 'deck-title'}= string.title
+    = render 'update_deck_string_title_form', deck_string: string, deck: @deck
+    %p{id: 'deck-description'}= string.description
+    = render 'update_deck_string_description_form', deck_string: string, deck: @deck
     - break
   - elsif string.language == @deck.default_language
-    %h1= string.title
-    %p= string.description
+    %h1{id: 'deck-title'}= string.title
+    = render 'update_deck_string_title_form', deck_string: string, deck: @deck
+    %p{id: 'deck-description'}= string.description
+    = render 'update_deck_string_description_form', deck_string: string, deck: @deck
     - break
-%hr
+
 
 %hr
 
@@ -19,7 +23,7 @@
   %p
   = deck_string.title
   - if policy(deck_string).update?
-    = render 'update_deck_string_form', deck_string: deck_string
+    = render 'update_deck_string_form', deck_string: deck_string, deck: @deck
 
 %hr
 // show only collections that belong to the deck

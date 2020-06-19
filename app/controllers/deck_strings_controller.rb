@@ -1,8 +1,8 @@
 class DeckStringsController < ApplicationController
-  before_action :set_deck, only: %i[update]
+  before_action :set_deck, only: %i[create update]
+  before_action :set_deck_string, only: %i[update]
 
   def create
-    @deck = Deck.find(params[:deck_id])
     @deck_string = DeckString.new(deck_string_params)
     @deck_string.user = current_user
     @deck_string.deck = @deck
@@ -16,7 +16,6 @@ class DeckStringsController < ApplicationController
 
   def update
     @user = current_user
-    @deck_string = DeckString.find(params[:deck_id])
     authorize @deck_string
     if @deck_string.update!(deck_string_params)
       redirect_to deck_path(@deck)
@@ -31,6 +30,10 @@ class DeckStringsController < ApplicationController
   end
 
   def set_deck
-    @deck = Deck.find(params[:id])
+    @deck = Deck.find(params[:deck_id])
+  end
+
+  def set_deck_string
+    @deck_string = DeckString.find(params[:id])
   end
 end
