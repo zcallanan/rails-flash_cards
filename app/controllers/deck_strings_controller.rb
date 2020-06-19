@@ -1,5 +1,18 @@
 class DeckStringsController < ApplicationController
-  before_action :set_deck, only: :update
+  before_action :set_deck, only: %i[update]
+
+  def create
+    @deck = Deck.find(params[:deck_id])
+    @deck_string = DeckString.new(deck_string_params)
+    @deck_string.user = current_user
+    @deck_string.deck = @deck
+    authorize(@deck_string)
+    if @deck_string.save!
+      redirect_to deck_path(@deck)
+    else
+      redirect_to decks_path
+    end
+  end
 
   def update
     @user = current_user

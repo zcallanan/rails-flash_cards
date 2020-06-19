@@ -9,6 +9,10 @@ class DeckStringPolicy < ApplicationPolicy
     end
   end
 
+  def create?
+    user_owns_record? || user_is_admin? || user_can_update?
+  end
+
   def update?
     user_owns_record? || user_is_admin? || user_can_update?
   end
@@ -16,7 +20,7 @@ class DeckStringPolicy < ApplicationPolicy
   private
 
   def user_owns_record?
-    record.deck.user == user
+    record.user == user
   end
 
   def user_is_admin?

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root to: 'pages#home'
   resources :decks, only: %i[index show create update] do
     resources :collections, only: %i[show create]
-    resources :deck_strings, only: %i[update]
+    resources :deck_strings, only: %i[create update]
   end
   resources :user_groups, only: %i[index show create update]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

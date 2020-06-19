@@ -155,13 +155,16 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
     t.string "language"
     t.string "title"
     t.string "description"
+    t.bigint "user_id", null: false
     t.bigint "deck_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_deck_strings_on_deck_id"
+    t.index ["user_id"], name: "index_deck_strings_on_user_id"
   end
 
   create_table "decks", force: :cascade do |t|
+    t.string "default_language"
     t.bigint "user_id", null: false
     t.boolean "global_deck_read", default: false
     t.boolean "archived", default: false
@@ -362,6 +365,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"
+  add_foreign_key "deck_strings", "users"
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"
