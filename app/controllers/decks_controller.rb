@@ -167,7 +167,11 @@ class DecksController < ApplicationController
       else
         # otherwise, return strings of the default language
         object.send(kwargs[:string_type]).each do |string|
-          object_strings << string if string.language == object.send(kwargs[:deck]).default_language
+          if string.language == object.default_language && kwargs[:deck].nil?
+            object_strings << string
+          elsif string.language == object.send(kwargs[:deck]).default_language && !kwargs[:deck].nil?
+            object_strings << string
+          end
         end
       end
     end
@@ -180,8 +184,8 @@ class DecksController < ApplicationController
       :global_deck_read,
       :archived,
       collections_attributes: [collection_strings_attributes:
-        %i[language title description]],
-      deck_strings_attributes: %i[language title description]
+        [:language, :title, :description]],
+      deck_strings_attributes: [:language, :title, :description]
     )
   end
 
