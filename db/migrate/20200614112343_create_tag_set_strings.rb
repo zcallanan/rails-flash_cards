@@ -4,6 +4,7 @@ class CreateTagSetStrings < ActiveRecord::Migration[6.0]
       t.string :title
       t.string :language
       t.string :description
+      t.references :user, null: false, foreign_key: true
       t.references :tag_set, null: false, foreign_key: true
 
       t.timestamps

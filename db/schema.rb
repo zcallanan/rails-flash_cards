@@ -102,10 +102,12 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
     t.string "language"
     t.string "title"
     t.string "description"
+    t.bigint "user_id", null: false
     t.bigint "collection_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["collection_id"], name: "index_collection_strings_on_collection_id"
+    t.index ["user_id"], name: "index_collection_strings_on_user_id"
   end
 
   create_table "collection_tags", force: :cascade do |t|
@@ -205,10 +207,12 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
     t.string "language"
     t.string "title"
     t.string "description"
+    t.bigint "user_id", null: false
     t.bigint "question_set_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_set_id"], name: "index_question_set_strings_on_question_set_id"
+    t.index ["user_id"], name: "index_question_set_strings_on_user_id"
   end
 
   create_table "question_sets", force: :cascade do |t|
@@ -262,10 +266,12 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
     t.string "title"
     t.string "language"
     t.string "description"
+    t.bigint "user_id", null: false
     t.bigint "tag_set_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_set_id"], name: "index_tag_set_strings_on_tag_set_id"
+    t.index ["user_id"], name: "index_tag_set_strings_on_user_id"
   end
 
   create_table "tag_sets", force: :cascade do |t|
@@ -355,6 +361,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   add_foreign_key "collection_permissions", "collections"
   add_foreign_key "collection_permissions", "users"
   add_foreign_key "collection_strings", "collections"
+  add_foreign_key "collection_strings", "users"
   add_foreign_key "collection_tags", "collections"
   add_foreign_key "collection_tags", "tag_sets"
   add_foreign_key "collections", "decks"
@@ -373,6 +380,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   add_foreign_key "question_set_permissions", "question_sets"
   add_foreign_key "question_set_permissions", "users"
   add_foreign_key "question_set_strings", "question_sets"
+  add_foreign_key "question_set_strings", "users"
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
@@ -382,6 +390,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   add_foreign_key "tag_set_permissions", "tag_sets"
   add_foreign_key "tag_set_permissions", "users"
   add_foreign_key "tag_set_strings", "tag_sets"
+  add_foreign_key "tag_set_strings", "users"
   add_foreign_key "tag_sets", "users"
   add_foreign_key "user_group_collections", "collections"
   add_foreign_key "user_group_collections", "user_groups"

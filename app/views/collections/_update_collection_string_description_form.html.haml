@@ -1,7 +1,0 @@
-#collection-description-form{style: 'display: none'}
-  = simple_form_for(collection_string, remote: true, input_html: {id: 'description-form-field'}, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
-    = f.input :description, label: false
-    = f.button :button, id: 'collection-description-submit', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
-      %i{class: "far fa-check-square"}
-
-// Handle case where there is no description

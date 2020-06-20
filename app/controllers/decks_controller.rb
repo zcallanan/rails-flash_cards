@@ -58,7 +58,9 @@ class DecksController < ApplicationController
     @languages = Languages.list
     @deck_string = DeckString.new
     @collection = Collection.new
+    @collection_string = CollectionString.new
     @collection.user = @user # enable view's evaluation of collection policy create?
+    @collection_string.user = @user
     # prepare simple_field usage
     @collection.collection_strings.build
     # TODO: may require a joins to eliminate archived deck data
