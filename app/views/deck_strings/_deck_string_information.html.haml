@@ -1,0 +1,7 @@
+// rendered by decks/show
+%h1{id: 'deck-title'}= deck_string.title
+%i{class: "far fa-edit", id: 'deck-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
+= render 'deck_strings/update_deck_string_title_form', deck_string: deck_string, deck: deck
+%p{id: 'deck-description'}= deck_string.description
+%i{class: "far fa-edit", id: 'deck-des-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
+= render 'deck_strings/update_deck_string_description_form', deck_string: deck_string, deck: deck
