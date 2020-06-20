@@ -1,3 +1,4 @@
+// rendered by decks/show
 = simple_form_for(deck, method: :patch) do |f|
   - if language_options.length == 1
     = f.input :default_language, collection: language_options, disabled: true, hint: 'Add deck information in other languages in order to change this value.'
