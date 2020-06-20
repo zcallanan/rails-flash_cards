@@ -2,10 +2,17 @@
 
 // TODO: create a collection/string upon deck creation.
 // autofill collection title with deck-name's Collection if there is no value in it
+%h3 Create a deck of cards
 = simple_form_for(deck, method: :post, url: decks_path) do |f|
   = f.simple_fields_for :deck_strings do |ds|
-    = ds.input :language, collection: @languages.map { |key, value| [key, value] }
-    = ds.input :title
+    = ds.input :language, collection: @languages.map { |key, value| [key, value] }, hint: 'The initial default language for this deck of cards. Once created, you can change the default setting.'
+    = ds.input :title, placeholder: 'My deck of cards.', hint: 'You can change this title at any time.'
     = ds.input :description
+  %h4 Create a custom collection of cards within your deck
+  = f.simple_fields_for :collections do |c|
+    = c.simple_fields_for :collection_strings do |cs|
+      = cs.input :language, :collection: @languages.map { |key, value| [key, value],  }
+      = cs.input :title
+      = cs.input :description
   = f.input :global_deck_read, as: :boolean, label: 'Allow all users to view this deck of cards?'
   = f.submit class: "btn btn-primary"

@@ -48,6 +48,8 @@ class DecksController < ApplicationController
     @deck = Deck.new
     # prepare simple_field usage
     @deck.deck_strings.build
+    @collection = @deck.collections.build
+    @collection_string = @collection.collection_strings.build
     @languages = Languages.list
   end
 
