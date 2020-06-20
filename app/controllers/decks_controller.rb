@@ -48,6 +48,8 @@ class DecksController < ApplicationController
     @deck = Deck.new
     # prepare simple_field usage
     @deck.deck_strings.build
+    @collection = @deck.collections.build
+    @collection_string = @collection.collection_strings.build
     @languages = Languages.list
   end
 
@@ -103,6 +105,10 @@ class DecksController < ApplicationController
     @user = current_user
     @deck = Deck.new(deck_params)
     @deck.user = @user
+    @deck.deck_strings.first.user = @user
+    @deck.collections.first.user = @user
+    @deck.collections.first.collection_strings.first.user = @user
+    @deck.collections.first.collection_strings.first.user
     authorize @deck
     if @deck.save!
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
@@ -110,6 +116,14 @@ class DecksController < ApplicationController
         deck: @deck,
         user: @user,
         deck_string: @deck.deck_strings.first,
+        read_access: true,
+        update_access: true,
+        clone_access: true
+      )
+      CollectionPermission.create!(
+        collection: @deck.collections.first,
+        user: @user,
+        collection_string: @deck.collections.first.collection_strings.first,
         read_access: true,
         update_access: true,
         clone_access: true
@@ -153,7 +167,11 @@ class DecksController < ApplicationController
       else
         # otherwise, return strings of the default language
         object.send(kwargs[:string_type]).each do |string|
-          object_strings << string if string.language == object.send(kwargs[:deck]).default_language
+          if string.language == object.default_language && kwargs[:deck].nil?
+            object_strings << string
+          elsif string.language == object.send(kwargs[:deck]).default_language && !kwargs[:deck].nil?
+            object_strings << string
+          end
         end
       end
     end
@@ -161,7 +179,14 @@ class DecksController < ApplicationController
   end
 
   def deck_params
-    params.require(:deck).permit(:default_language, :global_deck_read, :archived, deck_strings_attributes: [:language, :title, :description])
+    params.require(:deck).permit(
+      :default_language,
+      :global_deck_read,
+      :archived,
+      collections_attributes: [collection_strings_attributes:
+        [:language, :title, :description]],
+      deck_strings_attributes: [:language, :title, :description]
+    )
   end
 
   def set_deck
