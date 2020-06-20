@@ -27,13 +27,13 @@ import "bootstrap";
 
 // Internal imports, e.g:
 // import { initSelect2 } from '../components/init_select2';
-import { DeckTitleFormInline, DeckDescriptionFormInline, ToggleFormInline } from '../components/inline_forms'
+import { deckFormInline, toggleFormInline, collectionFormInline } from '../components/inline_forms'
 
 document.addEventListener('turbolinks:load', () => {
   // Call your functions here, e.g:
   // initSelect2();
-  DeckTitleFormInline();
-  DeckDescriptionFormInline();
+  deckFormInline();
+  collectionFormInline();
 });
 
 
