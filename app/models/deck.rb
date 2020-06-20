@@ -9,7 +9,8 @@ class Deck < ApplicationRecord
   has_many :cards
   has_many :deck_categories
   has_many :categories, through: :deck_categories
-  accepts_nested_attributes_for :deck_strings, :collections
+  accepts_nested_attributes_for :deck_strings
+  accepts_nested_attributes_for :collections
 
   def owner
     user
