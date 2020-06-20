@@ -1,14 +1,18 @@
 - @deck.deck_strings.each do |string|
   - if string.language == @user.language
     %h1{id: 'deck-title'}= string.title
+    %i{class: "far fa-edit", id: 'deck-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
     = render 'update_deck_string_title_form', deck_string: string, deck: @deck
     %p{id: 'deck-description'}= string.description
+    %i{class: "far fa-edit", id: 'deck-des-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
     = render 'update_deck_string_description_form', deck_string: string, deck: @deck
     - break
   - elsif string.language == @deck.default_language
     %h1{id: 'deck-title'}= string.title
+    %i{class: "far fa-edit", id: 'deck-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
     = render 'update_deck_string_title_form', deck_string: string, deck: @deck
     %p{id: 'deck-description'}= string.description
+    %i{class: "far fa-edit", id: 'deck-des-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
     = render 'update_deck_string_description_form', deck_string: string, deck: @deck
     - break
 

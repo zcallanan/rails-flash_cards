@@ -4,6 +4,7 @@ class CreateQuestionSetStrings < ActiveRecord::Migration[6.0]
       t.string :language
       t.string :title
       t.string :description
+      t.references :user, null: false, foreign_key: true
       t.references :question_set, null: false, foreign_key: true
 
       t.timestamps
