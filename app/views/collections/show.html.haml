@@ -2,8 +2,8 @@
   - if string.language == @user.language
     %h1{id: 'collection-title'}= string.title
     %i{class: "far fa-edit", id: 'collection-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
-    = render 'update_collection_string_title_form', deck: @deck, collection: @collection, collection_string: string
-    %p{id: 'collection_strings/collection-description'}= string.description
+    = render 'collection_strings/update_collection_string_title_form', deck: @deck, collection: @collection, collection_string: string
+    %p{id: 'collection-description'}= string.description
     %i{class: "far fa-edit", id: 'collection-des-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
     = render 'collection_strings/update_collection_string_description_form', deck: @deck, collection: @collection, collection_string: string
     - break

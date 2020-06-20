@@ -22,6 +22,7 @@ class CollectionStringsController < ApplicationController
       redirect_to deck_collection_path(@deck, @collection)
     else
       redirect_to decks_path
+    end
   end
 
   private

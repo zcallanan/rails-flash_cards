@@ -24,7 +24,9 @@ const deckFormInline = () => {
     const deckDesForm = document.getElementById('deck-description-form')
     const desSubmitButton = document.getElementById('deck-description-submit')
     deckT.addEventListener('click', (e) => toggleFormInline(e, deckT, deckTForm, tSubmitButton, deckTEditButton))
+    deckTEditButton.addEventListener('click', (e) => toggleFormInline(e, deckT, deckTForm, tSubmitButton, deckTEditButton))
     deckDes.addEventListener('click', (e) => toggleFormInline(e, deckDes, deckDesForm, desSubmitButton, deckDesEditButton))
+    deckDesEditButton.addEventListener('click', (e) => toggleFormInline(e, deckDes, deckDesForm, desSubmitButton, deckDesEditButton))
     document.body.addEventListener('mousedown', (e) => {
       if (!deckTForm.contains(e.target) && !deckDesForm.contains(e.target)) {
         if (deckTForm.style.display == 'block') {
@@ -49,10 +51,10 @@ const collectionFormInline = () => {
     const collDesEditButton = document.getElementById('collection-des-edit-button')
     const collDesForm = document.getElementById('collection-description-form')
     const collDesSubmitButton = document.getElementById('collection-description-submit')
-    console.log(collTSubmitButton)
-    console.log(collDesSubmitButton)
     collT.addEventListener('click', (e) => toggleFormInline(e, collT, collTForm, collTSubmitButton, collTEditButton))
+    collTEditButton.addEventListener('click', (e) => toggleFormInline(e, collT, collTForm, collTSubmitButton, collTEditButton))
     collDes.addEventListener('click', (e) => toggleFormInline(e, collDes, collDesForm, collDesSubmitButton, collDesEditButton))
+    collDesEditButton.addEventListener('click', (e) => toggleFormInline(e, collDes, collDesForm, collDesSubmitButton, collDesEditButton))
     document.body.addEventListener('mousedown', (e) => {
       if (!collTForm.contains(e.target) && !collDesForm.contains(e.target)) {
         if (collTForm.style.display == 'block') {
