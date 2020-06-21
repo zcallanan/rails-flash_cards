@@ -44,6 +44,6 @@ class UserGroupPolicy < ApplicationPolicy
 
   def user_can_update?
     # check if user can make updates to the collection
-    record.memberships.where(user_id: user.id, user_group_id: record.id, update_access: true).present?
+    record.memberships.where(user_id: user.id, user_group_id: record.id, read_access: true, update_access: true).present?
   end
 end

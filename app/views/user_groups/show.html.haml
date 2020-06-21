@@ -1,0 +1,33 @@
+%table
+  %thead
+    %tr
+      %th Label
+      %th Contact Email
+      %th Status
+      %th View Access
+      %th Update Access
+      %th
+  %tbody
+    %tr
+      - if policy(@membership).create?
+        = simple_form_for(@membership, method: :post, url: user_group_memberships_path(@user_group)) do |f|
+          %td= f.input :email_contact, label: false, placeholder: 'Another user\'s registered email'
+          %td= f.input :user_label, label: false
+          %td
+          %td= f.input :read_access, label: false
+          %td= f.input :update_access, label: false
+          %td= f.submit 'Add User', class: "btn btn-primary", id: 'membership-submit'
+    %tr
+      %td{class: 'owner-user-label'}= @owner.user_label
+      %td{class: 'owner-email-contact'}= @owner.email_contact
+      %td{class: 'owner-status'}= @owner.status
+      %td{class: 'owner-read-access'}= @owner.read_access
+      %td{class: 'owner-update-access'}= @owner.update_access
+    - @members.each_with_index do |member, index|
+      - if index > 0
+        %tr
+          %td{id: 'user-label'}= member.user_label
+          %td{id: 'status'}= member.status
+          %td{id: 'read-access'}= member.read_access
+          %td{id: 'update-access'}= member.update_access
+

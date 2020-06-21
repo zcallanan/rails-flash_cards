@@ -4,8 +4,9 @@ class UserGroupsController < ApplicationController
   def index
     @user = current_user
     @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
-    @user_groups_read = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }).where.not(user: @user).distinct
-    @user_groups_update = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }).where.not(user: @user).distinct
+    @user_groups_read = @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where('memberships.user_id = ? AND memberships.read_access = ? AND memberships.update_access = ? AND decks.archived = ? AND user_groups.user_id != ?', @user.id, true, false, false, @user.id).distinct
+    @user_groups_update = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }, decks: { archived: false }).where.not(user: @user).distinct
+
     @user_group = UserGroup.new
     # prepare simple_field usage
     @user_group.decks.build
@@ -18,7 +19,21 @@ class UserGroupsController < ApplicationController
     @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'deck')
   end
 
-  def show; end
+  def show
+    # build a list of all members, owner first, in view should not be able to edit that row
+    memberships = Membership.all.where(user_group: @user_group)
+    @members = []
+    memberships.each do |member|
+      if member.user_id == @user_group.user.id && member.owner_id == member.user_id
+        @owner = member
+        @members << @owner
+      end
+    end
+    memberships.each { |member| @members << member unless member.user_id == @user_group.user.id }
+    @membership = Membership.new
+    @membership.user = current_user
+    @membership.user_group = @user_group
+  end
 
   def create
     @user_group = UserGroup.new(user_group_params)
@@ -26,10 +41,10 @@ class UserGroupsController < ApplicationController
 
     if @user_group.save
       Membership.create!(
-        user: current_user,
+        owner_id: current_user,
         user_group: @user_group,
-        user_label: "Group Owner",
-        confirmed: true,
+        user_label: 'Group Owner',
+        status: 'Managing Owner',
         read_access: true,
         update_access: true
       )
@@ -63,18 +78,16 @@ class UserGroupsController < ApplicationController
       object.send(method).each do |string|
         next if object_list.flatten.include?(object.id)
 
-        if string.language == user.language # if the object has a string with the user's preferred language
+        if string.language == user.language && user.id == string.user_id # if the object has a string with the user's preferred language
           object_list << [string.title, object.id]
-          break
-        elsif deck_string.nil? # if the object is a deck, choose the deck_string with the deck's default language
+        elsif deck_string.nil? && user.id == string.user_id # if the object is a deck, choose the deck_string with the deck's default language
           object_list << [string.title, object.id] if string.language == object.default_language
-          break
-        elsif !deck_string.nil? # if the object is  not a deck, choose the string with the deck's default language
+        elsif !deck_string.nil? && user.id == string.user_id # if the object is  not a deck, choose the string with the deck's default language
           object_list << [string.title, object.id] if string.language == object.send(deck_string).default_language
-          break
         end
       end
     end
     object_list
   end
 end
+
