@@ -63,15 +63,12 @@ class UserGroupsController < ApplicationController
       object.send(method).each do |string|
         next if object_list.flatten.include?(object.id)
 
-        if string.language == user.language # if the object has a string with the user's preferred language
+        if string.language == user.language && user.id == string.user_id # if the object has a string with the user's preferred language
           object_list << [string.title, object.id]
-          break
-        elsif deck_string.nil? # if the object is a deck, choose the deck_string with the deck's default language
+        elsif deck_string.nil? && user.id == string.user_id # if the object is a deck, choose the deck_string with the deck's default language
           object_list << [string.title, object.id] if string.language == object.default_language
-          break
-        elsif !deck_string.nil? # if the object is  not a deck, choose the string with the deck's default language
+        elsif !deck_string.nil? && user.id == string.user_id # if the object is  not a deck, choose the string with the deck's default language
           object_list << [string.title, object.id] if string.language == object.send(deck_string).default_language
-          break
         end
       end
     end
