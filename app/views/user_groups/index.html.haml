@@ -1,5 +1,23 @@
-- @user_groups.each do |user_group|
+%h3 User Groups owned
+- @user_groups_owned.each do |user_group|
   %p
   = link_to user_group.name, user_group_path(user_group)
 
+%hr
+
+%h3 User Groups you can view
+- @user_groups_read.each do |user_group|
+  %p
+  = link_to user_group.name, user_group_path(user_group)
+
+%hr
+
+%h3 User Groups you can view and update
+- @user_groups_update.each do |user_group|
+  %p
+  = link_to user_group.name, user_group_path(user_group)
+
+%hr
+
+%h3 Create a User Group
 = render 'create_form', user_group: @user_group

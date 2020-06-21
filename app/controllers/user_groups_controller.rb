@@ -3,17 +3,19 @@ class UserGroupsController < ApplicationController
 
   def index
     @user = current_user
-    @user_groups = policy_scope(UserGroup)
+    @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
+    @user_groups_read = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }).where.not(user: @user).distinct
+    @user_groups_update = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }).where.not(user: @user).distinct
     @user_group = UserGroup.new
     # prepare simple_field usage
     @user_group.decks.build
     @user_group.collections.build
     @user_group.question_sets.build
     # generate option arrays for form fields
-    @deck_select = select_options(@user, 'decks', 'deck_strings', 'deck_id')
-    @collection_select = select_options(@user, 'collections', 'collection_strings', 'collection_id')
-    @question_set_select = select_options(@user, 'question_sets', 'question_set_strings', 'question_set_id')
-    @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'tag_set_id')
+    @deck_select = select_options(@user, 'decks', 'deck_strings')
+    @collection_select = select_options(@user, 'collections', 'collection_strings', 'deck')
+    @question_set_select = select_options(@user, 'question_sets', 'question_set_strings', 'deck')
+    @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'deck')
   end
 
   def show; end
@@ -54,34 +56,25 @@ class UserGroupsController < ApplicationController
     params.require(:user_group).permit(:name, deck_ids: [], collection_ids: [], question_set_ids: [])
   end
 
-  def generate_options(object_list, id_string)
-    # returns an array of object titles for select form fields
-    num_id = 0
-    array = []
-    chars = ''
-    string_obj = nil
-    object_list.each_with_index do |string, index|
-      if num_id.zero?
-        chars = string.title
-        num_id = string.send(id_string)
-        string_obj = string
-      elsif num_id == string.send(id_string)
-        chars += " | #{string.title}"
-      elsif num_id != string.send(id_string)
-        array << [chars, string_obj.send(id_string)]
-        string_obj = string
-        chars = string.title
-        num_id = string.send(id_string)
-      end
-      array << [chars, string.send(id_string)] if index == object_list.length - 1
-    end
-    array
-  end
-
-  def select_options(user, objects, method, id_string)
+  def select_options(user, objects, method, deck_string = nil)
     # objects ~ decks, method ~ deck_strings, id_string ~ deck_id
     object_list = []
-    user.send(objects).each { |object| object.send(method).each { |string| object_list << string } }
-    generate_options(object_list, id_string)
+    user.send(objects).each do |object|
+      object.send(method).each do |string|
+        next if object_list.flatten.include?(object.id)
+
+        if string.language == user.language # if the object has a string with the user's preferred language
+          object_list << [string.title, object.id]
+          break
+        elsif deck_string.nil? # if the object is a deck, choose the deck_string with the deck's default language
+          object_list << [string.title, object.id] if string.language == object.default_language
+          break
+        elsif !deck_string.nil? # if the object is  not a deck, choose the string with the deck's default language
+          object_list << [string.title, object.id] if string.language == object.send(deck_string).default_language
+          break
+        end
+      end
+    end
+    object_list
   end
 end

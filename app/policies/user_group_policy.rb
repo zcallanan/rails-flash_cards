@@ -4,11 +4,8 @@ class UserGroupPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user
-        # user has read access
-        scope.joins(:memberships).where({ memberships: { user_id: user.id, read_access: true } })
-      elsif user
-        # owner of that user_group
-        scope.where(user_id: user.id)
+        # user has read access or user is owner
+        scope.joins(users: :memberships).where('memberships.user_id = ? AND memberships.read_access = ? OR user_groups.user_id = ?', user.id, true, user.id).distinct
       end
     end
   end

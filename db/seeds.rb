@@ -25,7 +25,7 @@ def generate_permissions(value, string_hash, user, deck, collection, question_se
     collection_hash = { user: user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true }
     question_set_hash = { user: user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true }
     tag_set_hash = { user: user, tag_set: tag_set, tag_set_string: string_hash[language][3], language: language, read_access: true } unless tag_set.nil?
-    user_group_hash = { user: user, user_group: user_group, read_access: true } unless user_group.nil?
+    user_group_hash = { user: user, user_group: user_group, user_label: "friend #{(1..50).to_a.sample}", read_access: true } unless user_group.nil?
     if value == 'update'
       deck_hash[:update_access] = true
       collection_hash[:update_access] = true
@@ -82,7 +82,7 @@ languages = [:en, :fr]
     n <= 14 ? deck = Deck.create!(user: user, default_language: language) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true)
     collection = Collection.create!(user: user, deck: deck)
     question_set = QuestionSet.create!(user: user, deck: deck)
-    tag_set = TagSet.create!(user: user)
+    tag_set = TagSet.create!(user: user, deck: deck)
     string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
@@ -90,7 +90,7 @@ languages = [:en, :fr]
     CollectionPermission.create!(user: user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true, update_access: true, clone_access: true)
     QuestionSetPermission.create!(user: user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true, update_access: true, clone_access: true)
     TagSetPermission.create!(user: user, tag_set: tag_set, tag_set_string: string_hash[language][3], language: language, read_access: true, update_access: true)
-    Membership.create!(user: user, user_group: user_group, read_access: true, update_access: true)
+    Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', read_access: true, update_access: true)
     if User.count > 10 # prevent the same user getting multiple permissions on the same deck et al.
       go = 0
       while go <= 2

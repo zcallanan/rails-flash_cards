@@ -177,9 +177,9 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
 
   create_table "memberships", force: :cascade do |t|
     t.string "user_label"
-    t.boolean "confirmed"
-    t.boolean "read_access"
-    t.boolean "update_access"
+    t.boolean "confirmed", default: false
+    t.boolean "read_access", default: false
+    t.boolean "update_access", default: false
     t.bigint "user_id"
     t.bigint "user_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -276,8 +276,10 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
 
   create_table "tag_sets", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.bigint "deck_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["deck_id"], name: "index_tag_sets_on_deck_id"
     t.index ["user_id"], name: "index_tag_sets_on_user_id"
   end
 
@@ -391,6 +393,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
   add_foreign_key "tag_set_permissions", "users"
   add_foreign_key "tag_set_strings", "tag_sets"
   add_foreign_key "tag_set_strings", "users"
+  add_foreign_key "tag_sets", "decks"
   add_foreign_key "tag_sets", "users"
   add_foreign_key "user_group_collections", "collections"
   add_foreign_key "user_group_collections", "user_groups"
