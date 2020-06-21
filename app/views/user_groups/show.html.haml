@@ -1,0 +1,30 @@
+%table
+  %thead
+    %tr
+      %th Label
+      %th Contact Email
+      %th Status
+      %th View Access
+      %th Update Access
+  %tbody
+    %tr
+      %td= @members.first.user_label
+      %td= @members.first.email_contact
+      %td= @members.first.status
+      %td Yes
+      %td Yes
+    - @members.each_with_index do |member, index|
+      - if index > 0
+        %tr
+          %td= member.user_label
+          %td= member.email_contact
+          %td= member.status
+          - if member.read_access == true
+            %td Yes
+          - else
+            %td No
+          - if member.update_access == true
+            %td Yes
+          - else
+            %td No
+

@@ -19,7 +19,15 @@ class UserGroupsController < ApplicationController
     @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'deck')
   end
 
-  def show; end
+  def show
+    # build a list of all members, owner first, in view should not be able to edit that row
+    memberships = Membership.all.where(user_group: @user_group)
+    owner = Membership.find(@user_group.user.id)
+    @members = []
+    @members << owner
+    memberships.each { |member| @members << member if member.user_id != @user_group.user.id }
+
+  end
 
   def create
     @user_group = UserGroup.new(user_group_params)
