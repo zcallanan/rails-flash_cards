@@ -26,7 +26,7 @@ class UserGroupsController < ApplicationController
     @members = []
     @members << owner
     memberships.each { |member| @members << member if member.user_id != @user_group.user.id }
-
+    @membership = Membership.new
   end
 
   def create

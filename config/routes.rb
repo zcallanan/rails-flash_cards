@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       #patch 'collection_strings/:id', to: 'collection_strings#update', as: :collection_string_update
     resources :deck_strings, only: %i[create update]
   end
-  resources :user_groups, only: %i[index show create update]
+  resources :user_groups, only: %i[index show create update] do
+    resources :memberships, only: %i[create update]
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
