@@ -2,7 +2,8 @@ class CreateMemberships < ActiveRecord::Migration[6.0]
   def change
     create_table :memberships do |t|
       t.string :user_label
-      t.boolean :confirmed, default: false
+      t.string :email_contact
+      t.string :status, default: 'Invited'
       t.boolean :read_access, default: false
       t.boolean :update_access, default: false
       t.references :user, foreign_key: true

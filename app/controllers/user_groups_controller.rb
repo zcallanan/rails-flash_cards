@@ -4,8 +4,9 @@ class UserGroupsController < ApplicationController
   def index
     @user = current_user
     @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
-    @user_groups_read = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }).where.not(user: @user).distinct
-    @user_groups_update = policy_scope(UserGroup).joins(:memberships).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }).where.not(user: @user).distinct
+    @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }, decks: { archived: false }).where.not(user: @user).distinct
+    @user_groups_update = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }, decks: { archived: false }).where.not(user: @user).distinct
+
     @user_group = UserGroup.new
     # prepare simple_field usage
     @user_group.decks.build
@@ -28,8 +29,8 @@ class UserGroupsController < ApplicationController
       Membership.create!(
         user: current_user,
         user_group: @user_group,
-        user_label: "Group Owner",
-        confirmed: true,
+        user_label: 'Group Owner',
+        status: 'Managing Owner',
         read_access: true,
         update_access: true
       )
