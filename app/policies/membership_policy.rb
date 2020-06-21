@@ -11,7 +11,7 @@ class MembershipPolicy < ApplicationPolicy
   end
 
   def create?
-    user_owns_record? || user_is_admin? || user_can_update?
+    user_owns_record? || user_is_admin? || user_owns_record? || user_is_owner?
   end
 
   def update?
@@ -21,7 +21,13 @@ class MembershipPolicy < ApplicationPolicy
   private
 
   def user_owns_record?
+    # for the new case
     record.user == user
+  end
+
+  def user_is_owner?
+    # for the create case
+    record.owner_id == user.id
   end
 
   def user_is_admin?
@@ -36,6 +42,6 @@ class MembershipPolicy < ApplicationPolicy
 
   def user_can_update?
     # check if user can make updates to the collection
-    record.memberships.where(user_id: user.id, read_access: true, update_access: true).present?
+    record.where(user_id: user.id, read_access: true, update_access: true).present?
   end
 end

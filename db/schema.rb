@@ -177,10 +177,11 @@ ActiveRecord::Schema.define(version: 2020_06_16_113510) do
 
   create_table "memberships", force: :cascade do |t|
     t.string "user_label"
-    t.string "email_contact", default: "-"
+    t.string "email_contact"
     t.string "status", default: "Invited"
     t.boolean "read_access", default: false
     t.boolean "update_access", default: false
+    t.integer "owner_id"
     t.bigint "user_id"
     t.bigint "user_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
