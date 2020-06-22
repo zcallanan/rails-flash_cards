@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :user_groups, only: [ :show ] do
-        resources :memberships, only: [ :create ]
+        resources :memberships, only: %i[ create update ]
       end
     end
   end

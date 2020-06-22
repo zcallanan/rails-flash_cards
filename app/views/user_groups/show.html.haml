@@ -9,6 +9,18 @@
       %th
   %tbody{id: 'membership-table'}
     %tr
+      %td
+      %td
+      %td
+      %td
+        %input{type: 'checkbox', name: 'read-access-all', id: 'read-access-all'}
+        %label{for: 'read-access-all'} Select All
+      %td
+        %input{type: 'checkbox', name: 'update-access-all', id: 'update-access-all'}
+        %label{for: 'update-access-all'} Select All
+      %td
+        %button{class: 'btn btn-primary', id: 'update-all-permissions'} Update All Permissions
+    %tr
       - if policy(@membership).create?
         = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
     %tr{id: 'owner-row'}
