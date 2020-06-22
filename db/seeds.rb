@@ -81,7 +81,8 @@ x = 0
 languages = [:en, :fr]
 
 15.times do
-  user = User.create!(email: "z#{n}@example.com", password: 'secret', language: languages.sample)
+  email = "pups#{n}@example.com"
+  user = User.create!(email: email, password: 'secret', language: languages.sample)
   n += 1
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true)
@@ -95,7 +96,7 @@ languages = [:en, :fr]
     CollectionPermission.create!(user: user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true, update_access: true, clone_access: true)
     QuestionSetPermission.create!(user: user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true, update_access: true, clone_access: true)
     TagSetPermission.create!(user: user, tag_set: tag_set, tag_set_string: string_hash[language][3], language: language, read_access: true, update_access: true)
-    Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', status: 'Managing Group', owner_id: user.id, read_access: true, update_access: true)
+    Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', status: 'Managing Group', owner_id: user.id, email_contact: email, read_access: true, update_access: true)
     if User.count > 8
       generate_permissions('read', string_hash, user, deck, collection, question_set, tag_set, user_group)
       generate_permissions('update', string_hash, user, deck, collection, question_set, tag_set, user_group)

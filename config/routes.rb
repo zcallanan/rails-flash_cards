@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' } # custom devise registration
+
   root to: 'pages#home'
   resources :decks, only: %i[index show create update] do
     resources :collections, only: %i[show create] do
@@ -9,7 +10,14 @@ Rails.application.routes.draw do
     resources :deck_strings, only: %i[create update]
   end
   resources :user_groups, only: %i[index show create update] do
-    resources :memberships, only: %i[create update]
+    resources :memberships, only: %i[update]
+  end
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :user_groups, only: [ :show ] do
+        resources :memberships, only: [ :create ]
+      end
+    end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

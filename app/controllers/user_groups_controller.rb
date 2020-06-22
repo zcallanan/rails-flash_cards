@@ -4,7 +4,7 @@ class UserGroupsController < ApplicationController
   def index
     @user = current_user
     @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
-    @user_groups_read = @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where('memberships.user_id = ? AND memberships.read_access = ? AND memberships.update_access = ? AND decks.archived = ? AND user_groups.user_id != ?', @user.id, true, false, false, @user.id).distinct
+    @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }, decks: { archived: false }).where.not(user: @user).distinct
     @user_groups_update = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }, decks: { archived: false }).where.not(user: @user).distinct
 
     @user_group = UserGroup.new
@@ -21,7 +21,7 @@ class UserGroupsController < ApplicationController
 
   def show
     # build a list of all members, owner first, in view should not be able to edit that row
-    memberships = Membership.all.where(user_group: @user_group)
+    memberships = Membership.all.where(user_group: @user_group).order("created_at DESC")
     @members = []
     memberships.each do |member|
       if member.user_id == @user_group.user.id && member.owner_id == member.user_id
@@ -30,9 +30,9 @@ class UserGroupsController < ApplicationController
       end
     end
     memberships.each { |member| @members << member unless member.user_id == @user_group.user.id }
+
     @membership = Membership.new
-    @membership.user = current_user
-    @membership.user_group = @user_group
+    @membership.user = current_user if @user_group.user == current_user
   end
 
   def create

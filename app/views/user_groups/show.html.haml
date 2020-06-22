@@ -7,28 +7,15 @@
       %th View Access
       %th Update Access
       %th
-  %tbody
+  %tbody{id: 'membership-table'}
     %tr
       - if policy(@membership).create?
-        = simple_form_for(@membership, method: :post, url: user_group_memberships_path(@user_group)) do |f|
-          %td= f.input :email_contact, label: false, placeholder: 'annie@example.com'
-          %td= f.input :user_label, label: false, placeholder: 'Label for the invited user.'
-          %td
-          %td= f.input :read_access, label: false
-          %td= f.input :update_access, label: false
-          %td= f.submit 'Add User', class: "btn btn-primary", id: 'membership-submit'
-    %tr
+        = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
+    %tr{id: 'owner-row'}
       %td
       %td{class: 'owner-user-label'}= @owner.user_label
       %td{class: 'owner-status'}= @owner.status
       %td{class: 'owner-read-access'}= @owner.read_access
       %td{class: 'owner-update-access'}= @owner.update_access
-    - @members.each_with_index do |member, index|
-      - if index > 0
-        %tr
-          %td
-          %td{id: 'user-label'}= member.user_label
-          %td{id: 'status'}= member.status
-          %td{id: 'read-access'}= member.read_access
-          %td{id: 'update-access'}= member.update_access
+    = render 'memberships/membership_table', members: @members
 

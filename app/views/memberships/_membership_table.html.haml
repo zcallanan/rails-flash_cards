@@ -1,0 +1,8 @@
+- members.each_with_index do |member, index|
+  - if index > 0
+    %tr
+      %td
+      %td{id: 'user-label'}= member.user_label
+      %td{id: 'status'}= member.status
+      %td{id: 'read-access'}= member.read_access
+      %td{id: 'update-access'}= member.update_access

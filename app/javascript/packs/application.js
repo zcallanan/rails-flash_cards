@@ -27,7 +27,10 @@ import "bootstrap";
 
 // Internal imports, e.g:
 // import { initSelect2 } from '../components/init_select2';
+
+import '../utils/fetch_with_token'
 import { deckFormInline, toggleFormInline, collectionFormInline } from '../components/inline_forms'
+import '../components/user_group_update_show_table'
 
 document.addEventListener('turbolinks:load', () => {
   // Call your functions here, e.g:
