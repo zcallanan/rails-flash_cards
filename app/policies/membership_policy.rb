@@ -11,7 +11,8 @@ class MembershipPolicy < ApplicationPolicy
   end
 
   def create?
-    user_owns_record? || user_is_admin? || user_owns_record? || user_is_owner?
+    user_owns_record? || user_is_admin? || user_is_owner?
+
   end
 
   def update?
