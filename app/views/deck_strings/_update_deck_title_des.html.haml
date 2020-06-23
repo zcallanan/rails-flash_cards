@@ -1,0 +1,10 @@
+// rendered by decks/show
+- if policy(deck_string).update?
+  #deck-inline-form{style: 'display: none', 'data-target' => 'deck-string-inline.div'}
+    = simple_form_for(deck_string, remote: true, url: api_v1_deck_deck_string_path(deck, deck_string)) do |f|
+      = f.input :title, label: false, input_html: { data: { target: 'deck-string-inline.title' } }
+      = f.input :description, label: false, input_html: { data: { target: 'deck-string-inline.description'  } }
+      = f.button :button, 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
+        %i{class: "far fa-check-square", id: 'deck-inline-submit', 'data-deck_id' => deck.id,'data-id' => deck_string.id, 'data-target' => 'deck-string-inline.submit', 'data-action' => 'click->deck-string-inline#dsubmit',}
+
+// TODO: Handle case where there is no description

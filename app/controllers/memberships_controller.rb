@@ -1,15 +1,15 @@
 class MembershipsController < ApplicationController
-  before_action :set_user_group, only: %i[update]
-  before_action :set_membership, only: %i[update]
+  # before_action :set_user_group, only: %i[update]
+  # before_action :set_membership, only: %i[update]
 
-  def update
-    authorize @membership
-    if @membership.update!(membership_params)
-      redirect_to user_group_path(@user_group)
-    else
-      redirect_to user_groups_path
-    end
-  end
+  # def update
+  #   authorize @membership
+  #   if @membership.update!(membership_params)
+  #     redirect_to user_group_path(@user_group)
+  #   else
+  #     redirect_to user_groups_path
+  #   end
+  # end
 
   private
 

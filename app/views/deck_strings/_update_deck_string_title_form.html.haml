@@ -1,7 +1,0 @@
-// rendered by decks/show
-- if policy(deck_string).update?
-  #deck-title-form{style: 'display: none'}
-    = simple_form_for(deck_string, remote: true, input_html: { id: 'title-form-field' }, url: deck_deck_string_path(deck, deck_string)) do |f|
-      = f.input :title, label: false
-      = f.button :button, id: 'deck-title-submit', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
-        %i{class: "far fa-check-square"}

@@ -1,6 +1,7 @@
 class Api::V1::MembershipsController < Api::V1::BaseController
-  acts_as_token_authentication_handler_for User # , except: [ :index, :show ]
-  before_action :set_user_group, only: %i[create]
+  acts_as_token_authentication_handler_for User
+  before_action :set_user_group, only: %i[create update]
+  before_action :set_membership, only: %i[update]
 
   def create
     @membership = Membership.new(membership_params)
@@ -41,6 +42,15 @@ class Api::V1::MembershipsController < Api::V1::BaseController
     end
   end
 
+  def update
+    authorize @membership
+    if @membership.update!(membership_params)
+      redirect_to user_group_path(@user_group)
+    else
+      redirect_to user_groups_path
+    end
+  end
+
   private
 
   def membership_params
@@ -49,6 +59,10 @@ class Api::V1::MembershipsController < Api::V1::BaseController
 
   def set_user_group
     @user_group = UserGroup.find(params[:user_group_id])
+  end
+
+  def set_membership
+    @membership = Membership.find(params[:id])
   end
 
   def render_error

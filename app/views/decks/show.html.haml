@@ -1,47 +1,49 @@
-- @deck.deck_strings.each do |deck_string|
-  - if deck_string.language == @user.language
-    = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
-    - break
-  - elsif deck_string.language == @deck.default_language
-    = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
-    - break
+#deck-string-information{'data-controller' => 'deck-string-inline'}
+  #deck-click-out{ 'data-action' => 'click->deck-string-inline#dclickout' }
+    - @deck.deck_strings.each do |deck_string|
+      - if deck_string.language == @user.language
+        = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
+        - break
+      - elsif deck_string.language == @deck.default_language
+        = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
+        - break
 
-%hr
+    %hr
 
-- if policy(@deck).update?
-  = render 'update_deck_form', deck: @deck, language_options: @language_options, deck_string: @deck_string
+    - if policy(@deck).update?
+      = render 'update_deck_form', deck: @deck, language_options: @language_options, deck_string: @deck_string
 
-%hr
-- @deck_strings.each do |deck_string|
-  %p
-  = deck_string.title
-  - if policy(deck_string).update?
-    = render 'deck_strings/update_deck_string_form', deck_string: deck_string, deck: @deck
+    %hr
+    - @deck_strings.each do |deck_string|
+      %p
+      = deck_string.title
+      - if policy(deck_string).update?
+        = render 'deck_strings/update_deck_string_form', deck_string: deck_string, deck: @deck
 
-%hr
-// show only collections that belong to the deck
-%h3 Deck Collections
-%ul
+    %hr
+    // show only collections that belong to the deck
+    %h3 Deck Collections
+    %ul
 
-- @collections_owned_strings. each do |string|
-  - if @deck.id == string.collection.deck_id
-    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+    - @collections_owned_strings. each do |string|
+      - if @deck.id == string.collection.deck_id
+        %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
 
-%hr
-%h3 Shared collections you can view
-%ul
-- @collections_read_strings.each do |string|
-  - if @deck.id == string.collection.deck_id
-    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+    %hr
+    %h3 Shared collections you can view
+    %ul
+    - @collections_read_strings.each do |string|
+      - if @deck.id == string.collection.deck_id
+        %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
 
-%hr
-%h3 Shared collections you can view & update
-%ul
-- @collections_update_strings.each do |string|
-  - if @deck.id == string.collection.deck_id
-    %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
+    %hr
+    %h3 Shared collections you can view & update
+    %ul
+    - @collections_update_strings.each do |string|
+      - if @deck.id == string.collection.deck_id
+        %li= link_to string.title, deck_collection_path(string.collection.deck, string.collection)
 
-%hr
-// check if the user has a right to create a collection
-- if policy(@collection).create?
-  = render 'collections/create_collection_form', deck: @deck, collection: @collection
+    %hr
+    // check if the user has a right to create a collection
+    - if policy(@collection).create?
+      = render 'collections/create_collection_form', deck: @deck, collection: @collection

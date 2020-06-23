@@ -1,0 +1,8 @@
+// rendered by collection_strings/collection_string_information
+- if policy(collection_string).update?
+  #collection-string-inline-form{style: 'display: none'}
+    = simple_form_for(collection_string, remote: true, input_html: {id: 'collection-string-inline-form'}, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
+      = f.input :title, label: false
+      = f.input :description, label: false
+      = f.button :button, id: 'collection-description-submit', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
+        %i{class: "far fa-check-square"}

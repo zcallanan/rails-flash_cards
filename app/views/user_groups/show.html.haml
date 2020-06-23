@@ -1,21 +1,34 @@
-%table
-  %thead
-    %tr
-      %th Contact Email
-      %th Label
-      %th Status
-      %th View Access
-      %th Update Access
-      %th
-  %tbody{id: 'membership-table'}
-    %tr
-      - if policy(@membership).create?
-        = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
-    %tr{id: 'owner-row'}
-      %td
-      %td{class: 'owner-user-label'}= @owner.user_label
-      %td{class: 'owner-status'}= @owner.status
-      %td{class: 'owner-read-access'}= @owner.read_access
-      %td{class: 'owner-update-access'}= @owner.update_access
-    = render 'memberships/membership_table', members: @members
+#table-body{'data-controller' => 'user-group-table' }
+  %table
+    %thead
+      %tr
+        %th Contact Email
+        %th Label
+        %th Status
+        %th View Access
+        %th Update Access
+        %th
+          %tbody{id: 'membership-table'}
+            %tr
+              %td
+              %td
+              %td
+              %td
+                %input{type: 'checkbox', name: 'read-access-all', id: 'read-access-all'}
+                %label{for: 'read-access-all'} Select All
+              %td
+                %input{type: 'checkbox', name: 'update-access-all', id: 'update-access-all'}
+                %label{for: 'update-access-all'} Select All
+              %td
+                %button{class: 'btn btn-primary', id: 'update-all-permissions'} Update All Permissions
+            %tr
+              - if policy(@membership).create?
+                = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
+            %tr{id: 'owner-row', 'data-target' => 'user-group-table.owner'}
+              %td
+              %td{class: 'owner-user-label'}= @owner.user_label
+              %td{class: 'owner-status'}= @owner.status
+              %td{class: 'owner-read-access'}= @owner.read_access
+              %td{class: 'owner-update-access'}= @owner.update_access
+            = render 'memberships/membership_table', members: @members
 
