@@ -6,6 +6,7 @@
 */
 
 import { fetch_with_token } from '../utils/fetch_with_token.js';
+
 // Select the update all elements.
 // const selectAllRead = document.getElementById('read-access-all');
 // const selectAllUpdate = document.getElementById('update-access-all');

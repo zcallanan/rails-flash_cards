@@ -25,19 +25,22 @@ require("channels")
 // External imports
 import "bootstrap";
 
+
 // Internal imports, e.g:
 // import { initSelect2 } from '../components/init_select2';
 
 import { fetchWithToken } from '../utils/fetch_with_token'
-import '../components/user_group_update_all'
-import { deckFormInline, toggleFormInline, collectionFormInline } from '../components/inline_forms'
-import '../components/user_group_update_show_table'
+// import '../components/user_group_update_all'
+// import '../components/inline_forms'
+// import '../components/user_group_update_show_table'
+// import '../components/deck_inline_forms.js'
+
 
 document.addEventListener('turbolinks:load', () => {
   // Call your functions here, e.g:
   // initSelect2();
-  deckFormInline();
-  collectionFormInline();
 });
+
+import "controllers"
 
 

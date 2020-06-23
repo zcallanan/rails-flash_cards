@@ -1,7 +1,7 @@
 = simple_form_for(membership, method: :post, url: api_v1_user_group_memberships_path(@user_group)) do |f|
-  %td= f.input :email_contact, label: false, placeholder: 'annie@example.com'
-  %td= f.input :user_label, label: false, placeholder: 'Label for the invited user.'
+  %td= f.input :email_contact, label: false, placeholder: 'annie@example.com', input_html: { data: { target: 'user-group-table.contact' } }
+  %td= f.input :user_label, label: false, placeholder: 'Label for the invited user.', input_html: { data: { target: 'user-group-table.label' } }
   %td
-  %td= f.input :read_access, id: 'test', label: false, as: :boolean
-  %td= f.input :update_access, label: false, as: :boolean
-  %td= f.submit 'Add User', class: "btn btn-primary", id: 'membership-submit', data: {id: "#{user_group.id}" }
+  %td= f.input :read_access, id: 'test', label: false, as: :boolean, input_html: { data: { target: 'user-group-table.read' } }
+  %td= f.input :update_access, label: false, as: :boolean, input_html: { data: { target: 'user-group-table.update' } }
+  %td= f.submit 'Add User', class: "btn btn-primary", id: 'membership-submit', 'data-action' => 'click->user-group-table#membership', data: {id: "#{user_group.id}" }

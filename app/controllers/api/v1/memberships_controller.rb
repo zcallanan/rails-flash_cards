@@ -1,5 +1,5 @@
 class Api::V1::MembershipsController < Api::V1::BaseController
-  acts_as_token_authentication_handler_for User # , except: [ :index, :show ]
+  acts_as_token_authentication_handler_for User
   before_action :set_user_group, only: %i[create update]
   before_action :set_membership, only: %i[update]
 

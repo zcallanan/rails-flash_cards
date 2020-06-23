@@ -6,7 +6,6 @@ Rails.application.routes.draw do
     resources :collections, only: %i[show create] do
       resources :collection_strings, only: %i[update]
     end
-      #patch 'collection_strings/:id', to: 'collection_strings#update', as: :collection_string_update
     resources :deck_strings, only: %i[create update]
   end
   resources :user_groups, only: %i[index show create update] do
@@ -14,8 +13,14 @@ Rails.application.routes.draw do
   end
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      resources :decks, only: %i[update] do
+        resources :collections, only: %i[create] do
+          resources :collection_strings, only: %i[update]
+        end
+        resources :deck_strings, only: %i[show create update]
+      end
       resources :user_groups, only: [ :show ] do
-        resources :memberships, only: %i[ create update ]
+        resources :memberships, only: %i[create update]
       end
     end
   end

@@ -3,5 +3,5 @@
   #collection-title-form{style: 'display: none'}
     = simple_form_for(collection_string, remote: true, input_html: {id: 'title-form-field'}, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
       = f.input :title, label: false
-      = f.button :button, id: 'collection-title-submit','data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
+      = f.button :button, id: 'collection-title-submit','data-toggle' => 'toggle', 'data-placement' => 'right', 'data-collection_id' => collection.id, 'data-id' => collection_string.id, title: 'Submit' do
         %i{class: "far fa-check-square"}
