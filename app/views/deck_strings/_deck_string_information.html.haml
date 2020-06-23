@@ -1,5 +1,5 @@
 // rendered by decks/show
-%h1{id: 'deck-title'}= deck_string.title
-%i{class: "far fa-edit", id: 'deck-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Edit'}
+%h1{id: 'deck-title', 'data-target' => 'deck-string-inline.titleinfo', 'data-action' => 'click->deck-string-inline#dclick' }= deck_string.title
+%i{class: "far fa-edit", id: 'deck-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', 'data-target' => 'deck-string-inline.edit', 'data-action' => 'click->deck-string-inline#dclick', title: 'Edit'}
 = render 'deck_strings/update_deck_title_des', deck_string: deck_string, deck: deck
-%p{id: 'deck-description'}= deck_string.description
+%p{id: 'deck-description', 'data-target' => 'deck-string-inline.descriptioninfo', 'data-action' => 'click->deck-string-inline#dclick' }= deck_string.description

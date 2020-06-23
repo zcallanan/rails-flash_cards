@@ -6,7 +6,6 @@ export default class extends Controller {
   static targets = [ "owner", "contact", "label", "read", "update" ]
 
   membership(event){
-    console.log(event)
     event.preventDefault();
     const submitButton = event.target
     const userLabel = this.labelTarget;
@@ -44,7 +43,7 @@ export default class extends Controller {
         ownerRow.insertAdjacentHTML('afterend', data.partialToAttach);
         submitButton.disabled = false;
         emailContact.value = '';
-        userLabel.value = ';'
+        userLabel.value = ''
       })
   }
 }

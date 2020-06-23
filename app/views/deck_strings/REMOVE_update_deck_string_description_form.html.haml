@@ -1,9 +1,0 @@
-// rendered by deck_strings/deck_string_information
-- if policy(deck_string).update?
-  #deck-description-form{style: 'display: none'}
-    = simple_form_for(deck_string, remote: true, input_html: {id: 'description-form-field'}, url: api_v1_deck_deck_string_path(deck, deck_string)) do |f|
-      = f.input :description, label: false
-      = f.button :button, id: 'deck-description-submit', 'data-toggle' => 'toggle', 'data-placement' => 'right', 'data-deck_id' => deck.id,'data-id' => deck_string.id, title: 'Submit' do
-        %i{class: "far fa-check-square"}
-
-// TODO: Handle case where there is no description
