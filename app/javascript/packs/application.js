@@ -32,7 +32,6 @@ import "bootstrap";
 import { fetchWithToken } from '../utils/fetch_with_token'
 // import '../components/user_group_update_all'
 // import '../components/inline_forms'
-// import '../components/user_group_update_show_table'
 // import '../components/deck_inline_forms.js'
 
 
