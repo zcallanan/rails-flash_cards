@@ -1,5 +1,4 @@
 import { Controller } from "stimulus"
-import { csrfToken } from "@rails/ujs";
 import { inlineStrings } from '../utils/inline_strings.js'
 
 export default class extends Controller {
@@ -15,7 +14,6 @@ export default class extends Controller {
   ]
 
   dclick(event) {
-
     const object = {
       submitbutton: this.submitTarget,
       button: this.buttonTarget, // if user hits enter in the form
@@ -24,7 +22,8 @@ export default class extends Controller {
       title: this.titleTarget,
       description: this.descriptionTarget,
       edit: this.editTarget,
-      div: this.divTarget
+      div: this.divTarget,
+      url: `http://localhost:3000/api/v1/decks/${this.submitTarget.dataset.deck_id}/deck_strings/${this.submitTarget.dataset.id}`
     };
 
     inlineStrings(object);

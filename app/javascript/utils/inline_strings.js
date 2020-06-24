@@ -13,9 +13,8 @@ const inlineStrings = (object) => {
     }, 300);
   }
   else if ((!object.div.contains(event.target) || (object.submitbutton == event.target) || (object.button == event.target)) && (isVisible(object.title) && isVisible(object.description))) {
-    const url = `http://localhost:3000/api/v1/decks/${object.submitbutton.dataset.deck_id}/deck_strings/${object.submitbutton.dataset.id}`;
     event.preventDefault();
-    fetchWithToken(url, {
+    fetchWithToken(object.url, {
       method: "PATCH",
       headers: {
         "Accept": "application/json",
