@@ -1,6 +1,7 @@
 import { Controller } from "stimulus"
 import { csrfToken } from "@rails/ujs";
 import { fetchWithToken } from '../utils/fetch_with_token.js';
+import { isVisible } from '../utils/is_visible.js';
 
 export default class extends Controller {
   static targets = [
@@ -21,8 +22,6 @@ export default class extends Controller {
     const deckDesField = this.descriptionTarget
     const deckEditButton = this.editTarget
     const deckDiv = this.divTarget
-
-    const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
 
     setTimeout(function(){
       if (isVisible(deckT) && isVisible(deckDes) && isVisible(deckEditButton)) {
@@ -47,9 +46,6 @@ export default class extends Controller {
     const deckEditButton = this.editTarget
     const deckDiv = this.divTarget
     const deck_url = `http://localhost:3000/api/v1/decks/${deckSubmitButton.dataset.deck_id}/deck_strings/${deckSubmitButton.dataset.id}`;
-
-
-    const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
 
     if (!deckDiv.contains(event.target) && isVisible(deckTField) && isVisible(deckDesField)) {
       if (deckDiv.style.display == 'block') {
