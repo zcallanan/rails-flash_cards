@@ -4,8 +4,8 @@
     = simple_form_for(collection_string, remote: true, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
       = f.input :title, label: false, input_html: { data: { target: 'collection-string-inline.title' } }
       = f.input :description, label: false, input_html: { data: { target: 'collection-string-inline.description' } }
-      = f.button :button, id: 'collection-inline-submit','data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
-        %i{class: "far fa-check-square", 'data-collection_id' => collection.id, 'data-id' => collection_string.id, 'data-target' => 'collection-string-inline.submit', 'data-action' => 'click->collection-string-inline#csubmit'}
+      = f.button :button, id: 'collection-inline-submit','data-toggle' => 'toggle', 'data-placement' => 'right', 'data-target' => 'collection-string-inline.button', 'data-action' => 'click->collection-string-inline#cclick', title: 'Submit' do
+        %i{class: "far fa-check-square", 'data-collection_id' => collection.id, 'data-id' => collection_string.id, 'data-deck_id' => collection.deck.id, 'data-target' => 'collection-string-inline.submit', 'data-action' => 'click->collection-string-inline#cclick'}
 
 
 // Handle case where there is no description
