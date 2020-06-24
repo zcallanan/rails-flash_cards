@@ -20,12 +20,9 @@ const inlineStrings = (object) => {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        deck_string: {
-          title: object.title.value,
-          description: object.description.value
-        }
-      })
+      body: JSON.stringify(
+        object.body
+      )
     })
       .then(response => response.json())
       .then((data) => {
