@@ -1,0 +1,11 @@
+// rendered by collection_strings/collection_string_information
+- if policy(collection_string).update?
+  #collection-string-inline-form{style: 'display: none', 'data-target' => 'collection-string-inline.div'}
+    = simple_form_for(collection_string, remote: true, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
+      = f.input :title, label: false, input_html: { data: { target: 'collection-string-inline.title' } }
+      = f.input :description, label: false, input_html: { data: { target: 'collection-string-inline.description' } }
+      = f.button :button, id: 'collection-inline-submit','data-toggle' => 'toggle', 'data-placement' => 'right', title: 'Submit' do
+        %i{class: "far fa-check-square", 'data-collection_id' => collection.id, 'data-id' => collection_string.id, 'data-target' => 'collection-string-inline.submit', 'data-action' => 'click->collection-string-inline#csubmit'}
+
+
+// Handle case where there is no description
