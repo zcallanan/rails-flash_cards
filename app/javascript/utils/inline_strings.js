@@ -10,7 +10,7 @@ const inlineStrings = (object) => {
         object.edit.style.display = 'none';
         object.div.style.display = 'block';
       }
-    }, 300);
+    }, 200);
   }
   else if ((!object.div.contains(event.target) || (object.submitbutton == event.target) || (object.button == event.target)) && (isVisible(object.title) && isVisible(object.description))) {
     event.preventDefault();

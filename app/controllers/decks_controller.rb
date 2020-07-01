@@ -1,50 +1,46 @@
 class DecksController < ApplicationController
   include Languages
   before_action :set_deck, only: %i[show update]
+
   def index
     @user = current_user
 
     # list of decks the user owns
     @decks_owned = policy_scope(Deck).where(user: @user).where.not(archived: true)
-    kwargs = {
+    decks_owned_strings = {
       objects: @decks_owned, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
     }
-    @decks_owned_strings = populate_strings(kwargs)
+    # app/controllers/concerns/populate_strings
+    @decks_owned_strings = PopulateStrings.new(decks_owned_strings).call
 
     # list of archived decks
     @decks_archived = policy_scope(Deck).where(user: @user, archived: true)
-    kwargs = {
+    archived_deck_strings = {
       objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
     }
-    @decks_archived_strings = populate_strings(kwargs)
+    @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
 
     # list of decks the user can read but does not own
     @decks_read = policy_scope(Deck)
                   .joins(:deck_permissions)
                   .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                   .where.not(user: @user).distinct
-    kwargs = {
+    targeted_read_strings = {
       objects: @decks_read, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
     }
-    @decks_read_strings = populate_strings(kwargs)
+    @decks_read_strings = PopulateStrings.new(targeted_read_strings).call
 
     # list of decks the user can read & update but does not own
     @decks_update = policy_scope(Deck)
                     .joins(:deck_permissions)
                     .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
                     .where.not(user: @user).distinct
-    kwargs = {
+    targeted_update_strings = {
       objects: @decks_update, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
     }
-    @decks_update_strings = populate_strings(kwargs)
+    @decks_update_strings = PopulateStrings.new(targeted_update_strings).call
 
-    # list of decks that are globally available
-    @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)
-    kwargs = {
-      objects: @decks_global, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-    }
-    @decks_global_strings = populate_strings(kwargs)
-
+    # create a deck form
     @deck = Deck.new
     # prepare simple_field usage
     @deck.deck_strings.build
@@ -67,30 +63,30 @@ class DecksController < ApplicationController
     @collection.collection_strings.build
     # TODO: may require a joins to eliminate archived deck data
     @collections_owned = policy_scope(Collection).where(user: @user)
-    kwargs = {
+    collections_owned_strings = {
       objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
     }
-    @collections_owned_strings = populate_strings(kwargs)
+    @collections_owned_strings = PopulateStrings.new(collections_owned_strings).call
 
     # list of collections the user can read but does not own
     @collections_read = policy_scope(Collection)
                         .joins(:collection_permissions)
                         .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: false } })
                         .where.not(user: @user).distinct
-    kwargs = {
+    collection_read_strings = {
       objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
     }
-    @collections_read_strings = populate_strings(kwargs)
+    @collections_read_strings = PopulateStrings.new(collection_read_strings).call
 
     # list of collections the user can read & update but does not own
     @collections_update = policy_scope(Collection)
                           .joins(:collection_permissions)
                           .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: true } })
                           .where.not(user: @user).distinct
-    kwargs = {
+    collection_update_strings = {
       objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
     }
-    @collections_update_strings = populate_strings(kwargs)
+    @collections_update_strings = PopulateStrings.new(collection_update_strings).call
 
     @languages = Languages.list
     @language_options = [] # when updating a deck, user can change what language strings users see by default, if they exist. User preference overrides this
@@ -145,38 +141,6 @@ class DecksController < ApplicationController
   end
 
   private
-
-  def populate_strings(**kwargs)
-    # objects ~ decks, string_type ~ 'deck_strings', id_type ~ :deck_id, permission_type ~ 'deck_permissions'
-    object_strings = []
-    kwargs[:objects].each do |object|
-      # prioritize strings that have a user's preferred language
-      next if object_strings.pluck(kwargs[:id_type]).include?(object.id)
-
-      languages = object.send(kwargs[:string_type]).pluck(:language)
-      if languages.include?(kwargs[:user].language)
-        object.send(kwargs[:string_type]).each do |string|
-          if string.language == kwargs[:user].language && kwargs[:permission_type].nil?
-            object_strings << string
-          elsif string.language == kwargs[:user].language
-            string.send(kwargs[:permission_type]).each do |permission|
-              object_strings << string if string.language == permission.language && permission.user_id == kwargs[:user].id
-            end
-          end
-        end
-      else
-        # otherwise, return strings of the default language
-        object.send(kwargs[:string_type]).each do |string|
-          if string.language == object.default_language && kwargs[:deck].nil?
-            object_strings << string
-          elsif string.language == object.send(kwargs[:deck]).default_language && !kwargs[:deck].nil?
-            object_strings << string
-          end
-        end
-      end
-    end
-    object_strings
-  end
 
   def deck_params
     params.require(:deck).permit(
