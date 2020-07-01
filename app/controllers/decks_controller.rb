@@ -38,12 +38,12 @@ class DecksController < ApplicationController
     }
     @decks_update_strings = populate_strings(kwargs)
 
-    # list of decks that are globally available
-    @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)
-    kwargs = {
-      objects: @decks_global, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-    }
-    @decks_global_strings = populate_strings(kwargs)
+    # # list of decks that are globally available
+    # @decks_global = policy_scope(Deck).where(global_deck_read: true, archived: false)
+    # kwargs = {
+    #   objects: @decks_global, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
+    # }
+    # @decks_global_strings = populate_strings(kwargs)
 
     @deck = Deck.new
     # prepare simple_field usage
