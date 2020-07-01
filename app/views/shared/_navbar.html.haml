@@ -6,12 +6,8 @@
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
       - if user_signed_in?
-        %li.nav-item.active
-          = link_to "Home", "#", class: "nav-link"
-        %li.nav-item
-          = link_to "Messages", "#", class: "nav-link"
         %li.nav-item.dropdown
-          = image_tag "https://kitt.lewagon.com/placeholder/users/ssaunier", class: "avatar dropdown-toggle", id: "navbarDropdown", data: { toggle: "dropdown" }, 'aria-haspopup': true, 'aria-expanded': false
+          %i{ class: 'far fa-user avatar dropdown-toggle', id: 'navbarDropDown', data: { toggle: "dropdown" }, 'aria-haspopup': true, 'aria-expanded': false }
           .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
             = link_to "Action", "#", class: "dropdown-item"
             = link_to "Another action", "#", class: "dropdown-item"

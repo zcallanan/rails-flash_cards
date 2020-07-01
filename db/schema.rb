@@ -176,8 +176,8 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   end
 
   create_table "memberships", force: :cascade do |t|
-    t.string "user_label"
-    t.string "email_contact"
+    t.string "user_label", null: false
+    t.string "email_contact", null: false
     t.string "status", default: "Invited"
     t.boolean "read_access", default: false
     t.boolean "update_access", default: false

@@ -1,0 +1,7 @@
+= simple_form_for(category, method: :get, url: shared_decks_path) do |f|
+  // TODO: nested collection of categories
+  // TODO: default should return all results
+  = f.input :name, collection: categories
+  = f.submit 'Find cards to review', class: "btn btn-primary"
+
+
