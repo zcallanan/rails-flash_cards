@@ -1,3 +1,4 @@
+DeckCategory.destroy_all
 CollectionPermission.destroy_all
 DeckPermission.destroy_all
 QuestionSetPermission.destroy_all
@@ -17,6 +18,14 @@ Collection.destroy_all
 Deck.destroy_all
 UserGroup.destroy_all
 User.destroy_all
+Category.destroy_all
+
+# TODO: generate list of real categories
+category_list = ['English', 'Spanish', 'French', 'Biology', 'Chemistry', 'Organic Chemistry', 'Algebra', 'Linear Algebra', 'Calculus']
+
+category_list.each do |category|
+  Category.create!(name: category)
+end
 
 
 def generate_permissions(value, string_hash, user, deck, collection, question_set, tag_set = nil, user_group = nil, languages= [:en, :fr])
@@ -104,4 +113,7 @@ languages = [:en, :fr]
     end
   end
 end
+
+
+
 
