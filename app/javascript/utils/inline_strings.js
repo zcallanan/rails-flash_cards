@@ -2,7 +2,8 @@ import { fetchWithToken } from '../utils/fetch_with_token.js';
 import { isVisible } from '../utils/is_visible.js';
 
 const inlineStrings = (object) => {
-  if (isVisible(object.titleinfo) && isVisible(object.descriptioninfo) && isVisible(object.edit)) {
+  if ((object.titleinfo.contains(event.target) || object.descriptioninfo.contains(event.target) || object.edit.contains(event.target))
+    && isVisible(object.titleinfo) && isVisible(object.descriptioninfo) && isVisible(object.edit)) {
     setTimeout(function(){
       if (object.div.style.display == 'none') {
         object.titleinfo.style.display = 'none';
