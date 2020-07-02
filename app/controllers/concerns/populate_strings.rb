@@ -6,6 +6,8 @@ class PopulateStrings
     @user = attrs[:user]
     @permission_type = attrs[:permission_type]
     @deck = attrs[:deck]
+    @language ||= attrs[:language] # user may not exist in the case of global read
+    @language ||= @user.language if @user.nil? == false
   end
 
   def call
@@ -16,11 +18,11 @@ class PopulateStrings
       next if object_strings.pluck(@id_type).include?(object.id)
 
       languages = object.send(@string_type).pluck(:language)
-      if languages.include?(@user.language)
+      if languages.include?(@language)
         object.send(@string_type).each do |string|
-          if string.language == @user.language && @permission_type.nil?
+          if string.language == @language && @permission_type.nil?
             object_strings << string
-          elsif string.language == @user.language
+          elsif string.language == @language
             string.send(@permission_type).each do |permission|
               object_strings << string if string.language == permission.language && permission.user_id == @user.id
             end
