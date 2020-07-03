@@ -1,8 +1,7 @@
 class Category < ApplicationRecord
   attr_accessor :language
 
-  has_many :deck_categories
-  has_many :decks, through: :deck_categories
+  has_many :decks
 
   # category select method for search
   def self.generate_categories

@@ -14,7 +14,6 @@ class SharedDecksController < ApplicationController
       deck: nil,
       language: params['category']['language']
     }
-
     # app/controllers/concerns/populate_strings
     @decks_global_strings = PopulateStrings.new(deck_strings).call
   end
