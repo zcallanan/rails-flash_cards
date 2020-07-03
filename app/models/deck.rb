@@ -1,4 +1,6 @@
 class Deck < ApplicationRecord
+  attr_accessor :language
+
   belongs_to :user
   belongs_to :category
   has_many :deck_permissions
