@@ -2,6 +2,6 @@
 %ul
 - @decks_global_strings.each do |string|
   %li
-    = link_to string.title, deck_path(string.deck)
+    = link_to string.title, shared_deck_path(string.deck, language: string.language)
 
-    = raise
+

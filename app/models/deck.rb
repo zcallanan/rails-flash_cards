@@ -14,6 +14,10 @@ class Deck < ApplicationRecord
     category.empty? ? where(global_deck_read: true) : where(category_id: category, global_deck_read: true)
   }
 
+  scope :global_search_by_language, lambda { |language|
+    includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+  }
+
   def owner
     user
   end
