@@ -91,11 +91,14 @@ class DecksController < ApplicationController
   def create
     @user = current_user
     @deck = Deck.new(deck_params)
+
+    @categories = Category.all
+
     @deck.user = @user
     @deck.deck_strings.first.user = @user
     @deck.collections.first.user = @user
     @deck.collections.first.collection_strings.first.user = @user
-    @deck.collections.first.collection_strings.first.user
+    # @deck.collections.first.collection_strings.first.user
     authorize @deck
     if @deck.save!
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
@@ -115,7 +118,7 @@ class DecksController < ApplicationController
         update_access: true,
         clone_access: true
       )
-      redirect_to deck_path(@deck)
+      redirect_to deck_path(@deck, language: @deck.default_language)
     else
       redirect_to decks_path
     end
@@ -135,6 +138,7 @@ class DecksController < ApplicationController
 
   def deck_params
     params.require(:deck).permit(
+      :category_id,
       :default_language,
       :global_deck_read,
       :archived,
