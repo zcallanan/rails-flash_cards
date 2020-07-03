@@ -53,6 +53,7 @@ class DecksController < ApplicationController
     @user = current_user
     authorize @deck
     @deck_strings = @deck.deck_strings
+    @deck_string_info = @deck_strings.where(language: params[:language]).first
     @languages = Languages.list
     @deck_string = DeckString.new
     @collection = Collection.new
