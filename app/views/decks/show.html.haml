@@ -1,12 +1,6 @@
 #deck-string-information{'data-controller' => 'deck-string-inline'}
   #deck-click-out{ 'data-action' => 'click->deck-string-inline#dclick' }
-    - @deck.deck_strings.each do |deck_string|
-      - if deck_string.language == @user.language
-        = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
-        - break
-      - elsif deck_string.language == @deck.default_language
-        = render 'deck_strings/deck_string_information', deck_string: deck_string, deck: @deck
-        - break
+    = render 'deck_strings/deck_string_information', deck_string: @deck_string_info, deck: @deck
 
     %hr
 
