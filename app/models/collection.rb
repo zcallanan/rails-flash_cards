@@ -17,9 +17,4 @@ class Collection < ApplicationRecord
   scope :collections_not_owned, lambda { |user, update|
     includes(:collection_permissions).where('collection_permissions.user_id = ? AND collection_permissions.read_access = ? AND collection_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(:collection_permissions).distinct
   }
-
-  # policy_scope(Collection)
-  #   .joins(:collection_permissions)
-  #   .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: false } })
-  #   .where.not(user: @user).distinct
 end
