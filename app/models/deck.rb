@@ -18,6 +18,14 @@ class Deck < ApplicationRecord
     includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
   }
 
+  scope :my_decks_owned, lambda { |user, archived|
+    where(user: user, archived: archived)
+  }
+
+  scope :my_decks_not_owned, lambda { |user, update|
+    includes(:deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(:deck_permissions).distinct
+  }
+
   def owner
     user
   end

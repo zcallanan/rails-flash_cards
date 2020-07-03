@@ -18,6 +18,7 @@ class PopulateStrings
       next if object_strings.pluck(@id_type).include?(object.id)
 
       languages = object.send(@string_type).pluck(:language)
+
       if languages.include?(@language)
         object.send(@string_type).each do |string|
           if string.language == @language && @permission_type.nil?
@@ -39,6 +40,6 @@ class PopulateStrings
         end
       end
     end
-    object_strings
+    object_strings.uniq(&:id)
   end
 end

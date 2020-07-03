@@ -6,7 +6,7 @@ class DecksController < ApplicationController
     @user = current_user
 
     # list of decks the user owns
-    @decks_owned = policy_scope(Deck).where(user: @user).where.not(archived: true)
+    @decks_owned = policy_scope(Deck).my_decks_owned(@user, false)
     decks_owned_strings = {
       objects: @decks_owned, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
     }
@@ -14,27 +14,21 @@ class DecksController < ApplicationController
     @decks_owned_strings = PopulateStrings.new(decks_owned_strings).call
 
     # list of archived decks
-    @decks_archived = policy_scope(Deck).where(user: @user, archived: true)
+    @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
     archived_deck_strings = {
       objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
     }
     @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
 
     # list of decks the user can read but does not own
-    @decks_read = policy_scope(Deck)
-                  .joins(:deck_permissions)
-                  .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: false } })
-                  .where.not(user: @user).distinct
+    @decks_read = policy_scope(Deck).my_decks_not_owned(@user, false)
     targeted_read_strings = {
       objects: @decks_read, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
     }
     @decks_read_strings = PopulateStrings.new(targeted_read_strings).call
 
     # list of decks the user can read & update but does not own
-    @decks_update = policy_scope(Deck)
-                    .joins(:deck_permissions)
-                    .where({ deck_permissions: { user_id: @user.id, read_access: true, update_access: true } })
-                    .where.not(user: @user).distinct
+    @decks_update = policy_scope(Deck).my_decks_not_owned(@user, true)
     targeted_update_strings = {
       objects: @decks_update, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
     }
