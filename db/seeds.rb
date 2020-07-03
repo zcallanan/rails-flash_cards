@@ -35,12 +35,15 @@ end
 
 
 def generate_permissions(value, string_hash, user, deck, collection, question_set, tag_set = nil, user_group = nil, languages= [:en, :fr])
+  users = []
+  users << user
   languages.each do |language|
     other_user_chosen = false
     while other_user_chosen == false
       other_user = User.all.sample
-      other_user_chosen = true if other_user != user
+      other_user_chosen = true if users.include?(other_user) == false
     end
+    users << other_user
     deck_hash = { user: other_user, deck: deck, deck_string: string_hash[language][0], language: language, read_access: true }
     collection_hash = { user: other_user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true }
     question_set_hash = { user: other_user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true }

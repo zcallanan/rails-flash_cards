@@ -57,27 +57,23 @@ class DecksController < ApplicationController
     # prepare simple_field usage
     @collection.collection_strings.build
     # TODO: may require a joins to eliminate archived deck data
-    @collections_owned = policy_scope(Collection).where(user: @user)
+    @collections_owned = policy_scope(Collection).collections_owned(@user)
     collections_owned_strings = {
       objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
     }
     @collections_owned_strings = PopulateStrings.new(collections_owned_strings).call
 
     # list of collections the user can read but does not own
-    @collections_read = policy_scope(Collection)
-                        .joins(:collection_permissions)
-                        .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: false } })
-                        .where.not(user: @user).distinct
+    @collections_read = policy_scope(Collection).collections_not_owned(@user, false)
+
     collection_read_strings = {
       objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
     }
     @collections_read_strings = PopulateStrings.new(collection_read_strings).call
 
     # list of collections the user can read & update but does not own
-    @collections_update = policy_scope(Collection)
-                          .joins(:collection_permissions)
-                          .where({ collection_permissions: { user_id: @user.id, read_access: true, update_access: true } })
-                          .where.not(user: @user).distinct
+    @collections_update = policy_scope(Collection).collections_not_owned(@user, true)
+
     collection_update_strings = {
       objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
     }
@@ -129,7 +125,7 @@ class DecksController < ApplicationController
   def update
     authorize(@deck)
     if @deck.update!(deck_params)
-      redirect_to deck_path(@deck)
+      redirect_to deck_path(@deck, language: params['deck']['language'])
     else
       redirect_to decks_path, flash[:alert] = "Unable to update"
     end

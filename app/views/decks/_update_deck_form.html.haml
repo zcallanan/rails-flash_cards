@@ -6,6 +6,7 @@
     = f.input :default_language, collection: language_options
   = f.input :global_deck_read, label: 'Allow all users to view this deck of cards?'
   = f.input :archived, label: 'Archive the deck of cards?'
+  = f.input :language, as: :hidden, input_html: {value: params[:language]}
   = f.submit class: "btn btn-primary"
 
 = render 'create_deck_string_form', deck: deck, deck_string: deck_string
