@@ -6,17 +6,24 @@ class SharedDecksController < ApplicationController
     # All can view globally shared content
     skip_policy_scope
     # list of decks that are globally available
-    @decks_global = Deck.where(global_deck_read: true, archived: false)
+    @decks_global = Deck.globally_available(true)
+    if params.key?('category')
+      language = params['category']['language']
+      category_id = params['category']['name']
+    else # account for going straight to /shared_decks
+      language = 'en'
+      category_id = ''
+    end
+
     deck_strings = {
       objects: @decks_global,
       string_type: 'deck_strings',
       id_type: :deck_id,
       permission_type: nil,
       deck: nil,
-      language: params['category']['language']
+      language: language
     }
-    language = params['category']['language']
-    category_id = params['category']['name']
+
     @decks = deck_search(language, category_id).order(updated_at: :desc)
 
     # app/controllers/concerns/populate_strings
