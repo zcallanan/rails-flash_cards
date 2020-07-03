@@ -10,6 +10,10 @@ class Deck < ApplicationRecord
   has_many :cards
   accepts_nested_attributes_for :deck_strings, :collections
 
+  scope :global_search_by_category, lambda { |category|
+    category.empty? ? where(global_deck_read: true) : where(category_id: category, global_deck_read: true)
+  }
+
   def owner
     user
   end
