@@ -130,15 +130,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
-  create_table "deck_categories", force: :cascade do |t|
-    t.bigint "category_id", null: false
-    t.bigint "deck_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["category_id"], name: "index_deck_categories_on_category_id"
-    t.index ["deck_id"], name: "index_deck_categories_on_deck_id"
-  end
-
   create_table "deck_permissions", force: :cascade do |t|
     t.string "language"
     t.boolean "read_access", default: false
@@ -169,10 +160,12 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   create_table "decks", force: :cascade do |t|
     t.string "default_language"
     t.bigint "user_id", null: false
+    t.bigint "category_id", null: false
     t.boolean "global_deck_read", default: false
     t.boolean "archived", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_decks_on_category_id"
     t.index ["user_id"], name: "index_decks_on_user_id"
   end
 
@@ -373,13 +366,12 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "collection_tags", "tag_sets"
   add_foreign_key "collections", "decks"
   add_foreign_key "collections", "users"
-  add_foreign_key "deck_categories", "categories"
-  add_foreign_key "deck_categories", "decks"
   add_foreign_key "deck_permissions", "deck_strings"
   add_foreign_key "deck_permissions", "decks"
   add_foreign_key "deck_permissions", "users"
   add_foreign_key "deck_strings", "decks"
   add_foreign_key "deck_strings", "users"
+  add_foreign_key "decks", "categories"
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"

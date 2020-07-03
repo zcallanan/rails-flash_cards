@@ -1,4 +1,3 @@
-DeckCategory.destroy_all
 CollectionPermission.destroy_all
 DeckPermission.destroy_all
 QuestionSetPermission.destroy_all
@@ -101,7 +100,7 @@ languages = [:en, :fr]
   user = User.create!(email: email, password: 'secret', language: languages.sample)
   n += 1
   languages.each do |language|
-    n <= 14 ? deck = Deck.create!(user: user, default_language: language) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true)
+    n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
     collection = Collection.create!(user: user, deck: deck)
     question_set = QuestionSet.create!(user: user, deck: deck)
     tag_set = TagSet.create!(user: user, deck: deck)
