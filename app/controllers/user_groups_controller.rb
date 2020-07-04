@@ -3,10 +3,10 @@ class UserGroupsController < ApplicationController
 
   def index
     @user = current_user
-    # TODO: create scopes
-    @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
-    @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }, decks: { archived: false }).where.not(user: @user).distinct
-    @user_groups_update = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }, decks: { archived: false }).where.not(user: @user).distinct
+
+    @user_groups_owned = policy_scope(UserGroup).user_groups_owned(@user)
+    @user_groups_read = policy_scope(UserGroup).user_groups_not_owned(@user, false)
+    @user_groups_update = policy_scope(UserGroup).user_groups_not_owned(@user, true)
 
     @user_group = UserGroup.new
     # prepare simple_field usage

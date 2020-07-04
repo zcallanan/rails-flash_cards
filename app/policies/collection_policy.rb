@@ -5,7 +5,7 @@ class CollectionPolicy < ApplicationPolicy
         scope.all
       elsif user
         # user has read access or is the owner
-        scope.joins(collection_permissions: { user: :deck_permissions }).where('collection_permissions.user_id = ? AND deck_permissions.user_id = ? AND deck_permissions.read_access = ? OR collections.user_id = ?', user.id, user.id, true, user.id).distinct
+        scope.includes(collection_permissions: { user: :deck_permissions }).where('collection_permissions.user_id = ? AND deck_permissions.user_id = ? AND deck_permissions.read_access = ? OR collections.user_id = ?', user.id, user.id, true, user.id).references(collection_permissions: { user: :deck_permissions }).distinct
       end
     end
   end

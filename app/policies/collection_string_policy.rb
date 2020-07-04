@@ -4,7 +4,7 @@ class CollectionStringPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user
-        scope.joins(collections: :collection_permissions).where('collection_permissions.user_id = ? AND collection_permissions.read_access = ? AND collection_permissions.language = ? OR collections.user_id = ?', user.id, true, scope.language, user.id).distinct
+        scope.includes(collections: :collection_permissions).where('collection_permissions.user_id = ? AND collection_permissions.read_access = ? AND collection_permissions.language = ? OR collections.user_id = ?', user.id, true, scope.language, user.id).references(collections: :collection_permissions).distinct
       end
     end
   end
