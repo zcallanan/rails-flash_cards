@@ -17,15 +17,14 @@ class PopulateStrings
       # prioritize strings that have a user's preferred language
       next if object_strings.pluck(@id_type).include?(object.id)
 
-      languages = object.send(@string_type).pluck(:language)
-      if languages.include?(@language)
-        object.send(@string_type).each do |string|
-          if string.language == @language && @permission_type.nil?
+      languages = object.send(@string_type).pluck(:language) # languages that exist for a string
+      if languages.include?(@language)  # do any of the existing strings match the @language in focus?
+        object.send(@string_type).each do |string| # aka: decks.deck_strings.each |string|
+          if string.language == @language && @permission_type.nil? # string.language == focus language AND we don't need to check your permission because you own it
             object_strings << string
-          elsif @permission_type.nil? == false
-            string.send(@permission_type).each do |permission|
-              object_strings << string if string.language == permission.language && permission.user_id == @user.id
-            end
+          elsif @permission_type.nil? == false && object.send(@permission_type).pluck(:user_id).include?(@user.id)
+            # check if object.permission_types includes your user.id
+            object_strings << string
           end
         end
       else
@@ -39,6 +38,6 @@ class PopulateStrings
         end
       end
     end
-    object_strings.uniq(&:id)
+    object_strings.uniq { |string| string.send(@id_type) }
   end
 end

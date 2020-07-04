@@ -3,6 +3,7 @@ class UserGroupsController < ApplicationController
 
   def index
     @user = current_user
+    # TODO: create scopes
     @user_groups_owned = policy_scope(UserGroup).joins(:memberships).where(user: @user).distinct
     @user_groups_read = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: false } }, decks: { archived: false }).where.not(user: @user).distinct
     @user_groups_update = policy_scope(UserGroup).joins(users: [:memberships, :decks]).where({ memberships: { user_id: @user.id, read_access: true, update_access: true } }, decks: { archived: false }).where.not(user: @user).distinct
@@ -20,18 +21,23 @@ class UserGroupsController < ApplicationController
   end
 
   def show
-    # build a list of all members, owner first, in view should not be able to edit that row
+    # build a list of all members, owner first, in view should not be able to edit the owner row
     memberships = Membership.all.where(user_group: @user_group).order("created_at DESC")
     @members = []
     memberships.each do |member|
+      # if member owns the user group and membership permission owner_id is this user
       if member.user_id == @user_group.user.id && member.owner_id == member.user_id
+        # this looks for only the owner, and ensures the owner is added first to @members for the show view list
         @owner = member
         @members << @owner
       end
     end
+    # add all other members to @members
     memberships.each { |member| @members << member unless member.user_id == @user_group.user.id }
 
+    # prepare form for membership creation
     @membership = Membership.new
+    # set creator to current user to pass create? validation
     @membership.user = current_user if @user_group.user == current_user
   end
 
@@ -44,7 +50,7 @@ class UserGroupsController < ApplicationController
         owner_id: current_user,
         user_group: @user_group,
         user_label: 'Group Owner',
-        status: 'Managing Owner',
+        status: 'Managing Group',
         read_access: true,
         update_access: true
       )

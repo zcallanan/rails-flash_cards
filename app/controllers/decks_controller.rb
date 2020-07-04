@@ -105,7 +105,6 @@ class DecksController < ApplicationController
       DeckPermission.create!(
         deck: @deck,
         user: @user,
-        deck_string: @deck.deck_strings.first,
         read_access: true,
         update_access: true,
         clone_access: true
@@ -113,7 +112,6 @@ class DecksController < ApplicationController
       CollectionPermission.create!(
         collection: @deck.collections.first,
         user: @user,
-        collection_string: @deck.collections.first.collection_strings.first,
         read_access: true,
         update_access: true,
         clone_access: true
