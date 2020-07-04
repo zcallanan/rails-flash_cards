@@ -56,7 +56,7 @@ class DecksController < ApplicationController
     @collection_string.user = @user
     # prepare simple_field usage
     @collection.collection_strings.build
-    # TODO: may require a joins to eliminate archived deck data
+
     @collections_owned = policy_scope(Collection).collections_owned(@user)
     collections_owned_strings = {
       objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'

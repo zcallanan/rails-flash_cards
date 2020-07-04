@@ -5,7 +5,7 @@ class UserGroupPolicy < ApplicationPolicy
         scope.all
       elsif user
         # user has read access or user is owner
-        scope.joins(users: :memberships).where('memberships.user_id = ? AND memberships.read_access = ? OR user_groups.user_id = ?', user.id, true, user.id).distinct
+        scope.includes(users: :memberships).where('memberships.user_id = ? AND memberships.read_access = ? OR user_groups.user_id = ?', user.id, true, user.id).references(users: :memberships).distinct
       end
     end
   end

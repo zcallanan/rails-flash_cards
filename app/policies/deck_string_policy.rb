@@ -4,7 +4,7 @@ class DeckStringPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user
-        scope.joins(decks: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.language = ? OR decks.user_id = ?', user.id, true, scope.language, user.id).distinct
+        scope.includes(decks: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.language = ? OR decks.user_id = ?', user.id, true, scope.language, user.id).references(decks: :deck_permissions).distinct
       end
     end
   end
