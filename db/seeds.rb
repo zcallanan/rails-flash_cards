@@ -34,28 +34,29 @@ category_list.each do |key, array|
 end
 
 
-def generate_permissions(value, string_hash, user, deck, collection, question_set, tag_set = nil, user_group = nil, languages= [:en, :fr])
+def generate_permissions(**objects)
   users = []
-  users << user
-  languages.each do |language|
+  users << objects[:user]
+  n = 0
+  while n < 3
     other_user_chosen = false
     while other_user_chosen == false
       other_user = User.all.sample
       other_user_chosen = true if users.include?(other_user) == false
     end
     users << other_user
-    deck_hash = { user: other_user, deck: deck, deck_string: string_hash[language][0], language: language, read_access: true }
-    collection_hash = { user: other_user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true }
-    question_set_hash = { user: other_user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true }
-    tag_set_hash = { user: other_user, tag_set: tag_set, tag_set_string: string_hash[language][3], language: language, read_access: true } unless tag_set.nil?
-    user_group_hash = { user: other_user, user_group: user_group, user_label: "friend #{other_user.id}", owner_id: user.id, email_contact: other_user.email, read_access: true } unless user_group.nil?
-    if value == 'update'
+    deck_hash = { user: other_user, deck: objects[:deck], read_access: true }
+    collection_hash = { user: other_user, collection: objects[:collection], read_access: true }
+    question_set_hash = { user: other_user, question_set: objects[:question_set], read_access: true }
+    tag_set_hash = { user: other_user, tag_set: objects[:tag_set], read_access: true } unless n == 2
+    user_group_hash = { user: other_user, user_group: objects[:user_group], user_label: "friend #{other_user.id}", owner_id: objects[:user].id, email_contact: other_user.email, read_access: true } unless n == 2
+    if n == 1
       deck_hash[:update_access] = true
       collection_hash[:update_access] = true
       question_set_hash[:update_access] = true
       tag_set_hash[:update_access] = true
       user_group_hash[:update_access] = true
-    elsif value == 'clone'
+    elsif n == 2
       deck_hash[:clone_access] = true
       collection_hash[:clone_access] = true
       question_set_hash[:clone_access] = true
@@ -64,16 +65,16 @@ def generate_permissions(value, string_hash, user, deck, collection, question_se
     permission = false
     until permission
       deck_random = Deck.all.sample
-      if deck_random.user != user
+      if deck_random.user != objects[:user]
         DeckPermission.create!(deck_hash)
         CollectionPermission.create!(collection_hash)
         QuestionSetPermission.create!(question_set_hash)
-        TagSetPermission.create!(tag_set_hash) unless tag_set.nil?
-        Membership.create!(user_group_hash) unless user_group.nil?
-        puts "#{value} access given to #{deck_random}"
+        TagSetPermission.create!(tag_set_hash) unless n == 2
+        Membership.create!(user_group_hash) unless n == 2
         permission = true
       end
     end
+    n += 1
   end
 end
 
@@ -110,18 +111,27 @@ languages = [:en, :fr]
     string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
-    DeckPermission.create!(user: user, deck: deck, deck_string: string_hash[language][0], language: language, read_access: true, update_access: true, clone_access: true)
-    CollectionPermission.create!(user: user, collection: collection, collection_string: string_hash[language][1], language: language, read_access: true, update_access: true, clone_access: true)
-    QuestionSetPermission.create!(user: user, question_set: question_set, question_set_string: string_hash[language][2], language: language, read_access: true, update_access: true, clone_access: true)
-    TagSetPermission.create!(user: user, tag_set: tag_set, tag_set_string: string_hash[language][3], language: language, read_access: true, update_access: true)
+
+    DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
+    CollectionPermission.create!(user: user, collection: collection, read_access: true, update_access: true, clone_access: true)
+    QuestionSetPermission.create!(user: user, question_set: question_set, read_access: true, update_access: true, clone_access: true)
+    TagSetPermission.create!(user: user, tag_set: tag_set, read_access: true, update_access: true)
     Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', status: 'Managing Group', owner_id: user.id, email_contact: email, read_access: true, update_access: true)
     if User.count > 8
-      generate_permissions('read', string_hash, user, deck, collection, question_set, tag_set, user_group)
-      generate_permissions('update', string_hash, user, deck, collection, question_set, tag_set, user_group)
-      generate_permissions('clone', string_hash, user, deck, collection, question_set)
+      object_hash = {
+        user: user,
+        deck: deck,
+        collection: collection,
+        question_set: question_set,
+        tag_set: tag_set,
+        user_group: user_group
+      }
+      generate_permissions(object_hash)
     end
   end
 end
+
+puts 'finished seed!'
 
 
 
