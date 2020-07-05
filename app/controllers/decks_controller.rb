@@ -49,11 +49,12 @@ class DecksController < ApplicationController
     @deck_strings = @deck.deck_strings
     @deck_string_info = @deck_strings.where(language: params[:language]).first
     @languages = Languages.list
+    # form setup
     @deck_string = DeckString.new
     @collection = Collection.new
-    @collection_string = CollectionString.new
-    @collection.user = @user # enable view's evaluation of collection policy create?
-    @collection_string.user = @user
+    # enable view's evaluation of collection policy create?
+    @collection.user = @user
+    @collection.deck = @deck
     # prepare simple_field usage
     @collection.collection_strings.build
 
@@ -67,7 +68,7 @@ class DecksController < ApplicationController
     @collections_read = policy_scope(Collection).collections_not_owned(@user, false)
 
     collection_read_strings = {
-      objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
+      objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
     }
     @collections_read_strings = PopulateStrings.new(collection_read_strings).call
 
@@ -75,7 +76,7 @@ class DecksController < ApplicationController
     @collections_update = policy_scope(Collection).collections_not_owned(@user, true)
 
     collection_update_strings = {
-      objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'collection_permissions', deck: 'deck'
+      objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
     }
     @collections_update_strings = PopulateStrings.new(collection_update_strings).call
 
@@ -104,13 +105,6 @@ class DecksController < ApplicationController
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
       DeckPermission.create!(
         deck: @deck,
-        user: @user,
-        read_access: true,
-        update_access: true,
-        clone_access: true
-      )
-      CollectionPermission.create!(
-        collection: @deck.collections.first,
         user: @user,
         read_access: true,
         update_access: true,

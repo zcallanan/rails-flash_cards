@@ -5,8 +5,6 @@ class Collection < ApplicationRecord
   has_many :cards, through: :collection_cards
   has_many :collection_tags
   has_many :tags, through: :collection_tags
-  has_many :collection_permissions
-  has_many :users, through: :collection_permissions
   has_many :collection_strings, inverse_of: :collection
   accepts_nested_attributes_for :collection_strings
 
@@ -15,6 +13,6 @@ class Collection < ApplicationRecord
   }
 
   scope :collections_not_owned, lambda { |user, update|
-    includes(:collection_permissions).where('collection_permissions.user_id = ? AND collection_permissions.read_access = ? AND collection_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(:collection_permissions).distinct
+    includes(deck: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(decks: :deck_permissions).distinct
   }
 end
