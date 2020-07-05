@@ -1,9 +1,3 @@
 #collection-string-information{'data-controller' => 'collection-string-inline'}
   #collection-click-out{ 'data-action' => 'click->collection-string-inline#cclick' }
-    - @collection.collection_strings.each do |collection_string|
-      - if collection_string.language == @user.language
-        = render 'collection_strings/collection_string_information', deck: @deck, collection: @collection, collection_string: collection_string
-        - break
-      - elsif collection_string.language == @collection.deck.default_language
-        = render 'collection_strings/collection_string_information', deck: @deck, collection: @collection, collection_string: collection_string
-        - break
+    = render 'collection_strings/collection_string_information', deck: @deck, collection: @collection, collection_string: @collection_string

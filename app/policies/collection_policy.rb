@@ -5,7 +5,7 @@ class CollectionPolicy < ApplicationPolicy
         scope.all
       elsif user
         # user has read access or is the owner
-        scope.includes(collection_permissions: { user: :deck_permissions }).where('collection_permissions.user_id = ? AND deck_permissions.user_id = ? AND deck_permissions.read_access = ? OR collections.user_id = ?', user.id, user.id, true, user.id).references(collection_permissions: { user: :deck_permissions }).distinct
+        scope.includes(deck: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND decks.user_id != ? OR decks.global_deck_read = ? OR decks.user_id = ?', user.id, true, user.id, true, user.id).references(decks: :deck_permissions).distinct
       end
     end
   end
@@ -29,7 +29,7 @@ class CollectionPolicy < ApplicationPolicy
   private
 
   def user_owns_record?
-    record.user == user
+    record.deck.user == user
   end
 
   def user_is_admin?
@@ -39,11 +39,11 @@ class CollectionPolicy < ApplicationPolicy
 
   def user_can_read?
     # check if user can view the collection
-    record.collection_permissions.where(user_id: user.id, collection_id: record.id, read_access: true).present?
+    record.deck.deck_permissions.where(user_id: user.id, deck_id: record.deck.id, read_access: true).present?
   end
 
   def user_can_update?
     # check if user can make updates to the collection
-    record.collection_permissions.where(user_id: user.id, collection_id: record.id, update_access: true).present?
+    record.deck.deck_permissions.where(user_id: user.id, deck_id: record.deck.id, update_access: true).present?
   end
 end

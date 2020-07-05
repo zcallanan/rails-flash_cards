@@ -84,18 +84,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.index ["collection_id"], name: "index_collection_cards_on_collection_id"
   end
 
-  create_table "collection_permissions", force: :cascade do |t|
-    t.boolean "read_access", default: false
-    t.boolean "update_access", default: false
-    t.boolean "clone_access", default: false
-    t.bigint "user_id", null: false
-    t.bigint "collection_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["collection_id"], name: "index_collection_permissions_on_collection_id"
-    t.index ["user_id"], name: "index_collection_permissions_on_user_id"
-  end
-
   create_table "collection_strings", force: :cascade do |t|
     t.string "language"
     t.string "title"
@@ -178,18 +166,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
-  create_table "question_set_permissions", force: :cascade do |t|
-    t.boolean "read_access", default: false
-    t.boolean "update_access", default: false
-    t.boolean "clone_access", default: false
-    t.bigint "user_id", null: false
-    t.bigint "question_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_set_id"], name: "index_question_set_permissions_on_question_set_id"
-    t.index ["user_id"], name: "index_question_set_permissions_on_user_id"
-  end
-
   create_table "question_set_strings", force: :cascade do |t|
     t.string "language"
     t.string "title"
@@ -233,17 +209,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_id"], name: "index_tag_relations_on_tag_id"
     t.index ["tag_set_id"], name: "index_tag_relations_on_tag_set_id"
-  end
-
-  create_table "tag_set_permissions", force: :cascade do |t|
-    t.boolean "read_access", default: false
-    t.boolean "update_access", default: false
-    t.bigint "tag_set_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_set_id"], name: "index_tag_set_permissions_on_tag_set_id"
-    t.index ["user_id"], name: "index_tag_set_permissions_on_user_id"
   end
 
   create_table "tag_set_strings", force: :cascade do |t|
@@ -345,8 +310,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "cards", "decks"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
-  add_foreign_key "collection_permissions", "collections"
-  add_foreign_key "collection_permissions", "users"
   add_foreign_key "collection_strings", "collections"
   add_foreign_key "collection_strings", "users"
   add_foreign_key "collection_tags", "collections"
@@ -361,8 +324,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"
-  add_foreign_key "question_set_permissions", "question_sets"
-  add_foreign_key "question_set_permissions", "users"
   add_foreign_key "question_set_strings", "question_sets"
   add_foreign_key "question_set_strings", "users"
   add_foreign_key "question_sets", "decks"
@@ -370,8 +331,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "question_strings", "questions"
   add_foreign_key "tag_relations", "tag_sets"
   add_foreign_key "tag_relations", "tags"
-  add_foreign_key "tag_set_permissions", "tag_sets"
-  add_foreign_key "tag_set_permissions", "users"
   add_foreign_key "tag_set_strings", "tag_sets"
   add_foreign_key "tag_set_strings", "users"
   add_foreign_key "tag_sets", "decks"

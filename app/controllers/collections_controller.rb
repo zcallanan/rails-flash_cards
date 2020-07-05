@@ -3,6 +3,7 @@ class CollectionsController < ApplicationController
   before_action :set_collection, only: %i[show]
   def show
     @user = current_user
+    @collection_string = @collection.collection_strings.first
     authorize @collection
   end
 
@@ -11,16 +12,9 @@ class CollectionsController < ApplicationController
     @collection = Collection.new(collection_params)
     @collection.user = @user
     @collection.deck = @deck
+    @collection.collection_strings.first.user = @user
     authorize @collection
     if @collection.save!
-      CollectionPermission.create!(
-        collection: @collection,
-        user: @user,
-        collection_string: @collection.collection_strings.first,
-        read_access: true,
-        update_access: true,
-        clone_access: true
-      )
       redirect_to deck_collection_path(@deck, @collection)
     else
       redirect_to deck_path(@deck)
