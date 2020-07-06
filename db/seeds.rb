@@ -88,7 +88,7 @@ languages = [:en, :fr]
   n += 1
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
-    collection = Collection.create!(user: user, deck: deck)
+    collection = Collection.create!(user: user, deck: deck, static: true)
     question_set = QuestionSet.create!(user: user, deck: deck)
     tag_set = TagSet.create!(user: user, deck: deck)
     string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
