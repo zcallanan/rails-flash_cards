@@ -6,7 +6,6 @@ class CreateMemberships < ActiveRecord::Migration[6.0]
       t.string :status, default: 'Invited'
       t.boolean :read_access, default: false
       t.boolean :update_access, default: false
-      t.integer :owner_id
       t.references :user, foreign_key: true
       t.references :user_group, null: false, foreign_key: true
 
