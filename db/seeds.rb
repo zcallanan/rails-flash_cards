@@ -5,9 +5,6 @@ CollectionString.destroy_all
 QuestionSetString.destroy_all
 TagSetString.destroy_all
 UserGroupDeck.destroy_all
-UserGroupCollection.destroy_all
-UserGroupQuestionSet.destroy_all
-UserGroupTagSet.destroy_all
 TagSet.destroy_all
 QuestionSet.destroy_all
 Collection.destroy_all
@@ -43,7 +40,7 @@ def generate_permissions(**objects)
     end
     users << other_user
     deck_hash = { user: other_user, deck: objects[:deck], read_access: true }
-    user_group_hash = { user: other_user, user_group: objects[:user_group], user_label: "friend #{other_user.id}", owner_id: objects[:user].id, email_contact: other_user.email, read_access: true } unless n == 2
+    user_group_hash = { user: other_user, user_group: objects[:user_group], user_label: "friend #{other_user.id}", email_contact: other_user.email, read_access: true } unless n == 2
     if n == 1
       deck_hash[:update_access] = true
       user_group_hash[:update_access] = true
@@ -97,9 +94,10 @@ languages = [:en, :fr]
     string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
+    ug_deck = UserGroupDeck.create!(user_group: user_group, deck: deck)
 
     DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
-    Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', status: 'Managing Group', owner_id: user.id, email_contact: email, read_access: true, update_access: true)
+    Membership.create!(user: user, user_group: user_group, user_label: 'Group Owner', status: 'Managing Group', email_contact: email, read_access: true, update_access: true)
     if User.count > 8
       object_hash = {
         user: user,

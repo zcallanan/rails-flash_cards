@@ -2,7 +2,6 @@
   %table
     %thead
       %tr
-        %th Contact Email
         %th Label
         %th Status
         %th View Access
@@ -13,19 +12,18 @@
               %td
               %td
               %td
-              %td
                 %input{type: 'checkbox', name: 'read-access-all', id: 'read-access-all'}
                 %label{for: 'read-access-all'} Select All
               %td
                 %input{type: 'checkbox', name: 'update-access-all', id: 'update-access-all'}
                 %label{for: 'update-access-all'} Select All
               %td
+                // - if policy(@membership).update? // TODO: requires different action from update
                 %button{class: 'btn btn-primary', id: 'update-all-permissions'} Update All Permissions
             %tr
               - if policy(@membership).create?
                 = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
             %tr{id: 'owner-row', 'data-target' => 'user-group-table.owner'}
-              %td
               %td{class: 'owner-user-label'}= @owner.user_label
               %td{class: 'owner-status'}= @owner.status
               %td{class: 'owner-read-access'}= @owner.read_access

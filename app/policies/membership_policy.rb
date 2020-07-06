@@ -11,7 +11,7 @@ class MembershipPolicy < ApplicationPolicy
   end
 
   def create?
-    user_owns_record? || user_is_admin? || user_is_owner?
+    user_owns_record? || user_is_admin? || user_owns_user_group?
 
   end
 
@@ -26,9 +26,9 @@ class MembershipPolicy < ApplicationPolicy
     record.user == user
   end
 
-  def user_is_owner?
+  def user_owns_user_group?
     # for the create case
-    record.owner_id == user.id
+    record.user_group.user_id == user.id
   end
 
   def user_is_admin?

@@ -11,13 +11,8 @@ class UserGroupsController < ApplicationController
     @user_group = UserGroup.new
     # prepare simple_field usage
     @user_group.decks.build
-    @user_group.collections.build
-    @user_group.question_sets.build
     # generate option arrays for form fields
     @deck_select = select_options(@user, 'decks', 'deck_strings')
-    @collection_select = select_options(@user, 'collections', 'collection_strings', 'deck')
-    @question_set_select = select_options(@user, 'question_sets', 'question_set_strings', 'deck')
-    @tag_set_select = select_options(@user, 'tag_sets', 'tag_set_strings', 'deck')
   end
 
   def show
@@ -25,8 +20,8 @@ class UserGroupsController < ApplicationController
     memberships = Membership.all.where(user_group: @user_group).order("created_at DESC")
     @members = []
     memberships.each do |member|
-      # if member owns the user group and membership permission owner_id is this user
-      if member.user_id == @user_group.user.id && member.owner_id == member.user_id
+      # if member owns the user group
+      if member.user_id == @user_group.user.id
         # this looks for only the owner, and ensures the owner is added first to @members for the show view list
         @owner = member
         @members << @owner
@@ -39,15 +34,17 @@ class UserGroupsController < ApplicationController
     @membership = Membership.new
     # set creator to current user to pass create? validation
     @membership.user = current_user if @user_group.user == current_user
+    @membership.user_group = @user_group
   end
 
   def create
     @user_group = UserGroup.new(user_group_params)
     @user_group.user = current_user
+    authorize @user_group
 
     if @user_group.save
       Membership.create!(
-        owner_id: current_user,
+        email_contact: current_user.email,
         user_group: @user_group,
         user_label: 'Group Owner',
         status: 'Managing Group',
@@ -55,15 +52,12 @@ class UserGroupsController < ApplicationController
         update_access: true
       )
       params['user_group']['user_group_deck']['deck_id'].each { |id| UserGroupDeck.create!(user_group: @user_group, deck: Deck.find(id)) }
-      params['user_group']['user_group_collection']['collection_id'].each { |id| UserGroupCollection.create!(user_group: @user_group, collection: Collection.find(id)) }
-      params['user_group']['user_group_question_set']['question_set_id'].each { |id| UserGroupQuestionSet.create!(user_group: @user_group, question_set: QuestionSet.find(id)) }
-      params['user_group']['user_group_tag_set']['tag_set_id'].each { |id| UserGroupTagSet.create!(user_group: @user_group, tag_set: TagSet.find(id)) }
       redirect_to user_group_path(@user_group)
     # else
     #   render :index
     end
 
-    authorize @user_group
+
   end
 
   private

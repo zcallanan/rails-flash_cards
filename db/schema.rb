@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.string "status", default: "Invited"
     t.boolean "read_access", default: false
     t.boolean "update_access", default: false
-    t.integer "owner_id"
     t.bigint "user_id"
     t.bigint "user_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -238,15 +237,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "user_group_collections", force: :cascade do |t|
-    t.bigint "user_group_id", null: false
-    t.bigint "collection_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["collection_id"], name: "index_user_group_collections_on_collection_id"
-    t.index ["user_group_id"], name: "index_user_group_collections_on_user_group_id"
-  end
-
   create_table "user_group_decks", force: :cascade do |t|
     t.bigint "user_group_id", null: false
     t.bigint "deck_id", null: false
@@ -254,24 +244,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_user_group_decks_on_deck_id"
     t.index ["user_group_id"], name: "index_user_group_decks_on_user_group_id"
-  end
-
-  create_table "user_group_question_sets", force: :cascade do |t|
-    t.bigint "user_group_id", null: false
-    t.bigint "question_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_set_id"], name: "index_user_group_question_sets_on_question_set_id"
-    t.index ["user_group_id"], name: "index_user_group_question_sets_on_user_group_id"
-  end
-
-  create_table "user_group_tag_sets", force: :cascade do |t|
-    t.bigint "user_group_id", null: false
-    t.bigint "tag_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_set_id"], name: "index_user_group_tag_sets_on_tag_set_id"
-    t.index ["user_group_id"], name: "index_user_group_tag_sets_on_user_group_id"
   end
 
   create_table "user_groups", force: :cascade do |t|
@@ -335,13 +307,7 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "tag_set_strings", "users"
   add_foreign_key "tag_sets", "decks"
   add_foreign_key "tag_sets", "users"
-  add_foreign_key "user_group_collections", "collections"
-  add_foreign_key "user_group_collections", "user_groups"
   add_foreign_key "user_group_decks", "decks"
   add_foreign_key "user_group_decks", "user_groups"
-  add_foreign_key "user_group_question_sets", "question_sets"
-  add_foreign_key "user_group_question_sets", "user_groups"
-  add_foreign_key "user_group_tag_sets", "tag_sets"
-  add_foreign_key "user_group_tag_sets", "user_groups"
   add_foreign_key "user_groups", "users"
 end

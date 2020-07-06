@@ -6,7 +6,8 @@ class Api::V1::MembershipsController < Api::V1::BaseController
   def create
     @membership = Membership.new(membership_params)
     @users = User.all
-    @membership.owner_id = current_user.id
+    @owner = @user_group.user
+    # @membership.owner_id = current_user.id
     @membership.user_group = @user_group
     @users.each do |user|
       if user.email == @membership.email_contact # if the user exists, then bind them to the permission
@@ -21,10 +22,7 @@ class Api::V1::MembershipsController < Api::V1::BaseController
       memberships = Membership.all.where(user_group: @user_group)
       @members = []
       memberships.each do |member|
-        if member.user_id == @user_group.user.id && member.owner_id == member.user_id
-          @owner = member
-          @members << @owner
-        end
+        @members << member if member == @owner
       end
       memberships.each { |member| @members << member unless member.user_id == @user_group.user.id }
       render json: {

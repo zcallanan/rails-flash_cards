@@ -2,12 +2,6 @@
   = f.error_notification
   = f.input :name
   = f.simple_fields_for :user_group_deck do |ugd|
-    = ugd.input :deck_id, collection: @deck_select, input_html: { multiple: true, checked: true }, label: "Select the deck(s) for users to manage:", as: :check_boxes, include_hidden: false
-  = f.simple_fields_for :user_group_collection do |ugc|
-    = ugc.input :collection_id, collection: @collection_select, input_html: { multiple: true, checked: true }, label: "Select the collection(s) for users to manage:", as: :check_boxes, include_hidden: false
-  = f.simple_fields_for :user_group_question_set do |ugq|
-    = ugq.input :question_set_id, collection: @question_set_select, input_html: { multiple: true, checked: true }, label: "Select the question set(s) for users to manage:", as: :check_boxes, include_hidden: false
-  = f.simple_fields_for :user_group_tag_set do |ugt|
-    = ugt.input :tag_set_id, collection: @tag_set_select, input_html: { multiple: true, checked: true }, label: "Select the tag set(s) for users to manage:", as: :check_boxes, include_hidden: false
+    = ugd.input :deck_id, collection: @deck_select, input_html: { multiple: true, checked: true }, label: "Select what content users will be able to view or update as part of this group:", as: :check_boxes, include_hidden: false
   = f.submit class: "btn btn-primary"
 
