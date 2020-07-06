@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   create_table "collections", force: :cascade do |t|
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
-    t.boolean "global_collection_read", default: false
+    t.boolean "static", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_collections_on_deck_id"

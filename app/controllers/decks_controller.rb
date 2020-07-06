@@ -97,19 +97,19 @@ class DecksController < ApplicationController
 
     @deck.user = @user
     @deck.deck_strings.first.user = @user
-    @deck.collections.first.user = @user
-    @deck.collections.first.collection_strings.first.user = @user
     # @deck.collections.first.collection_strings.first.user
     authorize @deck
     if @deck.save!
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
-      DeckPermission.create!(
-        deck: @deck,
-        user: @user,
-        read_access: true,
-        update_access: true,
-        clone_access: true
-      )
+      # Set full access rights for deck owner
+      DeckPermission.create!(deck: @deck, user: @user, read_access: true, update_access: true, clone_access: true)
+      # Create the default collection. Collections are custom subsets of the full deck of cards used in review
+      collection = Collection.create!(deck: @deck, user: @user, static: true)
+      # # Static: true - denotes the collection that should not allow its card content to be editable
+      # Create strings for the initial collection
+      # # TODO: localize these strings
+      CollectionString.create!(collection: collection, user: @user, language: @deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
+
       redirect_to deck_path(@deck, language: @deck.default_language)
     else
       redirect_to decks_path
