@@ -4,19 +4,20 @@ class Api::V1::MembershipsController < Api::V1::BaseController
   before_action :set_membership, only: %i[update]
 
   def create
-    @membership = Membership.new(membership_params)
-    @users = User.all
     @owner = @user_group.user
-    # @membership.owner_id = current_user.id
+    # params are user_label, email contact, access level - at this point we don't know if entry is a saved user
+    @membership = Membership.new(membership_params)
     @membership.user_group = @user_group
-    @users.each do |user|
-      if user.email == @membership.email_contact # if the user exists, then bind them to the permission
-        @membership.user = user
-      else
-        # TODO: mailer
-        ## if user doesn't exist, send an email, then save their user to this permission once registered
-      end
+    # Check if user exists, if it does, assign the user to the permission
+    contact_user = User.find_by(email: @membership.email_contact)
+
+    unless contact_user.nil?
+      @membership.user = contact_user
+    # else
+      # TODO: mailer
+          # # if user doesn't exist, send an email, then save their user to this permission once registered
     end
+
     authorize @membership
     if @membership.save!
       memberships = Membership.all.where(user_group: @user_group)

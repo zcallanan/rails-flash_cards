@@ -2,6 +2,7 @@
   %table
     %thead
       %tr
+        %th Contact Email
         %th Label
         %th Status
         %th View Access
@@ -9,6 +10,7 @@
         %th
           %tbody{id: 'membership-table'}
             %tr
+              %td
               %td
               %td
               %td
@@ -24,6 +26,8 @@
               - if policy(@membership).create?
                 = render 'memberships/create_membership_form', user_group: @user_group, membership: @membership
             %tr{id: 'owner-row', 'data-target' => 'user-group-table.owner'}
+              %td
+                %em Confidential
               %td{class: 'owner-user-label'}= @owner.user_label
               %td{class: 'owner-status'}= @owner.status
               %td{class: 'owner-read-access'}= @owner.read_access
