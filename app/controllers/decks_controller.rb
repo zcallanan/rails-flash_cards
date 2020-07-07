@@ -3,89 +3,105 @@ class DecksController < ApplicationController
   before_action :set_deck, only: %i[show update]
 
   def index
-    @user = current_user
+    if user_signed_in?
+      @user = current_user
 
-    # list of decks the user owns
-    @decks_owned = policy_scope(Deck).my_decks_owned(@user, false)
-    decks_owned_strings = {
-      objects: @decks_owned, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-    }
-    # app/controllers/concerns/populate_strings
-    @decks_owned_strings = PopulateStrings.new(decks_owned_strings).call
+      # global decks
+      global_decks
 
-    # list of archived decks
-    @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
-    archived_deck_strings = {
-      objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-    }
-    @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
+      # list of decks the user owns
+      @decks_owned = policy_scope(Deck).my_decks_owned(@user, false)
+      decks_owned_strings = {
+        objects: @decks_owned, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
+      }
+      # app/controllers/concerns/populate_strings
+      @decks_owned_strings = PopulateStrings.new(decks_owned_strings).call
 
-    # list of decks the user can read but does not own
-    @decks_read = policy_scope(Deck).my_decks_not_owned(@user, false)
-    targeted_read_strings = {
-      objects: @decks_read, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
-    }
-    @decks_read_strings = PopulateStrings.new(targeted_read_strings).call
+      # list of archived decks
+      @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
+      archived_deck_strings = {
+        objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
+      }
+      @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
 
-    # list of decks the user can read & update but does not own
-    @decks_update = policy_scope(Deck).my_decks_not_owned(@user, true)
-    targeted_update_strings = {
-      objects: @decks_update, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
-    }
-    @decks_update_strings = PopulateStrings.new(targeted_update_strings).call
+      # list of decks the user can read but does not own
+      @decks_read = policy_scope(Deck).my_decks_not_owned(@user, false)
+      targeted_read_strings = {
+        objects: @decks_read, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
+      }
+      @decks_read_strings = PopulateStrings.new(targeted_read_strings).call
 
-    # create a deck form
-    @deck = Deck.new
-    # prepare simple_field usage
-    @deck.deck_strings.build
-    @collection = @deck.collections.build
-    @collection_string = @collection.collection_strings.build
-    @languages = Languages.list
+      # list of decks the user can read & update but does not own
+      @decks_update = policy_scope(Deck).my_decks_not_owned(@user, true)
+      targeted_update_strings = {
+        objects: @decks_update, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
+      }
+      @decks_update_strings = PopulateStrings.new(targeted_update_strings).call
+
+      # create a deck form
+      @deck = Deck.new
+      # prepare simple_field usage
+      @deck.deck_strings.build
+      @collection = @deck.collections.build
+      @collection_string = @collection.collection_strings.build
+      @languages = Languages.list
+    else
+      # All can view globally shared content
+      skip_policy_scope
+      global_decks
+    end
   end
 
   def show
-    @user = current_user
-    authorize @deck
-    @deck_strings = @deck.deck_strings
-    @deck_string_info = @deck_strings.where(language: params[:language]).first
-    @languages = Languages.list
-    # form setup
-    @deck_string = DeckString.new
-    @collection = Collection.new
-    # enable view's evaluation of collection policy create?
-    @collection.user = @user
-    @collection.deck = @deck
-    # prepare simple_field usage
-    @collection.collection_strings.build
+    if user_signed_in?
+      @user = current_user
+      authorize @deck
+      @deck_strings = @deck.deck_strings
+      @deck_string_info = @deck_strings.where(language: params[:language]).first
+      @languages = Languages.list
+      # form setup
+      @deck_string = DeckString.new
+      @collection = Collection.new
+      # enable view's evaluation of collection policy create?
+      @collection.user = @user
+      @collection.deck = @deck
+      # prepare simple_field usage
+      @collection.collection_strings.build
 
-    @collections_owned = policy_scope(Collection).collections_owned(@user)
-    collections_owned_strings = {
-      objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
-    }
-    @collections_owned_strings = PopulateStrings.new(collections_owned_strings).call
+      @collections_owned = policy_scope(Collection).collections_owned(@user)
+      collections_owned_strings = {
+        objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
+      }
+      @collections_owned_strings = PopulateStrings.new(collections_owned_strings).call
 
-    # list of collections the user can read but does not own
-    @collections_read = policy_scope(Collection).collections_not_owned(@user, false)
+      # list of collections the user can read but does not own
+      @collections_read = policy_scope(Collection).collections_not_owned(@user, false)
 
-    collection_read_strings = {
-      objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
-    }
-    @collections_read_strings = PopulateStrings.new(collection_read_strings).call
+      collection_read_strings = {
+        objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
+      }
+      @collections_read_strings = PopulateStrings.new(collection_read_strings).call
 
-    # list of collections the user can read & update but does not own
-    @collections_update = policy_scope(Collection).collections_not_owned(@user, true)
+      # list of collections the user can read & update but does not own
+      @collections_update = policy_scope(Collection).collections_not_owned(@user, true)
 
-    collection_update_strings = {
-      objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
-    }
-    @collections_update_strings = PopulateStrings.new(collection_update_strings).call
+      collection_update_strings = {
+        objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
+      }
+      @collections_update_strings = PopulateStrings.new(collection_update_strings).call
 
-    @languages = Languages.list
-    @language_options = [] # when updating a deck, user can change what language strings users see by default, if they exist. User preference overrides this
-    @reduced_languages = {} # remove language options from language list if a string exists in that language
-    language_collection = @deck.deck_strings.pluck(:language)
-    @languages.each do |key, value|
-      language_collection.include?(value) ? @language_options << [key, value] : @reduced_languages[key] = value
+      @languages = Languages.list
+      @language_options = [] # when updating a deck, user can change what language strings users see by default, if they exist. User preference overrides this
+      @reduced_languages = {} # remove language options from language list if a string exists in that language
+      language_collection = @deck.deck_strings.pluck(:language)
+      @languages.each do |key, value|
+        language_collection.include?(value) ? @language_options << [key, value] : @reduced_languages[key] = value
+      end
+    else
+      # All can view globally shared content
+      skip_authorization
+      skip_policy_scope
+      @deck_string = @deck.deck_strings.where(language: params[:language]).first
     end
   end
 
@@ -142,5 +158,38 @@ class DecksController < ApplicationController
 
   def set_deck
     @deck = Deck.find(params[:id])
+  end
+
+  def deck_search(language, category_id)
+    DeckSearchService.new(
+      language: language,
+      category: category_id
+    ).call(true)
+  end
+
+  def global_decks
+    # list of decks that are globally available
+    @decks_global = Deck.globally_available(true)
+    if params.key?('category')
+      language = params['category']['language']
+      category_id = params['category']['name']
+    else # account for going straight to /shared_decks
+      language = 'en'
+      category_id = ''
+    end
+
+    deck_strings = {
+      objects: @decks_global,
+      string_type: 'deck_strings',
+      id_type: :deck_id,
+      permission_type: nil,
+      deck: nil,
+      language: language
+    }
+
+    @decks = deck_search(language, category_id).order(updated_at: :desc)
+
+    # app/controllers/concerns/populate_strings
+    @decks_global_strings = PopulateStrings.new(deck_strings).call
   end
 end
