@@ -7,13 +7,26 @@
   z-index: 1;
 }
 
+li.active {
+  background: rgb(200,200,200);
+}
+
+li.active a {
+  color: black;
+}
+
 nav a {
   text-decoration: none;
-  padding: 20px;
+  padding: 6px;
   display: inline-block;
   color: white;
   transition: all 0.2s;
   text-transform: uppercase;
+}
+
+nav a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 nav ul {

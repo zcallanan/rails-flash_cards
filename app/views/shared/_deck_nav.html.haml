@@ -3,17 +3,17 @@
     %ul
       %li{id: 'create-deck'}
         = link_to 'Create Deck'
-      %li{id: 'all-decks-user'}
-        = link_to 'All Decks'
-      %li{id: 'my-decks-user'}
-        = link_to 'My Decks'
-      %li{id: 'private-decks-user'}
-        = link_to 'Shared Decks'
+      %li{id: 'all-decks-user', class: 'active', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
+        = link_to 'All Decks', '', data: { target: 'deck-tabs.alltab' }
+      %li{id: 'my-decks-user', 'data-target'=>'deck-tabs.listmydecks', 'data-action'=>'click->deck-tabs#tabclick' }
+        = link_to 'My Decks', '', data: { target: 'deck-tabs.mytab' }
+      %li{id: 'shared-decks-user', 'data-target'=>'deck-tabs.listshared', 'data-action'=>'click->deck-tabs#tabclick' }
+        = link_to 'Shared Decks', '', data: { target: 'deck-tabs.sharedtab'}
   - else
     %ul
-      %li{id: 'all-decks-global'}
+      %li{id: 'all-decks-global', class: 'active'}
         = link_to 'All Decks'
       %li{id: 'my-decks-global'}
         = link_to 'My Decks', new_user_session_path
-      %li{id: 'private-decks-global'}
-        = link_to 'Private Decks', new_user_session_path
+      %li{id: 'shared-decks-global'}
+        = link_to 'Shared Decks', new_user_session_path
