@@ -1,6 +1,6 @@
-= simple_form_for(category, method: :get, url: shared_decks_path) do |f|
-  // TODO: nested collection of categories
+= simple_form_for(category, method: :get, url: decks_path) do |f|
   // TODO: default should return all results
+  // TODO: multi-language select
   = f.input :name, collection: Category.generate_categories, label: 'Category', prompt: 'All', include_hidden: false, as: :grouped_select, group_method: :last
   = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true
   = f.submit 'Find cards to review', class: "btn btn-primary"
