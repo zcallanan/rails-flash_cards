@@ -1,0 +1,19 @@
+%nav{id: 'deck-nav-main', 'data-target'=>'index-scroll.nav', 'data-top-of-nav'=>''}
+  - if user_signed_in?
+    %ul
+      %li{id: 'create-deck'}
+        = link_to 'Create Deck'
+      %li{id: 'all-decks-user'}
+        = link_to 'All Decks'
+      %li{id: 'my-decks-user'}
+        = link_to 'My Decks'
+      %li{id: 'private-decks-user'}
+        = link_to 'Shared Decks'
+  - else
+    %ul
+      %li{id: 'all-decks-global'}
+        = link_to 'All Decks'
+      %li{id: 'my-decks-global'}
+        = link_to 'My Decks', new_user_session_path
+      %li{id: 'private-decks-global'}
+        = link_to 'Private Decks', new_user_session_path
