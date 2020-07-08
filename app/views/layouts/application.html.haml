@@ -8,7 +8,13 @@
     %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true
-  %body{ class: "#{controller_name}_#{action_name}" }
-    = render 'shared/navbar'
-    = render 'shared/flashes'
-    = yield
+  - if user_signed_in?
+    %body{'data-controller'=>'deck-create'}
+      = render 'shared/navbar'
+      = render 'shared/flashes'
+      = yield
+  - else
+    %body
+      = render 'shared/navbar'
+      = render 'shared/flashes'
+      = yield

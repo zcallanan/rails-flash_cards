@@ -1,9 +1,10 @@
-#deck-index{'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav'}
-
+#deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav' }
   .deck-tabs{'data-controller'=>'deck-tabs'}
     = render 'shared/deck_nav'
-    #top-bar
+    #top-bar{'data-target'=>'deck-create.topbardiv'}
     - if user_signed_in?
+      #deck-create{'data-target'=>'deck-create.deckcreatediv'}
+        = render 'create_deck_form', deck: @deck, user: @user
       .global-decks{'data-target'=>'deck-tabs.global'}
         - @decks_global_strings.each do |string|
           = link_to deck_path(string.deck, language: string.language) do
@@ -30,11 +31,12 @@
           = link_to deck_path(string.deck, language: string.language) do
             = render 'deck_panel', deck_string: string
 
-      = render 'create_deck_form', deck: @deck, user: @user
+
     - else
       .deck-tabs
         .global-decks
           - @decks_global_strings.each do |string|
             = link_to deck_path(string.deck, language: string.language) do
               = render 'deck_panel', deck_string: string
+}
 
