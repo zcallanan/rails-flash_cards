@@ -1,6 +1,5 @@
 // rendered by decks/index
 
-%h3 Create a deck of cards
 = simple_form_for(deck, method: :post, url: decks_path) do |f|
   = f.input :category_id, collection: Category.generate_categories, label: 'Category', include_blank: false, include_hidden: false, as: :grouped_select, group_method: :last
   = f.simple_fields_for :deck_strings do |ds|
