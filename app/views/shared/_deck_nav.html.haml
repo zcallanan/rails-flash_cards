@@ -4,11 +4,11 @@
       %li{id: 'create-deck'}
         = link_to 'Create Deck'
       %li{id: 'all-decks-user', class: 'active', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
-        = link_to 'All Decks', '', data: { target: 'deck-tabs.alltab' }
+        = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall', action: 'click->deck-tabs#tabclick' }
       %li{id: 'my-decks-user', 'data-target'=>'deck-tabs.listmydecks', 'data-action'=>'click->deck-tabs#tabclick' }
-        = link_to 'My Decks', '', data: { target: 'deck-tabs.mytab' }
+        = link_to 'My Decks', '', data: { target: 'deck-tabs.linkmydecks', action: 'click->deck-tabs#tabclick' }
       %li{id: 'shared-decks-user', 'data-target'=>'deck-tabs.listshared', 'data-action'=>'click->deck-tabs#tabclick' }
-        = link_to 'Shared Decks', '', data: { target: 'deck-tabs.sharedtab'}
+        = link_to 'Shared Decks', '', data: { target: 'deck-tabs.linkshared', action: 'click->deck-tabs#tabclick' }
   - else
     %ul
       %li{id: 'all-decks-global', class: 'active'}

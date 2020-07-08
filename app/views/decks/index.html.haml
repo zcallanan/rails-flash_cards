@@ -1,44 +1,40 @@
 #deck-index{'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav'}
-  #top-bar
+
   .deck-tabs{'data-controller'=>'deck-tabs'}
     = render 'shared/deck_nav'
+    #top-bar
     - if user_signed_in?
       .global-decks{'data-target'=>'deck-tabs.global'}
-        %ul
         - @decks_global_strings.each do |string|
           = link_to deck_path(string.deck, language: string.language) do
             = render 'deck_panel', deck_string: string
+
       .my-decks{'data-target'=>'deck-tabs.mydecks'}
-        %ul
-        - @decks_owned_strings. each do |string|
-          %li
-            = link_to string.title, deck_path(string.deck, language: string.language)
+        - @decks_owned_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
         %h5 Archived Decks
-        %ul
-        - @decks_archived_strings. each do |string|
-          %li
-            = link_to string.title, deck_path(string.deck, language: string.language)
+        - @decks_archived_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
       .shared-decks{'data-target'=>'deck-tabs.shared'}
         %h3 Shared decks you can view
-        %ul
         - @decks_read_strings.each do |string|
-          %li
-            = link_to string.title, deck_path(string.deck, language: string.language)
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
         %h3 Shared decks you can view & update
-        %ul
         - @decks_update_strings.each do |string|
-          %li
-            = link_to string.title, deck_path(string.deck, language: string.language)
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
       = render 'create_deck_form', deck: @deck, user: @user
     - else
       .deck-tabs
         .global-decks
-          %ul
           - @decks_global_strings.each do |string|
-            %li
-              = link_to string.title, deck_path(string.deck, language: string.language)
+            = link_to deck_path(string.deck, language: string.language) do
+              = render 'deck_panel', deck_string: string
 
