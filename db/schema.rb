@@ -49,15 +49,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.index ["card_id"], name: "index_card_strings_on_card_id"
   end
 
-  create_table "card_tags", force: :cascade do |t|
-    t.bigint "tag_set_id", null: false
-    t.bigint "card_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["card_id"], name: "index_card_tags_on_card_id"
-    t.index ["tag_set_id"], name: "index_card_tags_on_tag_set_id"
-  end
-
   create_table "cards", force: :cascade do |t|
     t.boolean "archive", default: false
     t.bigint "deck_id", null: false
@@ -94,15 +85,6 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["collection_id"], name: "index_collection_strings_on_collection_id"
     t.index ["user_id"], name: "index_collection_strings_on_user_id"
-  end
-
-  create_table "collection_tags", force: :cascade do |t|
-    t.bigint "tag_set_id", null: false
-    t.bigint "collection_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["collection_id"], name: "index_collection_tags_on_collection_id"
-    t.index ["tag_set_id"], name: "index_collection_tags_on_tag_set_id"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -203,32 +185,11 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
 
   create_table "tag_relations", force: :cascade do |t|
     t.bigint "tag_id", null: false
-    t.bigint "tag_set_id", null: false
+    t.bigint "card_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["card_id"], name: "index_tag_relations_on_card_id"
     t.index ["tag_id"], name: "index_tag_relations_on_tag_id"
-    t.index ["tag_set_id"], name: "index_tag_relations_on_tag_set_id"
-  end
-
-  create_table "tag_set_strings", force: :cascade do |t|
-    t.string "title"
-    t.string "language"
-    t.string "description"
-    t.bigint "user_id", null: false
-    t.bigint "tag_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_set_id"], name: "index_tag_set_strings_on_tag_set_id"
-    t.index ["user_id"], name: "index_tag_set_strings_on_user_id"
-  end
-
-  create_table "tag_sets", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "deck_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["deck_id"], name: "index_tag_sets_on_deck_id"
-    t.index ["user_id"], name: "index_tag_sets_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -277,15 +238,11 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "card_question_sets", "question_sets"
   add_foreign_key "card_question_sets", "questions"
   add_foreign_key "card_strings", "cards"
-  add_foreign_key "card_tags", "cards"
-  add_foreign_key "card_tags", "tag_sets"
   add_foreign_key "cards", "decks"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
   add_foreign_key "collection_strings", "collections"
   add_foreign_key "collection_strings", "users"
-  add_foreign_key "collection_tags", "collections"
-  add_foreign_key "collection_tags", "tag_sets"
   add_foreign_key "collections", "decks"
   add_foreign_key "collections", "users"
   add_foreign_key "deck_permissions", "decks"
@@ -301,12 +258,8 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
-  add_foreign_key "tag_relations", "tag_sets"
+  add_foreign_key "tag_relations", "cards"
   add_foreign_key "tag_relations", "tags"
-  add_foreign_key "tag_set_strings", "tag_sets"
-  add_foreign_key "tag_set_strings", "users"
-  add_foreign_key "tag_sets", "decks"
-  add_foreign_key "tag_sets", "users"
   add_foreign_key "user_group_decks", "decks"
   add_foreign_key "user_group_decks", "user_groups"
   add_foreign_key "user_groups", "users"
