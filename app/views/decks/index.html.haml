@@ -1,6 +1,6 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav' }
   .deck-tabs{'data-controller'=>'deck-tabs'}
-    = render 'shared/deck_nav'
+    = render 'shared/deck_nav', decks_owned_strings: @decks_owned_strings
     #top-bar{'data-target'=>'deck-create.topbardiv'}
     - if user_signed_in?
       #deck-create{'data-target'=>'deck-create.deckcreatediv'}
@@ -38,5 +38,4 @@
           - @decks_global_strings.each do |string|
             = link_to deck_path(string.deck, language: string.language) do
               = render 'deck_panel', deck_string: string
-}
 

@@ -1,8 +1,12 @@
 %nav{id: 'deck-nav-main', 'data-target'=>'index-scroll.nav', 'data-top-of-nav'=>'' }
   - if user_signed_in?
     %ul
-      %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'click->deck-create#createdeck'}
-        = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
+      - if decks_owned_strings.empty?
+        %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'load@window->deck-create#click click->deck-create#createdeck'    }
+          = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
+      - else
+        %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'click->deck-create#createdeck'}
+          = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
       %li{id: 'all-decks-user', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
         = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall', action: 'click->deck-tabs#tabclick' }
       %li{id: 'my-decks-user', class: 'active', 'data-target'=>'deck-tabs.listmydecks', 'data-action'=>'click->deck-tabs#tabclick' }
