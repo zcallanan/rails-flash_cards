@@ -3,6 +3,7 @@ Membership.destroy_all
 DeckString.destroy_all
 CollectionString.destroy_all
 QuestionSetString.destroy_all
+CardString.destroy_all
 UserGroupDeck.destroy_all
 TagRelation.destroy_all
 Tag.destroy_all
@@ -14,6 +15,12 @@ Deck.destroy_all
 UserGroup.destroy_all
 User.destroy_all
 Category.destroy_all
+
+tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog']
+
+tags.each do |tag|
+  Tag.create!(name: tag)
+end
 
 # TODO: generate list of real categories
 category_list = {
@@ -68,7 +75,17 @@ def create_strings(user, deck, collection, question_set, cards, number)
     en: ["title one #{number}", "description one #{number}", true],
     fr: ["titre premier #{number}", "description un #{number}", false]
   }
+  card_strings = {
+    en: ["title #{number}", "body #{number}"],
+    fr: ["titre #{number}", "corps #{number}"]
+  }
   string_hash = {en: [], fr: []}
+  cards.each do |card|
+    card_strings.each do |key, value|
+      CardString.create!(user: user, card: card, language: key, title: value.first, body: value.last)
+    end
+  end
+
   strings.each do |key, value|
     string_hash[key] << DeckString.create!(user: user, deck: deck, language: key, title: "Deck #{value[0]} #{deck.id}", description: "Deck #{value[1]} #{deck.id}" )
     string_hash[key] << CollectionString.create!(user: user, collection: collection, language: key, title: "Collection #{value[0]} #{collection.id}", description: "Collection #{value[1]} #{collection.id}" )
@@ -91,7 +108,7 @@ languages = [:en, :fr]
     card_list = []
     c = 4
     5.times do
-      card_list << Card.create!(deck: deck)
+      card_list << Card.create!(deck: deck, user: user)
       CollectionCard.create!(card: card_list.last, collection: collection, priority: c)
       c -= 1
     end

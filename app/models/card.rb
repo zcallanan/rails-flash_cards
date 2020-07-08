@@ -1,5 +1,6 @@
 class Card < ApplicationRecord
   belongs_to :deck
+  belongs_to :user
   has_many :collection_cards
   has_many :collections, through: :collection_cards
   has_many :tag_relations

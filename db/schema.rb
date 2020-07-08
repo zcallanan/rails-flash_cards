@@ -44,17 +44,21 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.string "title"
     t.string "body"
     t.bigint "card_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["card_id"], name: "index_card_strings_on_card_id"
+    t.index ["user_id"], name: "index_card_strings_on_user_id"
   end
 
   create_table "cards", force: :cascade do |t|
     t.boolean "archive", default: false
     t.bigint "deck_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deck_id"], name: "index_cards_on_deck_id"
+    t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -238,7 +242,9 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "card_question_sets", "question_sets"
   add_foreign_key "card_question_sets", "questions"
   add_foreign_key "card_strings", "cards"
+  add_foreign_key "card_strings", "users"
   add_foreign_key "cards", "decks"
+  add_foreign_key "cards", "users"
   add_foreign_key "collection_cards", "cards"
   add_foreign_key "collection_cards", "collections"
   add_foreign_key "collection_strings", "collections"
