@@ -1,39 +1,42 @@
-- if user_signed_in?
-  %h3 Globally available
-  %ul
-  - @decks_global_strings.each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+#deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav' }
+  .deck-tabs{'data-controller'=>'deck-tabs'}
+    = render 'shared/deck_nav'
+    #top-bar{'data-target'=>'deck-create.topbardiv'}
+    - if user_signed_in?
+      #deck-create{'data-target'=>'deck-create.deckcreatediv'}
+        = render 'create_deck_form', deck: @deck, user: @user
+      .global-decks{'data-target'=>'deck-tabs.global'}
+        - @decks_global_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
-  %h3 Decks owned
-  %ul
-  - @decks_owned_strings. each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+      .my-decks{'data-target'=>'deck-tabs.mydecks'}
+        - @decks_owned_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
-  %h3 Decks archived
-  %ul
-  - @decks_archived_strings. each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+        %h5 Archived Decks
+        - @decks_archived_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
-  %h3 Shared decks you can view
-  %ul
-  - @decks_read_strings.each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+      .shared-decks{'data-target'=>'deck-tabs.shared'}
+        %h3 Shared decks you can view
+        - @decks_read_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
-  %h3 Shared decks you can view & update
-  %ul
-  - @decks_update_strings.each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+        %h3 Shared decks you can view & update
+        - @decks_update_strings.each do |string|
+          = link_to deck_path(string.deck, language: string.language) do
+            = render 'deck_panel', deck_string: string
 
-  = render 'create_deck_form', deck: @deck, user: @user
-- else
-  %h3 Globally available
-  %ul
-  - @decks_global_strings.each do |string|
-    %li
-      = link_to string.title, deck_path(string.deck, language: string.language)
+
+    - else
+      .deck-tabs
+        .global-decks
+          - @decks_global_strings.each do |string|
+            = link_to deck_path(string.deck, language: string.language) do
+              = render 'deck_panel', deck_string: string
+}
 

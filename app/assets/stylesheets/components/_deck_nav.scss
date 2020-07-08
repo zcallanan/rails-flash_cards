@@ -1,0 +1,78 @@
+#deck-nav-main {
+  background: black;
+  top: 0;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+li.active {
+  background: rgb(200,200,200);
+}
+
+li.active a {
+  color: black;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 6px;
+  display: inline-block;
+  color: white;
+  text-transform: uppercase;
+}
+
+nav a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+nav ul {
+  margin: 0;
+  padding:0;
+  list-style: none;
+  display: flex;
+}
+
+nav li {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav li:hover {
+  cursor: pointer;
+}
+
+li#create-deck {
+  // max-width: 500px;
+  overflow: hidden;
+  background: white;
+  // transition: all .5s;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+nav {
+  background: black;
+  top: 0;
+  width: 100%;
+  transition: all 0.5s;
+  position: relative;
+  z-index: 1;
+}
+
+.fixed-nav nav {
+  position: fixed !important;
+  box-shadow: 0 5px rgba(0,0,0,0.1)
+}
+
+// .fixed-nav li#create-deck {
+//   max-width: 500px;
+// }
+
+li#create-deck a {
+  color: black;
+}
