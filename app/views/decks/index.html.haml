@@ -5,7 +5,7 @@
     - if user_signed_in?
       #deck-create{'data-target'=>'deck-create.deckcreatediv'}
         = render 'create_deck_form', deck: @deck, user: @user
-      .global-decks{'data-target'=>'deck-tabs.global'}
+      .my-global-decks{'data-target'=>'deck-tabs.global'}
         - @decks_global_strings.each do |string|
           = link_to deck_path(string.deck, language: string.language) do
             = render 'deck_panel', deck_string: string

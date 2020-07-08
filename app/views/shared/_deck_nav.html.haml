@@ -3,9 +3,9 @@
     %ul
       %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'click->deck-create#createdeck'}
         = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
-      %li{id: 'all-decks-user', class: 'active', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
+      %li{id: 'all-decks-user', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
         = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall', action: 'click->deck-tabs#tabclick' }
-      %li{id: 'my-decks-user', 'data-target'=>'deck-tabs.listmydecks', 'data-action'=>'click->deck-tabs#tabclick' }
+      %li{id: 'my-decks-user', class: 'active', 'data-target'=>'deck-tabs.listmydecks', 'data-action'=>'click->deck-tabs#tabclick' }
         = link_to 'My Decks', '', data: { target: 'deck-tabs.linkmydecks', action: 'click->deck-tabs#tabclick' }
       %li{id: 'shared-decks-user', 'data-target'=>'deck-tabs.listshared', 'data-action'=>'click->deck-tabs#tabclick' }
         = link_to 'Shared Decks', '', data: { target: 'deck-tabs.linkshared', action: 'click->deck-tabs#tabclick' }
