@@ -16,3 +16,6 @@
     %p{class: 'deck-total-cards'} Total Cards
     %p{class: 'deck-question-count'} Total Custom Questions
     %p Rating/Score/Comments
+  .deck-link
+    = link_to 'View Deck', deck_path(deck_string.deck, language: deck_string.language), class: 'btn btn-primary'
+
