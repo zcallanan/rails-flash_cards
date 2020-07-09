@@ -3,6 +3,7 @@ class CreateCards < ActiveRecord::Migration[6.0]
     create_table :cards do |t|
       t.boolean :archive, default: false
       t.references :deck, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

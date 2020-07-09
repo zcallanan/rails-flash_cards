@@ -1,8 +1,11 @@
-= simple_form_for(category, method: :get, url: decks_path) do |f|
-  // TODO: default should return all results
-  // TODO: multi-language select
-  = f.input :name, collection: Category.generate_categories, label: 'Category', prompt: 'All', include_hidden: false, as: :grouped_select, group_method: :last
-  = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true
-  = f.submit 'Find cards to review', class: "btn btn-primary"
+.tag-field{'data-controller'=>'tags'}
+  = simple_form_for(category, method: :get, url: decks_path) do |f|
+    // TODO: default should return all results
+    // TODO: multi-language select
+    = f.input :name, collection: Category.generate_categories, label: 'Category', prompt: 'All', include_hidden: false, as: :grouped_select, group_method: :last
+    = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true
+    = f.input :tag, label: 'Tags', input_html: { data: { target: 'tags.tagField', action: 'keydown->tags#change change->tags#change' } }
+    %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
+    = f.submit 'Find cards to review', class: "btn btn-primary"
 
 

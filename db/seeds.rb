@@ -3,15 +3,24 @@ Membership.destroy_all
 DeckString.destroy_all
 CollectionString.destroy_all
 QuestionSetString.destroy_all
-TagSetString.destroy_all
+CardString.destroy_all
 UserGroupDeck.destroy_all
-TagSet.destroy_all
+TagRelation.destroy_all
+Tag.destroy_all
 QuestionSet.destroy_all
+CollectionCard.destroy_all
+Card.destroy_all
 Collection.destroy_all
 Deck.destroy_all
 UserGroup.destroy_all
 User.destroy_all
 Category.destroy_all
+
+tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog']
+
+tags.each do |tag|
+  Tag.create!(name: tag)
+end
 
 # TODO: generate list of real categories
 category_list = {
@@ -61,19 +70,26 @@ def generate_permissions(**objects)
   end
 end
 
-def create_strings(user, deck, collection, question_set, tag_set, number)
+def create_strings(user, deck, collection, question_set, cards, number)
   strings = {
     en: ["title one #{number}", "description one #{number}", true],
     fr: ["titre premier #{number}", "description un #{number}", false]
-    # de: ["Titel eins #{number}", "Beschreibung ein #{number}", false],
-    # ru: ["заглавие первое #{number}", "первое описание #{number}", false]
+  }
+  card_strings = {
+    en: ["title #{number}", "body #{number}"],
+    fr: ["titre #{number}", "corps #{number}"]
   }
   string_hash = {en: [], fr: []}
+  cards.each do |card|
+    card_strings.each do |key, value|
+      CardString.create!(user: user, card: card, language: key, title: value.first, body: value.last)
+    end
+  end
+
   strings.each do |key, value|
     string_hash[key] << DeckString.create!(user: user, deck: deck, language: key, title: "Deck #{value[0]} #{deck.id}", description: "Deck #{value[1]} #{deck.id}" )
     string_hash[key] << CollectionString.create!(user: user, collection: collection, language: key, title: "Collection #{value[0]} #{collection.id}", description: "Collection #{value[1]} #{collection.id}" )
     string_hash[key] << QuestionSetString.create!(user: user, question_set: question_set, language: key, title: "Question Set #{value[0]} #{question_set.id}", description: "Question Set #{value[1]} #{question_set.id}" )
-    string_hash[key] << TagSetString.create!(user: user, tag_set: tag_set, language: key, title: "Tag Set #{value[0]} #{tag_set.id}", description: "Tag Set #{value[1]} #{tag_set.id}" )
   end
   string_hash
 end
@@ -89,9 +105,15 @@ languages = [:en, :fr]
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
     collection = Collection.create!(user: user, deck: deck, static: true)
+    card_list = []
+    c = 4
+    5.times do
+      card_list << Card.create!(deck: deck, user: user)
+      CollectionCard.create!(card: card_list.last, collection: collection, priority: c)
+      c -= 1
+    end
     question_set = QuestionSet.create!(user: user, deck: deck)
-    tag_set = TagSet.create!(user: user, deck: deck)
-    string_hash = create_strings(user, deck, collection, question_set, tag_set, x)
+    string_hash = create_strings(user, deck, collection, question_set, card_list, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
     ug_deck = UserGroupDeck.create!(user_group: user_group, deck: deck)
