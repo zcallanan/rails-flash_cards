@@ -13,7 +13,7 @@ class DeckSearchService
       # reduce deck list to those with child deck strings of @language
       @decks = @decks.global_search_by_language(@language)
       # reduce deck list by tags
-      @decks = @decks.global_search_by_tags(@tags)
+      @decks = @decks.global_search_by_tags(@tags) unless @tags.nil?
       @decks
     end
   end
