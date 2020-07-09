@@ -44,17 +44,15 @@ class DecksController < ApplicationController
       @deck.deck_strings.build
       @collection = @deck.collections.build
       @collection_string = @collection.collection_strings.build
-      @languages = Languages.list
-
-      # search form
-      @category = Category.new
-      @categories = Category.all
-
     else
       # All can view globally shared content
       skip_policy_scope
       global_decks
     end
+    # search form
+    @languages = Languages.list
+    @category = Category.new
+    @categories = Category.all
   end
 
   def show
