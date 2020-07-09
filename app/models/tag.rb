@@ -1,6 +1,8 @@
 class Tag < ApplicationRecord
-  has_many :card_tags
-  has_many :cards, through: :card_tags
-  has_many :collection_tags
-  has_many :tags, through: :collection_tags
+  has_many :tag_relations
+  has_many :cards, through: :tag_relations
+
+  def self.collect_tags(deck)
+    Tag.all.includes(tag_relations: :card).where(cards: { deck_id: deck.id }).references(tag_relations: :cards)
+  end
 end

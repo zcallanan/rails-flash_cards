@@ -2,34 +2,31 @@
   .deck-tabs{'data-controller'=>'deck-tabs'}
     = render 'shared/deck_nav', decks_owned_strings: @decks_owned_strings
     #top-bar{'data-target'=>'deck-create.topbardiv'}
+    #search-bar
+      = render 'shared/deck_search_form', category: @category, languages: @languages
     - if user_signed_in?
       #deck-create{'data-target'=>'deck-create.deckcreatediv'}
         = render 'create_deck_form', deck: @deck, user: @user
       .my-global-decks{'data-target'=>'deck-tabs.global'}
         - @decks_global_strings.each do |string|
-          = link_to deck_path(string.deck, language: string.language) do
-            = render 'deck_panel', deck_string: string
+          = render 'deck_panel', deck_string: string
 
       .my-decks{'data-target'=>'deck-tabs.mydecks'}
         - @decks_owned_strings.each do |string|
-          = link_to deck_path(string.deck, language: string.language) do
-            = render 'deck_panel', deck_string: string
+          = render 'deck_panel', deck_string: string
 
         %h5 Archived Decks
         - @decks_archived_strings.each do |string|
-          = link_to deck_path(string.deck, language: string.language) do
-            = render 'deck_panel', deck_string: string
+          = render 'deck_panel', deck_string: string
 
       .shared-decks{'data-target'=>'deck-tabs.shared'}
         %h3 Shared decks you can view
         - @decks_read_strings.each do |string|
-          = link_to deck_path(string.deck, language: string.language) do
-            = render 'deck_panel', deck_string: string
+          = render 'deck_panel', deck_string: string
 
         %h3 Shared decks you can view & update
         - @decks_update_strings.each do |string|
-          = link_to deck_path(string.deck, language: string.language) do
-            = render 'deck_panel', deck_string: string
+          = render 'deck_panel', deck_string: string
 
 
     - else
