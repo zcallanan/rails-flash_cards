@@ -1,6 +1,3 @@
-// As a user I can add any tag that exists to my content, across all decks
-// It's saved to a tag_set
-
 import { Controller } from "stimulus"
 
 export default class extends Controller {
