@@ -44,13 +44,18 @@ export default class extends Controller {
         }).join('');
         suggestions.innerHTML = html;
       }
-      if (editorText !== '') {
+      if (editorText !== '' && localStorage.getItem('tags') === null) {
         fetch(endpoint)
         .then(blob => blob.json())
         .then(data => {
+          localStorage.setItem('tags', JSON.stringify(data)); // save tags to local storage
           tags.push(...data);
           displayMatches(editorText, tags);
         })
+      } else if (editorText !== '' && localStorage.getItem('tags') !== null) {
+        const data = JSON.parse(localStorage.getItem('tags')) // get tags from local storage if available
+        tags.push(...data);
+        displayMatches(editorText, tags);
       } else {
           suggestions.innerHTML = ''; // if there's nothing in the editor field, remove the typeahead html
       }

@@ -130,7 +130,6 @@ class DecksController < ApplicationController
     else
       redirect_to decks_path
     end
-
   end
 
   def update
@@ -160,10 +159,11 @@ class DecksController < ApplicationController
     @deck = Deck.find(params[:id])
   end
 
-  def deck_search(language, category_id)
+  def deck_search(language, category_ids, tags)
     DeckSearchService.new(
       language: language,
-      category: category_id
+      categories: category_ids,
+      tags: tags
     ).call(true)
   end
 
@@ -172,22 +172,23 @@ class DecksController < ApplicationController
     @decks_global = Deck.globally_available(true)
     if params.key?('category')
       language = params['category']['language']
-      category_id = params['category']['name']
+      category_ids = params['category']['name']
+      tags = params['category']['tag']
     else # account for going straight to /shared_decks
       language = 'en'
-      category_id = ''
+      category_ids = ''
     end
 
+    @decks = deck_search(language, category_ids, tags).order(updated_at: :desc)
+
     deck_strings = {
-      objects: @decks_global,
+      objects: @decks,
       string_type: 'deck_strings',
       id_type: :deck_id,
       permission_type: nil,
       deck: nil,
       language: language
     }
-
-    @decks = deck_search(language, category_id).order(updated_at: :desc)
 
     # app/controllers/concerns/populate_strings
     @decks_global_strings = PopulateStrings.new(deck_strings).call
