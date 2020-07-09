@@ -1,5 +1,5 @@
 class Category < ApplicationRecord
-  attr_accessor :language
+  attr_accessor :language, :tag
 
   has_many :decks
 

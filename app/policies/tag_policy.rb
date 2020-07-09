@@ -1,4 +1,4 @@
-class TagSetPolicy < ApplicationPolicy
+class TagPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
