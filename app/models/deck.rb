@@ -12,12 +12,26 @@ class Deck < ApplicationRecord
   has_many :cards
   accepts_nested_attributes_for :deck_strings, :collections
 
-  scope :global_search_by_category, lambda { |category|
-    category.empty? ? where(global_deck_read: true) : where(category_id: category, global_deck_read: true)
+  scope :global_search_by_categories, lambda { |categories|
+    if categories.empty?
+      where(global_deck_read: true)
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:global_deck_read] = true
+      where(category_hash)
+    end
   }
 
   scope :global_search_by_language, lambda { |language|
     includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+  }
+
+  scope :global_search_by_tags, lambda { |tags|
+    tag_array = tags.split(',')
+    tag_hash = {}
+    tag_array.each { |tag| tag_hash[:tags] = { name: tag } }
+    includes(cards: [tag_relations: :tag]).where(tag_hash).references(cards: [tag_relations: :tags])
   }
 
   scope :my_decks_owned, lambda { |user, archived|

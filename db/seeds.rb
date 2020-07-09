@@ -109,9 +109,18 @@ languages = [:en, :fr]
     c = 4
     5.times do
       card_list << Card.create!(deck: deck, user: user)
+
       CollectionCard.create!(card: card_list.last, collection: collection, priority: c)
       c -= 1
     end
+
+    card_list.each do |card|
+      card_tags = Tag.all.sample(2)
+      card_tags.each do |tag|
+        TagRelation.create!(card: card, tag: tag)
+      end
+    end
+
     question_set = QuestionSet.create!(user: user, deck: deck)
     string_hash = create_strings(user, deck, collection, question_set, card_list, x)
     x += 1
