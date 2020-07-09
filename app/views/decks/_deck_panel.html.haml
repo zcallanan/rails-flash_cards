@@ -5,8 +5,13 @@
       %h4{class: 'deck-category'}= deck_string.deck.category.name
     .deck-row-two
       %h4{class: 'deck-description'}= deck_string.description
-    .deck-row-three
-      %p{class: 'deck-tags'} Tags
+      .deck-row-three
+        - tags = Tag.collect_tags(deck_string.deck)
+        - tag_array = []
+        - tags.each do |tag|
+          - tag_array << tag.name
+        - tag_array.uniq.sort.each do |name|
+          %span{class: 'deck-tags badge badge-primary'}= name
   .deck-stats
     %p{class: 'deck-total-cards'} Total Cards
     %p{class: 'deck-question-count'} Total Custom Questions
