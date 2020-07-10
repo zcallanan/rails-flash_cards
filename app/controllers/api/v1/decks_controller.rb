@@ -1,6 +1,13 @@
 class Api::V1::DecksController < Api::V1::BaseController
-  acts_as_token_authentication_handler_for User
+  before_action :authenticate_user!, except: %i[global]
+  acts_as_token_authentication_handler_for User, except: %i[global]
   before_action :set_deck, only: %i[update]
+
+  def global
+    array = global_decks
+
+    render json: { data: { partials: array, formats: [:json], layout: false } }
+  end
 
   def update
     authorize(@deck)
@@ -31,5 +38,50 @@ class Api::V1::DecksController < Api::V1::BaseController
   def render_error
     render json: { errors: @membership.errors.full_messages },
       status: :unprocessable_entity
+  end
+
+  def deck_search(language, category_ids, tags)
+    DeckSearchService.new(
+      language: language,
+      categories: category_ids,
+      tags: tags
+    ).call(true)
+  end
+
+  def global_decks
+    # list of decks that are globally available
+    # curl -s http://localhost:3000/api/v1/decks/global
+    @decks_global = Deck.globally_available(true)
+    if params.key?('category')
+      language = params['category']['language']
+      category_ids = params['category']['name']
+      tags = params['category']['tag']
+    else # account for going straight to /shared_decks
+      language = 'en'
+      category = Category.find_by(name: 'All Categories')
+      category_ids = [category.id]
+    end
+
+    @decks = deck_search(language, category_ids, tags).order(updated_at: :desc)
+
+    deck_strings = {
+      objects: @decks,
+      string_type: 'deck_strings',
+      id_type: :deck_id,
+      permission_type: nil,
+      deck: nil,
+      language: language
+    }
+
+    # app/controllers/concerns/populate_strings
+    @decks_global_strings = PopulateStrings.new(deck_strings).call
+    array = []
+    @decks_global_strings.each do |string|
+      array << render_to_string(
+        partial: 'deck_panel',
+        locals: { deck_string: string }
+      )
+    end
+    array
   end
 end

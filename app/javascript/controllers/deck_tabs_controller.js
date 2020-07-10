@@ -33,6 +33,8 @@ export default class extends Controller {
       if (list_my_decks.classList.contains('active')) list_my_decks.classList.remove('active')
       if (list_shared.classList.contains('active')) list_shared.classList.remove('active')
       list_all.classList.add('active');
+      const url = `http://localhost:3000/api/v1/decks/global`
+      this.search(url)
     } else if ((event.target == list_my_decks || event.target == linkmydecks) && !list_my_decks.classList.contains('active')) {
       global_div.style.display = 'none';
       mydecks_div.style.display = 'block';
@@ -48,5 +50,19 @@ export default class extends Controller {
       if (list_my_decks.classList.contains('active')) list_my_decks.classList.remove('active')
       list_shared.classList.add('active');
     }
+  }
+
+  search(url) {
+    fetchWithToken(url, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data)
+      });
   }
 }
