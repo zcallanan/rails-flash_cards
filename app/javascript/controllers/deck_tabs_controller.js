@@ -1,4 +1,6 @@
 import { Controller } from "stimulus"
+import { fetchWithToken } from '../utils/fetch_with_token.js';
+import { isVisible } from '../utils/is_visible.js';
 
 export default class extends Controller {
   static targets = [
@@ -10,7 +12,10 @@ export default class extends Controller {
     'listshared',
     'linkall',
     'linkmydecks',
-    'linkshared'
+    'linkshared',
+    'link',
+    'list',
+    'searchSubmit'
   ]
 
   tabclick(event) {
@@ -25,8 +30,9 @@ export default class extends Controller {
     const linkall = this.linkallTarget;
     const linkmydecks = this.linkmydecksTarget;
     const linkshared = this.linksharedTarget;
+    const searchSubmit = this.searchSubmitTarget;
 
-    if ((event.target == list_all || event.target == linkall) && !list_all.classList.contains('active')) {
+    if (event.target == list_all || event.target == linkall || (event.target == searchSubmit && isVisible(global_div))) {
       global_div.style.display = 'block';
       mydecks_div.style.display = 'none';
       shared_div.style.display = 'none';
@@ -34,7 +40,7 @@ export default class extends Controller {
       if (list_shared.classList.contains('active')) list_shared.classList.remove('active')
       list_all.classList.add('active');
       const url = `http://localhost:3000/api/v1/decks/global`
-      this.search(url)
+      this.search(url, global_div)
     } else if ((event.target == list_my_decks || event.target == linkmydecks) && !list_my_decks.classList.contains('active')) {
       global_div.style.display = 'none';
       mydecks_div.style.display = 'block';
@@ -52,7 +58,7 @@ export default class extends Controller {
     }
   }
 
-  search(url) {
+  search(url, div) {
     fetchWithToken(url, {
       method: "GET",
       headers: {
@@ -62,7 +68,8 @@ export default class extends Controller {
     })
       .then(response => response.json())
       .then((data) => {
-        console.log(data)
+        div.innerHTML = ''
+        div.innerHTML = data['data']['partials'].join('')
       });
   }
 }

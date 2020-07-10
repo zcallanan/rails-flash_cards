@@ -1,6 +1,6 @@
 // rendered by decks/show
 = simple_form_for(deck, method: :patch) do |f|
-  = f.input :category_id, collection: Category.generate_categories, label: 'Category', include_blank: false, include_hidden: false, as: :grouped_select, group_method: :last
+  = f.input :category_id, collection: Category.generate_categories('no_all'), label: 'Category', include_blank: false, include_hidden: false, as: :grouped_select, group_method: :last
   - if language_options.length == 1
     = f.input :default_language, collection: language_options, disabled: true, hint: 'Add deck information in other languages in order to change this value.'
   - else

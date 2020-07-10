@@ -51,7 +51,7 @@ class Api::V1::DecksController < Api::V1::BaseController
   def global_decks
     # list of decks that are globally available
     # curl -s http://localhost:3000/api/v1/decks/global
-    @decks_global = Deck.globally_available(true)
+    @decks_global = policy_scope(Deck).globally_available(true)
     if params.key?('category')
       language = params['category']['language']
       category_ids = params['category']['name']

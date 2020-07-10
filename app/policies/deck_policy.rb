@@ -1,7 +1,9 @@
 class DeckPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.admin?
+      if user.nil?
+        scope.where(global_deck_read: true)
+      elsif user.admin?
         scope.all
       elsif user
         scope.includes(:deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND decks.user_id != ? OR decks.global_deck_read = ? OR decks.user_id = ?', user.id, true, user.id, true, user.id).references(:deck_permissions).distinct
