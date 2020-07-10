@@ -13,7 +13,7 @@ class Deck < ApplicationRecord
   accepts_nested_attributes_for :deck_strings, :collections
 
   scope :global_search_by_categories, lambda { |categories|
-    if categories.size == 1 && categories.first.empty?
+    if Category.find(categories).first.name == 'All Categories'
       where(global_deck_read: true)
     else
       category_hash = {}
