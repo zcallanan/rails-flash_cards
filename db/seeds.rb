@@ -24,6 +24,7 @@ end
 
 # TODO: generate list of real categories
 category_list = {
+  'All' => ['All Categories'],
   'Geography' => ['Countries'],
   'Language' => ['English', 'Spanish', 'French'],
   'Mathematics' => ['Algebra', 'Linear Algebra', 'Calculus'],
