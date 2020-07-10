@@ -5,11 +5,15 @@ class Category < ApplicationRecord
 
   # category select method for search
   def self.generate_categories
-    categories = []
     themes = Category.pluck(:theme).sort.uniq
-    themes.each do |theme|
-      categories << [theme, Category.where(theme: theme)]
+    themes.map do |theme|
+      [theme, Category.where(theme: theme).map do |category|
+        if theme == 'All'
+          [category.name, category.id, { data: { target: 'category-select.all', action: 'click->category-select#options' } }]
+        else
+          [category.name, category.id, { data: { target: 'category-select.option', action: 'click->category-select#options' } }]
+        end
+      end]
     end
-    categories
   end
 end
