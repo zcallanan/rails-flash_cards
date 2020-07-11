@@ -1,12 +1,72 @@
 class Api::V1::DecksController < Api::V1::BaseController
-  before_action :authenticate_user!, except: %i[global]
   acts_as_token_authentication_handler_for User, except: %i[global]
+  before_action :authenticate_user!, except: %i[global]
   before_action :set_deck, only: %i[update]
 
   def global
-    array = global_decks
+    # curl -s http://localhost:3000/api/v1/decks/global
+    # @decks_global = policy_scope(Deck).globally_available(true)
+
+    value_hash = search_values(params)
+    value_hash[:user] = nil
+    search_hash = { global: true, mydecks: false }
+
+    @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+
+    deck_strings = {
+      objects: @decks,
+      string_type: 'deck_strings',
+      id_type: :deck_id,
+      permission_type: nil,
+      deck: nil,
+      language: value_hash[:language]
+    }
+
+    render json: { data: { partials: generate_partials(deck_strings), formats: [:json], layout: false } }
+  end
+
+  def mydecks
+    if user_signed_in?
+      @user = current_user
+      # curl -i -X GET \
+      # -H 'X-User-Email: pups0@example.com' \
+      # -H 'X-User-Token: SzRrzWThqfnd2aK7t67C' \
+      # http://localhost:3000/api/v1/decks/mydecks
+
+      value_hash = search_values(params)
+      value_hash[:user] = @user
+      search_hash = { global: false, mydecks: true }
+
+      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+
+      decks_owned_strings = {
+        objects: @decks, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil, language: value_hash[:language]
+      }
+
+      render json: { data: { partials: generate_partials(decks_owned_strings), formats: [:json], layout: false } }
+    end
+  end
+
+  def myarchived
+    @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
+    archived_deck_strings = {
+      objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
+    }
+    @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
+
+    array = []
+    @decks_archived_strings.each do |string|
+      array << render_to_string(
+        partial: 'deck_panel',
+        locals: { deck_string: string }
+      )
+    end
 
     render json: { data: { partials: array, formats: [:json], layout: false } }
+  end
+
+  def shared
+
   end
 
   def update
@@ -40,18 +100,23 @@ class Api::V1::DecksController < Api::V1::BaseController
       status: :unprocessable_entity
   end
 
-  def deck_search(language, category_ids, tags)
-    DeckSearchService.new(
-      language: language,
-      categories: category_ids,
-      tags: tags
-    ).call(true)
+  def deck_search(value_hash, search_hash)
+    DeckSearchService.new(value_hash).call(search_hash)
   end
 
-  def global_decks
-    # list of decks that are globally available
-    # curl -s http://localhost:3000/api/v1/decks/global
-    @decks_global = policy_scope(Deck).globally_available(true)
+  def generate_partials(deck_strings)
+    strings = PopulateStrings.new(deck_strings).call
+    array = []
+    strings.each do |string|
+      array << render_to_string(
+        partial: 'deck_panel',
+        locals: { deck_string: string }
+      )
+    end
+    array
+  end
+
+  def search_values(params)
     if params.key?('category')
       language = params['category']['language']
       category_ids = params['category']['name']
@@ -61,27 +126,6 @@ class Api::V1::DecksController < Api::V1::BaseController
       category = Category.find_by(name: 'All Categories')
       category_ids = [category.id]
     end
-
-    @decks = deck_search(language, category_ids, tags).order(updated_at: :desc)
-
-    deck_strings = {
-      objects: @decks,
-      string_type: 'deck_strings',
-      id_type: :deck_id,
-      permission_type: nil,
-      deck: nil,
-      language: language
-    }
-
-    # app/controllers/concerns/populate_strings
-    @decks_global_strings = PopulateStrings.new(deck_strings).call
-    array = []
-    @decks_global_strings.each do |string|
-      array << render_to_string(
-        partial: 'deck_panel',
-        locals: { deck_string: string }
-      )
-    end
-    array
+    { language: language, categories: category_ids, tags: tags }
   end
 end

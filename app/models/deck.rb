@@ -23,11 +23,22 @@ class Deck < ApplicationRecord
     end
   }
 
-  scope :global_search_by_language, lambda { |language|
+  scope :mydecks_search_by_categories, lambda { |categories, user|
+    if Category.find(categories).first.name == 'All Categories'
+      where(user: user)
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:user] = user
+      where(category_hash)
+    end
+  }
+
+  scope :search_by_language, lambda { |language|
     includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
   }
 
-  scope :global_search_by_tags, lambda { |tags|
+  scope :search_by_tags, lambda { |tags|
     tag_array = tags.split(',')
     tag_hash = {}
     tag_array.each { |tag| tag_hash[:tags] = { name: tag } }

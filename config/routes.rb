@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       resources :decks, only: %i[index update] do
         collection do
           get 'global'
+          get 'mydecks'
+          get 'myarchived'
+          get 'shared'
         end
         resources :collections, only: %i[create] do
           resources :collection_strings, only: %i[update]
