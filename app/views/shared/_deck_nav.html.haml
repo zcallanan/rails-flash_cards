@@ -15,9 +15,9 @@
         = link_to 'Shared Decks', '', data: { target: 'deck-tabs.linkshared deck-create.linkshared', action: 'click->deck-tabs#tabclick click->deck-create#createdeck' }
   - else
     %ul
-      %li{id: 'all-decks-global', class: 'active'}
-        = link_to 'All Decks'
-      %li{id: 'my-decks-global'}
-        = link_to 'My Decks', new_user_session_path
-      %li{id: 'shared-decks-global'}
-        = link_to 'Shared Decks', new_user_session_path
+      %li{id: 'all-decks-global', class: 'active', 'data-target'=>'deck-tabs.listall', 'data-action'=>'click->deck-tabs#tabclick' }
+        = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall', action: 'click->deck-tabs#tabclick' }
+      %li{id: 'my-decks-global', 'data-target'=>'deck-tabs.listmydecks'}
+        = link_to 'My Decks', new_user_session_path, data: { target: 'deck-tabs.linkmydecks' }
+      %li{id: 'shared-decks-global', 'data-target'=>'deck-tabs.listshared'}
+        = link_to 'Shared Decks', new_user_session_path, data: { target: 'deck-tabs.linkshared' }

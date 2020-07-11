@@ -179,7 +179,8 @@ class DecksController < ApplicationController
       tags = params['category']['tag']
     else # account for going straight to /shared_decks
       language = 'en'
-      category_ids = ''
+      category = Category.find_by(name: 'All Categories')
+      category_ids = [category.id]
     end
 
     @decks = deck_search(language, category_ids, tags).order(updated_at: :desc)
