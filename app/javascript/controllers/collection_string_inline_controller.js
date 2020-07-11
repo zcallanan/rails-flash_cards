@@ -15,10 +15,10 @@ export default class extends Controller {
 
   cclick(event) {
     const object = {
-      submitbutton: this.submitTarget,
+      submitButton: this.submitTarget,
       button: this.buttonTarget, // if user hits enter in the form
-      titleinfo: this.titleinfoTarget,
-      descriptioninfo: this.descriptioninfoTarget,
+      titleInfo: this.titleinfoTarget,
+      descriptionInfo: this.descriptioninfoTarget,
       title: this.titleTarget,
       description: this.descriptionTarget,
       edit: this.editTarget,
