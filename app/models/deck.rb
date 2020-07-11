@@ -23,18 +23,7 @@ class Deck < ApplicationRecord
     end
   }
 
-  scope :mydecks_search_by_categories, lambda { |categories, user|
-    if Category.find(categories).first.name == 'All Categories'
-      where(user: user)
-    else
-      category_hash = {}
-      categories.each { |category_id| category_hash[:category_id] = category_id }
-      category_hash[:user] = user
-      where(category_hash)
-    end
-  }
-
-  scope :myarchived_search_by_categories, lambda { |categories, user, archived|
+  scope :mydecks_search_by_categories, lambda { |categories, user, archived|
     if Category.find(categories).first.name == 'All Categories'
       where(user: user, archived: archived)
     else
@@ -43,6 +32,19 @@ class Deck < ApplicationRecord
       category_hash[:user] = user
       category_hash[:archived] = archived
       where(category_hash)
+    end
+  }
+
+  scope :shared_search_by_categories, lambda { |categories, user, update|
+    if Category.find(categories).first.name == 'All Categories'
+      includes(:deck_permissions).where(deck_permissions: { user_id: user.id, read_access: true, update_access: update }).where.not(user: user).references(:deck_permissions).distinct
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:user] = user
+      category_hash[:read_access] = true
+      category_hash[:update_access] = update
+      includes(:deck_permissions).where(category_hash).where.not(user: user).references(:deck_permissions).distinct
     end
   }
 
@@ -72,8 +74,4 @@ class Deck < ApplicationRecord
   def owner
     user
   end
-
-  # def collaborators
-  #   users
-  # end
 end

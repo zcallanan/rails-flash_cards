@@ -22,7 +22,8 @@ Rails.application.routes.draw do
           get 'global'
           get 'mydecks'
           get 'myarchived'
-          get 'shared'
+          get 'shared_read'
+          get 'shared_update'
         end
         resources :collections, only: %i[create] do
           resources :collection_strings, only: %i[update]

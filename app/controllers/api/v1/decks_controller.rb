@@ -9,18 +9,9 @@ class Api::V1::DecksController < Api::V1::BaseController
 
     value_hash = search_values(params)
     value_hash[:user] = nil
-    search_hash = { global: true, mydecks: false, myarchived: false }
-
+    search_hash = { global: true, mydecks: false, myarchived: false, shared_read: false, shared_update: false }
     @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-
-    deck_strings = {
-      objects: @decks,
-      string_type: 'deck_strings',
-      id_type: :deck_id,
-      permission_type: nil,
-      deck: nil,
-      language: value_hash[:language]
-    }
+    deck_strings = string_hash(@decks, nil, value_hash[:language])
 
     render json: { data: { partials: generate_partials(deck_strings), formats: [:json], layout: false } }
   end
@@ -35,13 +26,9 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: true, myarchived: false }
-
+      search_hash = { global: false, mydecks: true, myarchived: false, shared_read: false, shared_update: false }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-
-      decks_owned_strings = {
-        objects: @decks, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil, language: value_hash[:language]
-      }
+      decks_owned_strings = string_hash(@decks, @user, value_hash[:language])
 
       render json: { data: { partials: generate_partials(decks_owned_strings), formats: [:json], layout: false } }
     end
@@ -53,19 +40,40 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: false, myarchived: true }
-
+      search_hash = { global: false, mydecks: false, myarchived: true, shared_read: false, shared_update: false }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-      archived_deck_strings = {
-        objects: @decks, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil, language: value_hash[:language]
-      }
+      archived_deck_strings = string_hash(@decks, @user, value_hash[:language])
 
       render json: { data: { partials: generate_partials(archived_deck_strings), formats: [:json], layout: false } }
     end
   end
 
-  def shared
+  def shared_read
+    if user_signed_in?
+      @user = current_user
 
+      value_hash = search_values(params)
+      value_hash[:user] = @user
+      search_hash = { global: false, mydecks: false, myarchived: false, shared_read: true, shared_update: false }
+      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      shared_read_strings = string_hash(@decks, @user, value_hash[:language])
+
+      render json: { data: { partials: generate_partials(shared_read_strings), formats: [:json], layout: false } }
+    end
+  end
+
+  def shared_update
+    if user_signed_in?
+      @user = current_user
+
+      value_hash = search_values(params)
+      value_hash[:user] = @user
+      search_hash = { global: false, mydecks: false, myarchived: false, shared_read: false, shared_update: true }
+      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      shared_update_strings = string_hash(@decks, @user, value_hash[:language])
+
+      render json: { data: { partials: generate_partials(shared_update_strings), formats: [:json], layout: false } }
+    end
   end
 
   def update
@@ -97,6 +105,19 @@ class Api::V1::DecksController < Api::V1::BaseController
   def render_error
     render json: { errors: @membership.errors.full_messages },
       status: :unprocessable_entity
+  end
+
+  def string_hash(decks, user, language)
+    string_hash = {
+      objects: decks,
+      string_type: 'deck_strings',
+      id_type: :deck_id,
+      permission_type: nil,
+      deck: nil,
+      language: language
+    }
+    string_hash[:user] = user unless user.nil?
+    string_hash
   end
 
   def deck_search(value_hash, search_hash)
