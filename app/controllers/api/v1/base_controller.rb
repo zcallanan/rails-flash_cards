@@ -1,8 +1,8 @@
 class Api::V1::BaseController < ActionController::API
   include Pundit
 
-  after_action :verify_authorized, except: %i[index global mydecks]
-  after_action :verify_policy_scoped, only: %i[index global mydecks]
+  after_action :verify_authorized, except: %i[index global mydecks myarchived]
+  after_action :verify_policy_scoped, only: %i[index global mydecks myarchived]
 
   rescue_from StandardError,                with: :internal_server_error
   rescue_from Pundit::NotAuthorizedError,   with: :user_not_authorized

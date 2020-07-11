@@ -8,11 +8,13 @@ class DeckSearchService
   end
 
   def call(**kwargs)
-    if kwargs[:global] == true
+    if kwargs[:global]
       # reduce deck list to those with @category id
       @decks = @decks.global_search_by_categories(@categories) unless @categories.nil? # multi select or empty string
-    elsif kwargs[:mydecks] == true
+    elsif kwargs[:mydecks]
       @decks = @decks.mydecks_search_by_categories(@categories, @user) unless @categories.nil?
+    elsif kwargs[:myarchived]
+      @decks = @decks.myarchived_search_by_categories(@categories, @user, true) unless @categories.nil?
     end
     # reduce deck list to those with child deck strings of @language
     @decks = @decks.search_by_language(@language) unless @language.nil? # should always have one value

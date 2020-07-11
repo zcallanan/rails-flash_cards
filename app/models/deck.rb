@@ -34,6 +34,18 @@ class Deck < ApplicationRecord
     end
   }
 
+  scope :myarchived_search_by_categories, lambda { |categories, user, archived|
+    if Category.find(categories).first.name == 'All Categories'
+      where(user: user, archived: archived)
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:user] = user
+      category_hash[:archived] = archived
+      where(category_hash)
+    end
+  }
+
   scope :search_by_language, lambda { |language|
     includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
   }

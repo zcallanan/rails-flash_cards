@@ -9,7 +9,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
     value_hash = search_values(params)
     value_hash[:user] = nil
-    search_hash = { global: true, mydecks: false }
+    search_hash = { global: true, mydecks: false, myarchived: false }
 
     @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
 
@@ -35,7 +35,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: true }
+      search_hash = { global: false, mydecks: true, myarchived: false }
 
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
 
@@ -48,21 +48,20 @@ class Api::V1::DecksController < Api::V1::BaseController
   end
 
   def myarchived
-    @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
-    archived_deck_strings = {
-      objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-    }
-    @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
+    if user_signed_in?
+      @user = current_user
 
-    array = []
-    @decks_archived_strings.each do |string|
-      array << render_to_string(
-        partial: 'deck_panel',
-        locals: { deck_string: string }
-      )
+      value_hash = search_values(params)
+      value_hash[:user] = @user
+      search_hash = { global: false, mydecks: false, myarchived: true }
+
+      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      archived_deck_strings = {
+        objects: @decks, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil, language: value_hash[:language]
+      }
+
+      render json: { data: { partials: generate_partials(archived_deck_strings), formats: [:json], layout: false } }
     end
-
-    render json: { data: { partials: array, formats: [:json], layout: false } }
   end
 
   def shared
