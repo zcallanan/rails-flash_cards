@@ -8,8 +8,8 @@
       #deck-create{'data-target'=>'deck-create.deckcreatediv'}
         = render 'create_deck_form', deck: @deck, user: @user
       .my-global-decks{'data-target'=>'deck-tabs.global'}
-        / - @decks_global_strings.each do |string|
-        /   = render 'deck_panel', deck_string: string
+        - @decks_global_strings.each do |string|
+          = render 'deck_panel', deck_string: string
 
       .my-decks{'data-target'=>'deck-tabs.mydecks'}
         - @decks_owned_strings.each do |string|
