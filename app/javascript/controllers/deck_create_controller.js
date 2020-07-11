@@ -17,22 +17,22 @@ export default class extends Controller {
   createdeck(event) {
     event.preventDefault();
 
-    const index_button = this.indexbuttonTarget;
-    const index_link = this.indexlinkTarget;
-    const deck_create_div = this.deckcreatedivTarget;
-    const top_bar_div = this.topbardivTarget;
+    const indexButton = this.indexbuttonTarget;
+    const indexLink = this.indexlinkTarget;
+    const deckCreateDiv = this.deckcreatedivTarget;
+    const topBarDiv = this.topbardivTarget;
     const cancel = this.cancelTarget;
-    const all_decks_tab = this.listallTarget;
-    const shared_decks_tab = this.listsharedTarget;
-    const all_link = this.linkallTarget;
-    const shared_link = this.linksharedTarget;
+    const allDecksTab = this.listallTarget;
+    const sharedDecksTab = this.listsharedTarget;
+    const allLink = this.linkallTarget;
+    const sharedLink = this.linksharedTarget;
 
-    if (isVisible(top_bar_div) && !isVisible(deck_create_div) && (event.target === index_button || event.target === index_link || event.target === document)) {
-      deck_create_div.style.display = 'block';
-      top_bar_div.style.display = 'none';
-    } else if (!isVisible(top_bar_div) && isVisible(deck_create_div) && (event.target === cancel || event.target === all_decks_tab || event.target === shared_decks_tab || event.target === all_link || event.target === shared_link)) {
-      deck_create_div.style.display = 'none';
-      top_bar_div.style.display = 'block';
+    if (isVisible(topBarDiv) && !isVisible(deckCreateDiv) && (event.target === indexButton || event.target === indexLink || event.target === document)) {
+      deckCreateDiv.style.display = 'block';
+      topBarDiv.style.display = 'none';
+    } else if (!isVisible(topBarDiv) && isVisible(deckCreateDiv) && (event.target === cancel || event.target === allDecksTab || event.target === sharedDecksTab || event.target === allLink || event.target === sharedLink)) {
+      deckCreateDiv.style.display = 'none';
+      topBarDiv.style.display = 'block';
     }
   }
 
