@@ -32,9 +32,9 @@
     - else
       .deck-tabs
         .global-decks{'data-target'=>'deck-tabs.global'}
-          / - @decks_global_strings.each do |string|
-          /   = link_to deck_path(string.deck, language: string.language) do
-          /     = render 'deck_panel', deck_string: string
+          - @decks_global_strings.each do |string|
+            = link_to deck_path(string.deck, language: string.language) do
+              = render 'deck_panel', deck_string: string
         .my-decks{'data-target'=>'deck-tabs.mydecks'}
 
         .shared-decks{'data-target'=>'deck-tabs.shared'}
