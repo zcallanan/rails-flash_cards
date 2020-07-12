@@ -5,11 +5,17 @@ const buildSearchUrl = (searchUrl) => {
   const tagString = '&category%5Btag%5D=';
   let categoryValue = '';
   let tagValue = '';
+  const options = Array.from(searchUrl.options)
 
   const languageValue = `&category%5Blanguage%5D=${searchUrl.language}`;
-  searchUrl.options.forEach(option => {
-    if (option.selected === true) categoryArray.push(option.value)
-  })
+  for (let [index, option] of options.entries()) {
+    if (option.selected && index === 0) {
+      categoryArray.push(option.value);
+      break;
+    } else {
+      categoryArray.push(option.value);
+    }
+  }
   const tagArray = searchUrl.tag.split(', ');
   categoryArray.forEach(category => {
     if (categoryArray.indexOf(category) === 0) {

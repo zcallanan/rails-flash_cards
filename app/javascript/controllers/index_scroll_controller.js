@@ -3,7 +3,7 @@ import { Controller } from "stimulus"
 export default class extends Controller {
   static targets = [ "nav" ]
 
-  fixnav() {
+  fixNav() {
     const index_nav = this.navTarget
     if (index_nav.dataset.topNav !== undefined) {
       const topOfNav = index_nav.dataset.topNav

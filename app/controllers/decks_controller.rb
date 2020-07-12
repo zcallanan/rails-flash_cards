@@ -6,8 +6,8 @@ class DecksController < ApplicationController
     if user_signed_in?
       @user = current_user
 
-      # global decks
-      global_decks
+      # # global decks
+      # global_decks
 
       # list of decks the user owns
       @decks_owned = policy_scope(Deck).my_decks_owned(@user, false)

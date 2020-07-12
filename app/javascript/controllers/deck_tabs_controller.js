@@ -6,8 +6,11 @@ import { buildSearchUrl } from '../utils/build_search_url.js';
 export default class extends Controller {
   static targets = [
     'global',
+    // 'myGlobal',
     'mydecks',
-    'shared',
+    'myArchived',
+    'sharedRead',
+    'sharedUpdate',
     'listall',
     'listmydecks',
     'listshared',
@@ -20,33 +23,52 @@ export default class extends Controller {
     'nameField',
     'languageField',
     'tagField',
-    'option'
+    'option',
+    'indexDiv'
   ]
 
+  indexContent() {
+    // on dom load, this is called
+    // should fetch index partial
+    const indexDiv = this.indexDivTarget;
+  }
+
   connect() {
+
     const globalDiv = this.globalTarget;
+    // const myGlobalDiv = this.myGlobalTarget;
     const myDecksDiv = this.mydecksTarget;
-    const sharedDiv = this.sharedTarget;
-    // const nameField = this.nameFieldTarget;
+    const myArchivedDiv = this.myArchivedTarget;
+    const sharedReadDiv = this.sharedReadTarget;
+    const sharedUpdateDiv = this.sharedUpdateTarget;
     const languageField = this.languageFieldTarget;
     const tagField = this.tagFieldTarget;
     const options = this.optionTargets;
     const urlRoute = 'http://localhost:3000/api/v1/decks/';
     let dest = '';
-    let searchValues = {}
+    let destTwo = '';
+    let divTwo = '';
+    let searchValues = {};
 
     if (isVisible(globalDiv)) {
+      console.log('yo')
       dest = 'global';
       searchValues['div'] = globalDiv
+      destTwo = null;
     } else if (isVisible(myDecksDiv)) {
+      console.log('hi')
       dest = 'mydecks';
       searchValues['div'] = myDecksDiv
-    } else if (isVisible(sharedDiv)) {
-      dest = 'shared'
-      searchValues['div'] = sharedDiv
+      destTwo = 'myarchived';
+      divTwo = myArchivedDiv;
+    } else if (isVisible(sharedReadDiv)) {
+      dest = 'shared_read'
+      searchValues['div'] = sharedReadDiv
+      destTwo = 'shared_update';
+      divTwo = sharedUpdateDiv;
     }
 
-    const search_url = {
+    let search_url = {
       options: options,
       language: languageField.value,
       tag: tagField.value,
@@ -54,7 +76,21 @@ export default class extends Controller {
       dest: dest
     };
     searchValues['url'] = buildSearchUrl(search_url);
+    console.log(searchValues)
     this.search(searchValues);
+
+    if (destTwo !== null) {
+      search_url = {
+        options: options,
+        language: languageField.value,
+        tag: tagField.value,
+        urlRoute: urlRoute,
+        dest: destTwo
+      };
+      searchValues['div'] = divTwo;
+      searchValues['url'] = buildSearchUrl(search_url);
+      this.search(searchValues);
+    }
   }
 
   tabclick(event) {
@@ -62,7 +98,9 @@ export default class extends Controller {
 
     const globalDiv = this.globalTarget;
     const myDecksDiv = this.mydecksTarget;
-    const sharedDiv = this.sharedTarget;
+    const myArchivedDiv = this.myArchivedTarget;
+    const sharedReadDiv = this.sharedReadTarget;
+    const sharedUpdateDiv = this.sharedUpdateTarget;
     const listAll = this.listallTarget;
     const listMyDecks = this.listmydecksTarget;
     const listShared = this.listsharedTarget;
@@ -70,18 +108,21 @@ export default class extends Controller {
     const linkMyDecks = this.linkmydecksTarget;
     const linkShared = this.linksharedTarget;
     const searchSubmit = this.searchSubmitTarget;
-    // const nameField = this.nameFieldTarget;
     const languageField = this.languageFieldTarget;
     const tagField = this.tagFieldTarget;
     const options = this.optionTargets;
     const urlRoute = 'http://localhost:3000/api/v1/decks/';
     let dest = '';
+    let destTwo = ''
+    let divTwo = ''
     let searchValues = {}
 
     if (event.target === listAll || event.target == linkAll && !listAll.classList.contains('active')) {
       globalDiv.style.display = 'block';
       myDecksDiv.style.display = 'none';
-      sharedDiv.style.display = 'none';
+      myArchivedDiv.style.display = 'none';
+      sharedReadDiv.style.display = 'none';
+      sharedUpdateDiv.style.display = 'none';
       if (listMyDecks.classList.contains('active')) listMyDecks.classList.remove('active')
       if (listShared.classList.contains('active')) listShared.classList.remove('active')
       listAll.classList.add('active');
@@ -93,40 +134,59 @@ export default class extends Controller {
     } else if ((event.target === listMyDecks || event.target == linkMyDecks) && !listMyDecks.classList.contains('active')) {
       globalDiv.style.display = 'none';
       myDecksDiv.style.display = 'block';
-      sharedDiv.style.display = 'none';
+      myArchivedDiv.style.display = 'block';
+      sharedReadDiv.style.display = 'none';
+      sharedUpdateDiv.style.display = 'none';
       if (listAll.classList.contains('active')) listAll.classList.remove('active')
       if (listShared.classList.contains('active')) listShared.classList.remove('active')
       listMyDecks.classList.add('active');
-      const allTabValues = {
+      let allTabValues = {
         url: 'http://localhost:3000/api/v1/decks/mydecks', // click on the tab and you get all mydeck items available
         div: myDecksDiv
+      }
+      this.search(allTabValues)
+      allTabValues = {
+        url: 'http://localhost:3000/api/v1/decks/myarchived',
+        div: myArchivedDiv
       }
       this.search(allTabValues)
     } else if ((event.target === listShared || event.target == linkShared) && !listShared.classList.contains('active')) {
       globalDiv.style.display = 'none';
       myDecksDiv.style.display = 'none';
-      sharedDiv.style.display = 'block';
+      myArchivedDiv.style.display = 'none';
+      sharedReadDiv.style.display = 'block';
+      sharedUpdateDiv.style.display = 'block';
       if (listAll.classList.contains('active')) listAll.classList.remove('active')
       if (listMyDecks.classList.contains('active')) listMyDecks.classList.remove('active')
       listShared.classList.add('active');
-      const allTabValues = {
-        url: 'http://localhost:3000/api/v1/decks/shared', // click on the tab and you get all shared items available
-        div: sharedDiv
+      let allTabValues = {
+        url: 'http://localhost:3000/api/v1/decks/shared_read', // click on the tab and you get all shared items available
+        div: sharedReadDiv
+      }
+      this.search(allTabValues)
+      allTabValues = {
+        url: 'http://localhost:3000/api/v1/decks/shared_update',
+        div: sharedUpdateDiv
       }
       this.search(allTabValues)
     } else if (event.target === searchSubmit) {
       if (isVisible(globalDiv)) {
         dest = 'global';
         searchValues['div'] = globalDiv;
+        destTwo = null;
       } else if (isVisible(myDecksDiv)) {
         dest = 'mydecks';
         searchValues['div'] = myDecksDiv;
-      } else if (isVisible(sharedDiv)) {
-        dest = 'shared';
-        searchValues['div'] = sharedDiv;
+        destTwo = 'myarchived';
+        divTwo = myArchivedDiv;
+      } else if (isVisible(sharedReadDiv)) {
+        dest = 'shared_read';
+        searchValues['div'] = sharedReadDiv;
+        destTwo = 'shared_update';
+        divTwo = sharedUpdateDiv;
       }
 
-      const search_url = {
+      let search_url = {
         options: options,
         language: languageField.value,
         tag: tagField.value,
@@ -135,6 +195,19 @@ export default class extends Controller {
       };
       searchValues['url'] = buildSearchUrl(search_url);
       this.search(searchValues);
+
+      if (destTwo !== null) {
+        search_url = {
+          options: options,
+          language: languageField.value,
+          tag: tagField.value,
+          urlRoute: urlRoute,
+          dest: destTwo
+        };
+        searchValues['div'] = divTwo;
+        searchValues['url'] = buildSearchUrl(search_url);
+        this.search(searchValues);
+      }
     }
   }
 
