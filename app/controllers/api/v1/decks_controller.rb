@@ -9,7 +9,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
     value_hash = search_values(params)
     value_hash[:user] = nil
-    search_hash = { global: true, mydecks: false, myarchived: false, shared_read: false, shared_update: false }
+    search_hash = { global: true }
     @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
     deck_strings = string_hash(@decks, nil, value_hash[:language])
 
@@ -26,7 +26,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: true, myarchived: false, shared_read: false, shared_update: false }
+      search_hash = { mydecks: true }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
       decks_owned_strings = string_hash(@decks, @user, value_hash[:language])
 
@@ -40,7 +40,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: false, myarchived: true, shared_read: false, shared_update: false }
+      search_hash = { myarchived: true }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
       archived_deck_strings = string_hash(@decks, @user, value_hash[:language])
 
@@ -54,7 +54,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: false, myarchived: false, shared_read: true, shared_update: false }
+      search_hash = { shared_read: true }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
       shared_read_strings = string_hash(@decks, @user, value_hash[:language])
 
@@ -68,7 +68,7 @@ class Api::V1::DecksController < Api::V1::BaseController
 
       value_hash = search_values(params)
       value_hash[:user] = @user
-      search_hash = { global: false, mydecks: false, myarchived: false, shared_read: false, shared_update: true }
+      search_hash = { shared_update: true }
       @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
       shared_update_strings = string_hash(@decks, @user, value_hash[:language])
 

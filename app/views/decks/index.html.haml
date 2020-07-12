@@ -1,41 +1,30 @@
-#deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixnav' }
-  .deck-tabs{'data-controller'=>'deck-tabs'}
-    = render 'shared/deck_nav', decks_owned_strings: @decks_owned_strings
+#deck-index{ 'data-controller'=>'index-scroll deck-tabs', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
+  .deck-tabs
+    = render 'shared/deck_nav', decks_owned: @decks_owned
     #top-bar{'data-target'=>'deck-create.topbardiv'}
     #search-bar
       = render 'shared/deck_search_form', category: @category, languages: @languages
     - if user_signed_in?
       #deck-create{'data-target'=>'deck-create.deckcreatediv'}
         = render 'create_deck_form', deck: @deck, user: @user
-      .my-global-decks{'data-target'=>'deck-tabs.global'}
-        - @decks_global_strings.each do |string|
-          = render 'deck_panel', deck_string: string
+      .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
 
       .my-decks{'data-target'=>'deck-tabs.mydecks'}
-        - @decks_owned_strings.each do |string|
-          = render 'deck_panel', deck_string: string
 
-        %h5 Archived Decks
-        - @decks_archived_strings.each do |string|
-          = render 'deck_panel', deck_string: string
+      .my-archived{'data-target'=>'deck-tabs.myArchived'}
 
-      .shared-decks{'data-target'=>'deck-tabs.shared'}
-        %h3 Shared decks you can view
-        - @decks_read_strings.each do |string|
-          = render 'deck_panel', deck_string: string
+      .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
 
-        %h3 Shared decks you can view & update
-        - @decks_update_strings.each do |string|
-          = render 'deck_panel', deck_string: string
-
-
+      .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
     - else
       .deck-tabs
         .global-decks{'data-target'=>'deck-tabs.global'}
-          - @decks_global_strings.each do |string|
-            = link_to deck_path(string.deck, language: string.language) do
-              = render 'deck_panel', deck_string: string
+
         .my-decks{'data-target'=>'deck-tabs.mydecks'}
 
-        .shared-decks{'data-target'=>'deck-tabs.shared'}
+        .my-archived{'data-target'=>'deck-tabs.myArchived'}
+
+        .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
+
+        .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
 
