@@ -6,7 +6,6 @@ import { buildSearchUrl } from '../utils/build_search_url.js';
 export default class extends Controller {
   static targets = [
     'global',
-    // 'myGlobal',
     'mydecks',
     'myArchived',
     'sharedRead',
@@ -27,16 +26,9 @@ export default class extends Controller {
     'indexDiv'
   ]
 
-  indexContent() {
-    // on dom load, this is called
-    // should fetch index partial
-    const indexDiv = this.indexDivTarget;
-  }
-
   connect() {
 
     const globalDiv = this.globalTarget;
-    // const myGlobalDiv = this.myGlobalTarget;
     const myDecksDiv = this.mydecksTarget;
     const myArchivedDiv = this.myArchivedTarget;
     const sharedReadDiv = this.sharedReadTarget;
