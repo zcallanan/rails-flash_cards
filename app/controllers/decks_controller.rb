@@ -167,7 +167,7 @@ class DecksController < ApplicationController
       language: language,
       categories: category_ids,
       tags: tags
-    ).call(true)
+    ).call({global: true})
   end
 
   def global_decks
