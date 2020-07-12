@@ -6,37 +6,8 @@ class DecksController < ApplicationController
     if user_signed_in?
       @user = current_user
 
-      # # global decks
-      # global_decks
-
       # list of decks the user owns
-      @decks_owned = policy_scope(Deck).my_decks_owned(@user, false)
-      decks_owned_strings = {
-        objects: @decks_owned, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-      }
-      # app/controllers/concerns/populate_strings
-      @decks_owned_strings = PopulateStrings.new(decks_owned_strings).call
-
-      # list of archived decks
-      @decks_archived = policy_scope(Deck).my_decks_owned(@user, true)
-      archived_deck_strings = {
-        objects: @decks_archived, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: nil, deck: nil
-      }
-      @decks_archived_strings = PopulateStrings.new(archived_deck_strings).call
-
-      # list of decks the user can read but does not own
-      @decks_read = policy_scope(Deck).my_decks_not_owned(@user, false)
-      targeted_read_strings = {
-        objects: @decks_read, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
-      }
-      @decks_read_strings = PopulateStrings.new(targeted_read_strings).call
-
-      # list of decks the user can read & update but does not own
-      @decks_update = policy_scope(Deck).my_decks_not_owned(@user, true)
-      targeted_update_strings = {
-        objects: @decks_update, user: @user, string_type: 'deck_strings', id_type: :deck_id, permission_type: 'deck_permissions', deck: nil
-      }
-      @decks_update_strings = PopulateStrings.new(targeted_update_strings).call
+      @decks_owned = policy_scope(Deck).my_decks_owned(@user, false) # used by decks_nav partial
 
       # create a deck form
       @deck = Deck.new
@@ -47,7 +18,6 @@ class DecksController < ApplicationController
     else
       # All can view globally shared content
       skip_policy_scope
-      global_decks
     end
     # search form
     @languages = Languages.list
@@ -160,41 +130,5 @@ class DecksController < ApplicationController
 
   def set_deck
     @deck = Deck.find(params[:id])
-  end
-
-  def deck_search(language, category_ids, tags)
-    DeckSearchService.new(
-      language: language,
-      categories: category_ids,
-      tags: tags
-    ).call({global: true})
-  end
-
-  def global_decks
-    # list of decks that are globally available
-    @decks_global = Deck.globally_available(true)
-    if params.key?('category')
-      language = params['category']['language']
-      category_ids = params['category']['name']
-      tags = params['category']['tag']
-    else # account for going straight to /shared_decks
-      language = 'en'
-      category = Category.find_by(name: 'All Categories')
-      category_ids = [category.id]
-    end
-
-    @decks = deck_search(language, category_ids, tags).order(updated_at: :desc)
-
-    deck_strings = {
-      objects: @decks,
-      string_type: 'deck_strings',
-      id_type: :deck_id,
-      permission_type: nil,
-      deck: nil,
-      language: language
-    }
-
-    # app/controllers/concerns/populate_strings
-    @decks_global_strings = PopulateStrings.new(deck_strings).call
   end
 end

@@ -12,7 +12,7 @@ const buildSearchUrl = (searchUrl) => {
     if (option.selected && index === 0) {
       categoryArray.push(option.value);
       break;
-    } else {
+    } else if (option.selected) {
       categoryArray.push(option.value);
     }
   }

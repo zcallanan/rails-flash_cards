@@ -1,7 +1,7 @@
 %nav{id: 'deck-nav-main', 'data-target'=>'index-scroll.nav', 'data-top-of-nav'=>'' }
   - if user_signed_in?
     %ul
-      - if decks_owned_strings.empty?
+      - if decks_owned.empty?
         %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'load@window->deck-create#click click->deck-create#createdeck'    }
           = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
       - else
