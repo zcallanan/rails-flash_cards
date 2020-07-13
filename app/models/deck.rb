@@ -63,14 +63,6 @@ class Deck < ApplicationRecord
     where(user: user, archived: archived)
   }
 
-  scope :my_decks_not_owned, lambda { |user, update|
-    includes(:deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(:deck_permissions).distinct
-  }
-
-  scope :globally_available, lambda { |bool|
-    where(global_deck_read: bool, archived: false)
-  }
-
   def owner
     user
   end
