@@ -1,8 +1,7 @@
+= render 'deck_strings/deck_string_information', deck_string: @deck_string_info, deck: @deck
+
+%hr
 - if user_signed_in?
-  = render 'deck_strings/deck_string_information', deck_string: @deck_string_info, deck: @deck
-
-  %hr
-
   - if policy(@deck).update?
     = render 'update_deck_form', deck: @deck, language_options: @language_options, deck_string: @deck_string
 
@@ -22,6 +21,3 @@
     // check if the user has a right to create a collection
     - if policy(@collection).create?
       = render 'collections/create_collection_form', deck: @deck, collection: @collection
-- else
-  %h1= @deck_string.title
-  %p= @deck_string.description

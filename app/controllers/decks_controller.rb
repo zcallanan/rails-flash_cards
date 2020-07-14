@@ -59,7 +59,7 @@ class DecksController < ApplicationController
       # All can view globally shared content
       skip_authorization
       skip_policy_scope
-      @deck_string = @deck.deck_strings.where(language: params[:language]).first
+      @deck_string_info = @deck.deck_strings.where(language: params[:language]).first
     end
   end
 

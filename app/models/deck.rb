@@ -76,7 +76,7 @@ class Deck < ApplicationRecord
     }
 
     collections_hash = {
-      objects: '', user: user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
+      objects: '', user: user, string_type: 'collection_strings', id_type: :collection_id, deck: 'deck'
     }
 
     array = []
