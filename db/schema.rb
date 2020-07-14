@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_13_085803) do
+ActiveRecord::Schema.define(version: 2020_07_14_215109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,6 +187,18 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.string "title"
+    t.string "body"
+    t.decimal "rating"
+    t.bigint "user_id", null: false
+    t.bigint "deck_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deck_id"], name: "index_reviews_on_deck_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "tag_relations", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "card_id", null: false
@@ -300,6 +312,8 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
   add_foreign_key "question_sets", "decks"
   add_foreign_key "question_sets", "users"
   add_foreign_key "question_strings", "questions"
+  add_foreign_key "reviews", "decks"
+  add_foreign_key "reviews", "users"
   add_foreign_key "tag_relations", "cards"
   add_foreign_key "tag_relations", "tags"
   add_foreign_key "user_group_decks", "decks"

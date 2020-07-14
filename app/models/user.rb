@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :user_groups, through: :memberships
   has_many :answers
   has_many :user_logs
+  has_many :reviews
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
