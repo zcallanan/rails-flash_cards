@@ -14,6 +14,7 @@ export default class extends Controller {
   ]
 
   dclick(event) {
+    console.log('hello')
     const object = {
       submitButton: this.submitTarget,
       button: this.buttonTarget, // if user hits enter in the form

@@ -17,6 +17,11 @@ class CollectionStringPolicy < ApplicationPolicy
     user_owns_record? || user_is_admin? || user_can_update?
   end
 
+  def user_can_update?
+    # check if user can make updates to the deck_string
+    record.collection.deck.deck_permissions.where(user_id: user.id, deck_id: record.collection.deck.id, update_access: true).present?
+  end
+
   private
 
   def user_owns_record?
@@ -31,10 +36,5 @@ class CollectionStringPolicy < ApplicationPolicy
   def user_can_read?
     # check if user can view the deck_string
     record.collection.deck.deck_permissions.where(user_id: user.id, deck_id: record.collection.deck.id, read_access: true).present?
-  end
-
-  def user_can_update?
-    # check if user can make updates to the deck_string
-    record.collection.deck.deck_permissions.where(user_id: user.id, deck_id: record.collection.deck.id, update_access: true).present?
   end
 end
