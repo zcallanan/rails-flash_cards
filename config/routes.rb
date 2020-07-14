@@ -24,8 +24,10 @@ Rails.application.routes.draw do
           get 'myarchived'
           get 'shared_read'
           get 'shared_update'
+          get 'recent_decks'
         end
         resources :collections, only: %i[create] do
+          get 'collection_contents', on: :collection
           resources :collection_strings, only: %i[update]
         end
         resources :deck_strings, only: %i[show create update]

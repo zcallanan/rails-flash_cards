@@ -1,0 +1,3 @@
+= simple_form_for(deck, method: :get, url: collection_contents_api_v1_deck_collections_path(@deck)) do |f|
+  = f.input :collect, collection: @collection_select, required: true, label: false, selected: @collection_select.first.second.first.second, input_html: { multiple: true }, include_hidden: false, as: :grouped_select, group_method: :last
+  = f.input :language, as: :hidden, input_html: {value: params[:language]}

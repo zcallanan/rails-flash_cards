@@ -8,4 +8,5 @@ class Card < ApplicationRecord
   has_many :answers
   has_many :card_question_sets
   has_many :questions, through: :card_question_sets
+  has_many :user_logs
 end

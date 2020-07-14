@@ -1,3 +1,5 @@
+puts 'destroying...'
+UserLog.destroy_all
 DeckPermission.destroy_all
 Membership.destroy_all
 DeckString.destroy_all
@@ -15,6 +17,8 @@ Deck.destroy_all
 UserGroup.destroy_all
 User.destroy_all
 Category.destroy_all
+
+puts 'seeding...'
 
 tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog']
 
@@ -62,8 +66,10 @@ def generate_permissions(**objects)
     until permission
       deck_random = Deck.all.sample
       if deck_random.user != objects[:user]
-        DeckPermission.create!(deck_hash)
-        Membership.create!(user_group_hash) unless n == 2
+        deck_permission = DeckPermission.create!(deck_hash)
+        UserLog.create!(user: deck_hash[:user], deck_permission: deck_permission, event: 'Deck access granted')
+        membership = Membership.create!(user_group_hash) unless n == 2
+        UserLog.create!(user: user_group_hash[:user], membership: membership, event: 'User Group access granted')
         permission = true
       end
     end
@@ -83,14 +89,18 @@ def create_strings(user, deck, collection, question_set, cards, number)
   string_hash = {en: [], fr: []}
   cards.each do |card|
     card_strings.each do |key, value|
-      CardString.create!(user: user, card: card, language: key, title: value.first, body: value.last)
+      card_string = CardString.create!(user: user, card: card, language: key, title: value.first, body: value.last)
+      UserLog.create!(user: user, card: card, card_string: card_string, event: 'Card string created')
     end
   end
 
   strings.each do |key, value|
     string_hash[key] << DeckString.create!(user: user, deck: deck, language: key, title: "Deck #{value[0]} #{deck.id}", description: "Deck #{value[1]} #{deck.id}" )
+    UserLog.create!(user: user, deck_string: string_hash[key].last, deck: deck, event: 'Deck string created')
     string_hash[key] << CollectionString.create!(user: user, collection: collection, language: key, title: "Collection #{value[0]} #{collection.id}", description: "Collection #{value[1]} #{collection.id}" )
+    UserLog.create!(user: user, collection_string: string_hash[key].last, collection: collection, event: 'Collection string created')
     string_hash[key] << QuestionSetString.create!(user: user, question_set: question_set, language: key, title: "Question Set #{value[0]} #{question_set.id}", description: "Question Set #{value[1]} #{question_set.id}" )
+    UserLog.create!(user: user, question_set_string: string_hash[key].last, question_set: question_set, event: 'Question Set string created')
   end
   string_hash
 end
@@ -105,27 +115,42 @@ languages = [:en, :fr]
   n += 1
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
+    UserLog.create!(user: user, deck: deck, event: 'Deck created')
+    # default collection created for a deck
     collection = Collection.create!(user: user, deck: deck, static: true)
+    UserLog.create!(user: user, collection: collection, event: 'All Cards collection created')
+    collection_string = CollectionString.create!(collection: collection, user: user, language: deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
+    UserLog.create!(user: user, collection_string: collection_string, collection: collection, event: 'All cards collection string created')
+    # custom collection created for a deck
+    collection = Collection.create!(user: user, deck: deck, static: false)
+    UserLog.create!(user: user, collection: collection, event: 'Collection created')
+
+
     card_list = []
     c = 4
     5.times do
       card_list << Card.create!(deck: deck, user: user)
+      UserLog.create!(user: user, card: card_list.last, event: 'Card created')
 
-      CollectionCard.create!(card: card_list.last, collection: collection, priority: c)
+      collection_card = CollectionCard.create!(card: card_list.last, collection: collection, priority: c)
+      UserLog.create!(user: user, collection_card: collection_card, card: card_list.last, collection: collection, event: 'Card added to collection')
       c -= 1
     end
 
     card_list.each do |card|
       card_tags = Tag.all.sample(2)
       card_tags.each do |tag|
-        TagRelation.create!(card: card, tag: tag)
+        tag_relation = TagRelation.create!(card: card, tag: tag)
+        UserLog.create!(user: user, tag_relation: tag_relation, card: card, tag: tag, event: 'Tag added to card')
       end
     end
 
     question_set = QuestionSet.create!(user: user, deck: deck)
+    UserLog.create!(user: user, question_set: question_set, event: 'Question set created')
     string_hash = create_strings(user, deck, collection, question_set, card_list, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
+    UserLog.create!(user: user, user_group: user_group, event: 'User Group created')
     ug_deck = UserGroupDeck.create!(user_group: user_group, deck: deck)
 
     DeckPermission.create!(user: user, deck: deck, read_access: true, update_access: true, clone_access: true)
