@@ -123,7 +123,6 @@ class Api::V1::DecksController < Api::V1::BaseController
       objects: objects,
       string_type: string_type,
       id_type: id_type,
-      permission_type: nil,
       deck: deck,
       language: language
     }

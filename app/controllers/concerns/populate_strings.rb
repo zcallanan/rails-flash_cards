@@ -10,7 +10,7 @@ class PopulateStrings
   end
 
   def call
-    # objects ~ decks, string_type ~ 'deck_strings', id_type ~ :deck_id, permission_type ~ 'deck_permissions'
+    # objects ~ decks, string_type ~ 'deck_strings', id_type ~ :deck_id
 
     object_strings = []
     @objects.each do |object|
