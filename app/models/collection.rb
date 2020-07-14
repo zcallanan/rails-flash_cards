@@ -1,5 +1,4 @@
 class Collection < ApplicationRecord
-
   belongs_to :deck
   belongs_to :user
   has_many :collection_cards
@@ -19,10 +18,6 @@ class Collection < ApplicationRecord
   }
 
   scope :collections_shared, lambda { |user, deck|
-    includes(deck: :deck_permissions).where(deck_id: deck.id, deck_permissions: { user_id: user.id, read_access: true }).where.not(user: user).references(decks: :deck_permissions).distinct
-  }
-
-  scope :collections_not_owned, lambda { |user, update|
-    includes(deck: :deck_permissions).where('deck_permissions.user_id = ? AND deck_permissions.read_access = ? AND deck_permissions.update_access = ?', user.id, true, update).where.not(user: user).references(decks: :deck_permissions).distinct
+    includes([deck: :deck_permissions], :collection_strings).where(deck_id: deck.id, deck_permissions: { user_id: user.id, read_access: true }).where.not(user: user, collection_strings: { title: 'All Cards' }).references([decks: :deck_permissions], :collection_strings).distinct
   }
 end
