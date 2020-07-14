@@ -10,6 +10,7 @@ class Deck < ApplicationRecord
   has_many :deck_strings, inverse_of: :deck
   has_many :collections
   has_many :cards
+  has_many :user_logs
   accepts_nested_attributes_for :deck_strings, :collections
 
   scope :global_search_by_categories, lambda { |categories|

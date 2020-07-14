@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_22_082128) do
+ActiveRecord::Schema.define(version: 2020_07_13_085803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,6 +219,42 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
     t.index ["user_id"], name: "index_user_groups_on_user_id"
   end
 
+  create_table "user_logs", force: :cascade do |t|
+    t.string "event"
+    t.bigint "user_id", null: false
+    t.bigint "deck_id"
+    t.bigint "collection_id"
+    t.bigint "card_id"
+    t.bigint "collection_card_id"
+    t.bigint "tag_relation_id"
+    t.bigint "question_set_id"
+    t.bigint "user_group_id"
+    t.bigint "deck_permission_id"
+    t.bigint "membership_id"
+    t.bigint "deck_string_id"
+    t.bigint "collection_string_id"
+    t.bigint "question_set_string_id"
+    t.bigint "card_string_id"
+    t.bigint "tag_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["card_id"], name: "index_user_logs_on_card_id"
+    t.index ["card_string_id"], name: "index_user_logs_on_card_string_id"
+    t.index ["collection_card_id"], name: "index_user_logs_on_collection_card_id"
+    t.index ["collection_id"], name: "index_user_logs_on_collection_id"
+    t.index ["collection_string_id"], name: "index_user_logs_on_collection_string_id"
+    t.index ["deck_id"], name: "index_user_logs_on_deck_id"
+    t.index ["deck_permission_id"], name: "index_user_logs_on_deck_permission_id"
+    t.index ["deck_string_id"], name: "index_user_logs_on_deck_string_id"
+    t.index ["membership_id"], name: "index_user_logs_on_membership_id"
+    t.index ["question_set_id"], name: "index_user_logs_on_question_set_id"
+    t.index ["question_set_string_id"], name: "index_user_logs_on_question_set_string_id"
+    t.index ["tag_id"], name: "index_user_logs_on_tag_id"
+    t.index ["tag_relation_id"], name: "index_user_logs_on_tag_relation_id"
+    t.index ["user_group_id"], name: "index_user_logs_on_user_group_id"
+    t.index ["user_id"], name: "index_user_logs_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -269,4 +305,19 @@ ActiveRecord::Schema.define(version: 2020_06_22_082128) do
   add_foreign_key "user_group_decks", "decks"
   add_foreign_key "user_group_decks", "user_groups"
   add_foreign_key "user_groups", "users"
+  add_foreign_key "user_logs", "card_strings"
+  add_foreign_key "user_logs", "cards"
+  add_foreign_key "user_logs", "collection_cards"
+  add_foreign_key "user_logs", "collection_strings"
+  add_foreign_key "user_logs", "collections"
+  add_foreign_key "user_logs", "deck_permissions"
+  add_foreign_key "user_logs", "deck_strings"
+  add_foreign_key "user_logs", "decks"
+  add_foreign_key "user_logs", "memberships"
+  add_foreign_key "user_logs", "question_set_strings"
+  add_foreign_key "user_logs", "question_sets"
+  add_foreign_key "user_logs", "tag_relations"
+  add_foreign_key "user_logs", "tags"
+  add_foreign_key "user_logs", "user_groups"
+  add_foreign_key "user_logs", "users"
 end

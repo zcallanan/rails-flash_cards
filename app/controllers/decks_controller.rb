@@ -29,6 +29,7 @@ class DecksController < ApplicationController
     if user_signed_in?
       @user = current_user
       authorize @deck
+      UserLog.create(user: @user, deck: @deck, event: 'Deck viewed')
       @deck_strings = @deck.deck_strings
       @deck_string_info = @deck_strings.where(language: params[:language]).first
       @languages = Languages.list
@@ -89,15 +90,18 @@ class DecksController < ApplicationController
     # @deck.collections.first.collection_strings.first.user
     authorize @deck
     if @deck.save!
+      UserLog.create(user: @user, deck: @deck, event: 'Deck created')
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
       # Set full access rights for deck owner
       DeckPermission.create!(deck: @deck, user: @user, read_access: true, update_access: true, clone_access: true)
       # Create the default collection. Collections are custom subsets of the full deck of cards used in review
       collection = Collection.create!(deck: @deck, user: @user, static: true)
+      UserLog.create(user: @user, collection: collection, event: 'Collection created')
       # # Static: true - denotes the collection that should not allow its card content to be editable
       # Create strings for the initial collection
       # # TODO: localize these strings
-      CollectionString.create!(collection: collection, user: @user, language: @deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
+      collection_string = CollectionString.create!(collection: collection, user: @user, language: @deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
+      UserLog.create(user: @user, collection_string: collection_string, collection: collection, event: 'Collection String created')
 
       redirect_to deck_path(@deck, language: @deck.default_language)
     else
@@ -108,6 +112,7 @@ class DecksController < ApplicationController
   def update
     authorize(@deck)
     if @deck.update!(deck_params)
+      UserLog.create(user: @user, deck: @deck, event: 'Deck updated')
       redirect_to deck_path(@deck, language: params['deck']['language'])
     else
       redirect_to decks_path, flash[:alert] = "Unable to update"

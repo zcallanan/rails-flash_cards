@@ -4,6 +4,7 @@ class UserGroup < ApplicationRecord
   has_many :users, through: :memberships
   has_many :user_group_decks
   has_many :decks, through: :user_group_decks
+  has_many :user_logs
   accepts_nested_attributes_for :decks
 
   scope :user_groups_owned, lambda { |user|

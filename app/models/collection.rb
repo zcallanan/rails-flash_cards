@@ -6,6 +6,7 @@ class Collection < ApplicationRecord
   has_many :collection_tags
   has_many :tags, through: :collection_tags
   has_many :collection_strings, inverse_of: :collection
+  has_many :user_logs
   accepts_nested_attributes_for :collection_strings
 
   scope :collections_owned, lambda { |user|
