@@ -1,3 +1,4 @@
+puts 'destroying...'
 UserLog.destroy_all
 DeckPermission.destroy_all
 Membership.destroy_all
@@ -16,6 +17,8 @@ Deck.destroy_all
 UserGroup.destroy_all
 User.destroy_all
 Category.destroy_all
+
+puts 'seeding...'
 
 tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog']
 
@@ -113,8 +116,16 @@ languages = [:en, :fr]
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
     UserLog.create!(user: user, deck: deck, event: 'Deck created')
+    # default collection created for a deck
     collection = Collection.create!(user: user, deck: deck, static: true)
+    UserLog.create!(user: user, collection: collection, event: 'All Cards collection created')
+    collection_string = CollectionString.create!(collection: collection, user: user, language: deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
+    UserLog.create!(user: user, collection_string: collection_string, collection: collection, event: 'All cards collection string created')
+    # custom collection created for a deck
+    collection = Collection.create!(user: user, deck: deck, static: false)
     UserLog.create!(user: user, collection: collection, event: 'Collection created')
+
+
     card_list = []
     c = 4
     5.times do

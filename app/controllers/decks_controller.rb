@@ -42,27 +42,11 @@ class DecksController < ApplicationController
       # prepare simple_field usage
       @collection.collection_strings.build
 
-      @collections_owned = policy_scope(Collection).collections_owned(@user)
-      collections_owned_strings = {
-        objects: @collections_owned, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
-      }
-      @collections_owned_strings = PopulateStrings.new(collections_owned_strings).call
+      all_cards = policy_scope(Collection).all_cards(@deck)
+      collections_owned = policy_scope(Collection).collections_owned(@user, @deck)
+      collections_shared = policy_scope(Collection).collections_shared(@user, @deck)
 
-      # list of collections the user can read but does not own
-      @collections_read = policy_scope(Collection).collections_not_owned(@user, false)
-
-      collection_read_strings = {
-        objects: @collections_read, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
-      }
-      @collections_read_strings = PopulateStrings.new(collection_read_strings).call
-
-      # list of collections the user can read & update but does not own
-      @collections_update = policy_scope(Collection).collections_not_owned(@user, true)
-
-      collection_update_strings = {
-        objects: @collections_update, user: @user, string_type: 'collection_strings', id_type: :collection_id, permission_type: 'deck_permissions', deck: 'deck'
-      }
-      @collections_update_strings = PopulateStrings.new(collection_update_strings).call
+      @collection_select = Deck.collection_select(@user, all_cards, collections_owned, collections_shared)
 
       @languages = Languages.list
       @language_options = [] # when updating a deck, user can change what language strings users see by default, if they exist. User preference overrides this
@@ -91,17 +75,18 @@ class DecksController < ApplicationController
     authorize @deck
     if @deck.save!
       UserLog.create(user: @user, deck: @deck, event: 'Deck created')
+      UserLog.create(user: @user, deck_string: @deck.deck_strings.first, deck: @deck, event: 'Deck string created')
       @deck.update!(default_language: @deck.deck_strings.first.language) # first string sets the default language
       # Set full access rights for deck owner
       DeckPermission.create!(deck: @deck, user: @user, read_access: true, update_access: true, clone_access: true)
       # Create the default collection. Collections are custom subsets of the full deck of cards used in review
       collection = Collection.create!(deck: @deck, user: @user, static: true)
-      UserLog.create(user: @user, collection: collection, event: 'Collection created')
+      UserLog.create(user: @user, collection: collection, event: 'All Cards collection created')
       # # Static: true - denotes the collection that should not allow its card content to be editable
       # Create strings for the initial collection
       # # TODO: localize these strings
       collection_string = CollectionString.create!(collection: collection, user: @user, language: @deck.default_language, title: 'All Cards', description: 'Review all cards in this deck.')
-      UserLog.create(user: @user, collection_string: collection_string, collection: collection, event: 'Collection String created')
+      UserLog.create(user: @user, collection_string: collection_string, collection: collection, event: 'All Cards collection string created')
 
       redirect_to deck_path(@deck, language: @deck.default_language)
     else

@@ -1,5 +1,5 @@
 class Deck < ApplicationRecord
-  attr_accessor :language
+  attr_accessor :language, :collect
 
   belongs_to :user
   belongs_to :category
@@ -66,5 +66,36 @@ class Deck < ApplicationRecord
 
   def owner
     user
+  end
+
+  def self.collection_select(user, all_cards, collections_owned, collections_shared)
+    types = {
+      'All' => '',
+      'Custom Card Collections' => '',
+      'Shared Card Collections' => ''
+    }
+
+    collections_hash = {
+      objects: '', user: user, string_type: 'collection_strings', id_type: :collection_id, permission_type: nil, deck: 'deck'
+    }
+
+    array = []
+
+    types.each do |key, value|
+      if key == 'All'
+        collections = all_cards
+      elsif key == 'Custom Card Collections'
+        collections = collections_owned
+      elsif key == 'Shared Card Collections'
+        collections = collections_shared
+      end
+      collections_hash[:objects] = collections
+
+      value = PopulateStrings.new(collections_hash).call unless collections.nil?
+
+      result = [key, value.map do |collection_string| [collection_string.title, collection_string.collection.id, { data: { target: 'collection-select.option', action: 'click->collection-select#collectionContent' } }] end]
+      array << result unless result[1].empty?
+    end
+    array
   end
 end

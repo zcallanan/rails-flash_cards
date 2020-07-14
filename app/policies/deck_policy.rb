@@ -27,6 +27,10 @@ class DeckPolicy < ApplicationPolicy
     user_owns_record? || user_is_admin?
   end
 
+  def collection_select?
+    user_owns_record? || user_is_admin? || user_can_read?
+  end
+
   private
 
   def record_is_global?

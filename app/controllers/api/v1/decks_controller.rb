@@ -9,25 +9,25 @@ class Api::V1::DecksController < Api::V1::BaseController
     value_hash = search_values(params)
     value_hash[:user] = nil
     search_hash = { global: true }
-    @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-    deck_strings = string_hash(@decks, nil, value_hash[:language])
+    decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+    deck_strings = string_hash(decks, nil, value_hash[:language], 'deck_strings', :deck_id, nil)
 
     render json: { data: { partials: generate_partials(deck_strings, 'deck_panel'), formats: [:json], layout: false } }
   end
 
   def mydecks
     if user_signed_in?
-      @user = current_user
+      user = current_user
       # curl -i -X GET \
       # -H 'X-User-Email: pups0@example.com' \
       # -H 'X-User-Token: SzRrzWThqfnd2aK7t67C' \
       # http://localhost:3000/api/v1/decks/mydecks
 
       value_hash = search_values(params)
-      value_hash[:user] = @user
+      value_hash[:user] = user
       search_hash = { mydecks: true }
-      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-      decks_owned_strings = string_hash(@decks, @user, value_hash[:language])
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      decks_owned_strings = string_hash(decks, user, value_hash[:language], 'deck_strings', :deck_id, nil)
 
       render json: { data: { partials: generate_partials(decks_owned_strings, 'deck_panel'), formats: [:json], layout: false } }
     end
@@ -35,13 +35,13 @@ class Api::V1::DecksController < Api::V1::BaseController
 
   def myarchived
     if user_signed_in?
-      @user = current_user
+      user = current_user
 
       value_hash = search_values(params)
-      value_hash[:user] = @user
+      value_hash[:user] = user
       search_hash = { myarchived: true }
-      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-      archived_deck_strings = string_hash(@decks, @user, value_hash[:language])
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      archived_deck_strings = string_hash(decks, user, value_hash[:language], 'deck_strings', :deck_id, nil)
 
       render json: { data: { partials: generate_partials(archived_deck_strings, 'deck_panel'), formats: [:json], layout: false } }
     end
@@ -49,13 +49,13 @@ class Api::V1::DecksController < Api::V1::BaseController
 
   def shared_read
     if user_signed_in?
-      @user = current_user
+      user = current_user
 
       value_hash = search_values(params)
-      value_hash[:user] = @user
+      value_hash[:user] = user
       search_hash = { shared_read: true }
-      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-      shared_read_strings = string_hash(@decks, @user, value_hash[:language])
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      shared_read_strings = string_hash(decks, user, value_hash[:language], 'deck_strings', :deck_id, nil)
 
       render json: { data: { partials: generate_partials(shared_read_strings, 'deck_panel'), formats: [:json], layout: false } }
     end
@@ -63,13 +63,13 @@ class Api::V1::DecksController < Api::V1::BaseController
 
   def shared_update
     if user_signed_in?
-      @user = current_user
+      user = current_user
 
       value_hash = search_values(params)
-      value_hash[:user] = @user
+      value_hash[:user] = user
       search_hash = { shared_update: true }
-      @decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
-      shared_update_strings = string_hash(@decks, @user, value_hash[:language])
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      shared_update_strings = string_hash(decks, user, value_hash[:language], 'deck_strings', :deck_id, nil)
 
       render json: { data: { partials: generate_partials(shared_update_strings, 'deck_panel'), formats: [:json], layout: false } }
     end
@@ -77,11 +77,11 @@ class Api::V1::DecksController < Api::V1::BaseController
 
   def recent_decks
     if user_signed_in?
-      @user = current_user
+      user = current_user
 
-      @decks = Deck.includes(:user_logs).where(user_logs: { user: @user, event: 'Deck viewed' }).references(:user_logs).order(created_at: :desc).limit(3)
+      decks = Deck.includes(:user_logs).where(user_logs: { user: user, event: 'Deck viewed' }).references(:user_logs).order(created_at: :desc).limit(3)
 
-      deck_strings = string_hash(@decks, @user, @user.language)
+      deck_strings = string_hash(decks, user, user.language, 'deck_strings', :deck_id, nil)
 
       render json: { data: { partials: generate_partials(deck_strings, 'recent_decks'), formats: [:json], layout: false } }
     end
@@ -118,13 +118,13 @@ class Api::V1::DecksController < Api::V1::BaseController
       status: :unprocessable_entity
   end
 
-  def string_hash(decks, user, language)
+  def string_hash(objects, user, language, string_type, id_type, deck)
     string_hash = {
-      objects: decks,
-      string_type: 'deck_strings',
-      id_type: :deck_id,
+      objects: objects,
+      string_type: string_type,
+      id_type: id_type,
       permission_type: nil,
-      deck: nil,
+      deck: deck,
       language: language
     }
     string_hash[:user] = user unless user.nil?
