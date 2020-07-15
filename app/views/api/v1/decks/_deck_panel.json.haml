@@ -3,7 +3,7 @@
     .deck-row-one{class: 'row'}
       %h2{class: 'deck-title'}= deck_string.title
       %h4{class: 'deck-category'}= deck_string.deck.category.name
-      = render 'shared/stars'
+      = render 'shared/stars', rating: rating
     .deck-row-two
       %h4{class: 'deck-description'}= deck_string.description
       .deck-row-three
