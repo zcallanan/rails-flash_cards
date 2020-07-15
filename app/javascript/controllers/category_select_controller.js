@@ -9,6 +9,7 @@ export default class extends Controller {
 
     const choices = new Choices(select, {
       removeItemButton: true,
+      maxItemCount: 5,
       classNames: {
         containerOuter: 'choices category-select'
       }
