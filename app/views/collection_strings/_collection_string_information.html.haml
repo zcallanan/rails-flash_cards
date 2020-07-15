@@ -1,5 +1,5 @@
 // rendered by collections/show
-- if user_signed_in? && policy(@collection).user_can_update?
+- if user_signed_in? && policy(@collection).can_update?
   %h1{id: 'collection-title', 'data-target' => 'collection-string-inline.titleinfo', 'data-action' => 'click->collection-string-inline#cclick' }= collection_string.title
   %i{class: "far fa-edit", id: 'collection-edit-button', 'data-toggle' => 'toggle', 'data-placement' => 'right', 'data-target' => 'collection-string-inline.edit', 'data-action' => 'click->collection-string-inline#cclick', title: 'Edit' }
   = render 'collection_strings/update_collection_title_des', deck: deck, collection: collection, collection_string: collection_string

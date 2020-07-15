@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: 'pages#home'
 
   resources :decks, only: %i[index show create update] do
+    resources :reviews, only: %i[index]
     resources :collections, only: %i[show create] do
       resources :collection_strings, only: %i[update]
     end

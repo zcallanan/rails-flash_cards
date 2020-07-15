@@ -2,4 +2,4 @@
   %h2{class: 'recent-deck-title'}= deck_string.title
   %h4{class: 'recent-deck-category'}= deck_string.deck.category.name
   %h4{class: 'recent-deck-description'}= deck_string.description
-  = render 'shared/stars'
+  = render 'shared/stars', rating_value: rating_value, rating_count: rating_count, deck: deck_string.deck

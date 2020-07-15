@@ -1,16 +1,11 @@
 .star-div{class: 'd-flex justify-content-center align-items-center text-right'}
-  %p 4.5 &nbsp
-  %i{class: "fas fa-star stars"}
-  %i{class: "fas fa-star stars"}
-  %i{class: "fas fa-star stars"}
-  %i{class: "fas fa-star stars"}
-  %i{class: "far fa-star stars"}
+  %p= rating_value
   %p &nbsp
-  %p= link_to "(444)", '#'
-
-/ - (1..5).to_a.each_with_index do |value, index| %>
-/   - if index < item.rating
-/     .i class="fas fa-star stars"
-/       - else
-/         .i class="far fa-star stars"
+  - (1..5).to_a.each_with_index do |_value, index|
+    - if rating_value < index + 1
+      %i{class: "far fa-star stars"}
+    - else
+      %i{class: "fas fa-star stars"}
+  %p &nbsp
+  %p= link_to "(#{rating_count})", deck_reviews_path(deck)
 

@@ -138,9 +138,12 @@ class Api::V1::DecksController < Api::V1::BaseController
     strings = PopulateStrings.new(deck_strings).call
     array = []
     strings.each do |string|
+      ratings = Review.generate_rating(string.deck) # calculate rating score
+      rating_count = ratings.count
+      rating_value = ratings.pluck(:rating).reduce(:+) / rating_count.to_f
       array << render_to_string(
         partial: partial_string,
-        locals: { deck_string: string }
+        locals: { deck_string: string, rating_value: rating_value, rating_count: rating_count }
       )
     end
     array

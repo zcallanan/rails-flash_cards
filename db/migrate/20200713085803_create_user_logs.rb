@@ -17,6 +17,7 @@ class CreateUserLogs < ActiveRecord::Migration[6.0]
       t.references :question_set_string, foreign_key: true
       t.references :card_string, foreign_key: true
       t.references :tag, foreign_key: true
+      t.references :review, foreign_key: true
 
       t.timestamps
     end

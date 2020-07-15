@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_215109) do
+ActiveRecord::Schema.define(version: 2020_07_13_085803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,7 +190,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_215109) do
   create_table "reviews", force: :cascade do |t|
     t.string "title"
     t.string "body"
-    t.decimal "rating"
+    t.integer "rating"
     t.bigint "user_id", null: false
     t.bigint "deck_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_215109) do
     t.bigint "question_set_string_id"
     t.bigint "card_string_id"
     t.bigint "tag_id"
+    t.bigint "review_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["card_id"], name: "index_user_logs_on_card_id"
@@ -261,6 +262,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_215109) do
     t.index ["membership_id"], name: "index_user_logs_on_membership_id"
     t.index ["question_set_id"], name: "index_user_logs_on_question_set_id"
     t.index ["question_set_string_id"], name: "index_user_logs_on_question_set_string_id"
+    t.index ["review_id"], name: "index_user_logs_on_review_id"
     t.index ["tag_id"], name: "index_user_logs_on_tag_id"
     t.index ["tag_relation_id"], name: "index_user_logs_on_tag_relation_id"
     t.index ["user_group_id"], name: "index_user_logs_on_user_group_id"
@@ -330,6 +332,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_215109) do
   add_foreign_key "user_logs", "memberships"
   add_foreign_key "user_logs", "question_set_strings"
   add_foreign_key "user_logs", "question_sets"
+  add_foreign_key "user_logs", "reviews"
   add_foreign_key "user_logs", "tag_relations"
   add_foreign_key "user_logs", "tags"
   add_foreign_key "user_logs", "user_groups"

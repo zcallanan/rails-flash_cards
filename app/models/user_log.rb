@@ -14,4 +14,5 @@ class UserLog < ApplicationRecord
   belongs_to :collection_string, optional: true
   belongs_to :question_set_string, optional: true
   belongs_to :card_string, optional: true
+  belongs_to :review, optional: true
 end
