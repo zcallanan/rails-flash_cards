@@ -7,6 +7,8 @@ class UserGroup < ApplicationRecord
   has_many :user_logs
   accepts_nested_attributes_for :decks
 
+  validates :name, presence: true, length: { minimum: 3, maximum: 256 }
+
   scope :user_groups_owned, lambda { |user|
     includes(:memberships).where(user: user).references(:memberships).distinct
   }
