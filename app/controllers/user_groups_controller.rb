@@ -68,7 +68,7 @@ class UserGroupsController < ApplicationController
   end
 
   def user_group_params
-    params.require(:user_group).permit(:name, deck_ids: [], collection_ids: [], question_set_ids: [])
+    params.require(:user_group).permit(:name, deck_ids: [])
   end
 
   def select_options(user, objects, method, deck_string = nil)

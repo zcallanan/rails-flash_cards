@@ -14,7 +14,7 @@
         - tag_array.uniq.sort.each do |name|
           %span{class: 'deck-tags badge badge-primary'}= name
   .deck-stats
-    %p{class: 'deck-total-cards'} Total Cards
+    %p{class: 'deck-total-cards'}= "#{card_count} Cards"
     %p{class: 'deck-question-count'} Total Custom Questions
 
   .deck-link

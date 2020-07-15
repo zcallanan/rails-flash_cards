@@ -5,8 +5,8 @@ class Deck < ApplicationRecord
   belongs_to :category
   has_many :deck_permissions
   has_many :users, through: :deck_permissions
-  has_many :question_sets
-  has_many :card_question_sets, through: :question_sets
+  has_many :question_relations
+  has_many :questions, through: :question_relations
   has_many :deck_strings, inverse_of: :deck
   has_many :collections
   has_many :cards
