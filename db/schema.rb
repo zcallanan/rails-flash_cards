@@ -28,17 +28,6 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
-  create_table "card_question_sets", force: :cascade do |t|
-    t.bigint "question_set_id", null: false
-    t.bigint "card_id", null: false
-    t.bigint "question_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["card_id"], name: "index_card_question_sets_on_card_id"
-    t.index ["question_id"], name: "index_card_question_sets_on_question_id"
-    t.index ["question_set_id"], name: "index_card_question_sets_on_question_set_id"
-  end
-
   create_table "card_strings", force: :cascade do |t|
     t.string "language"
     t.string "title"
@@ -151,40 +140,38 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
-  create_table "question_set_strings", force: :cascade do |t|
-    t.string "language"
-    t.string "title"
-    t.string "description"
-    t.bigint "user_id", null: false
-    t.bigint "question_set_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_set_id"], name: "index_question_set_strings_on_question_set_id"
-    t.index ["user_id"], name: "index_question_set_strings_on_user_id"
-  end
-
-  create_table "question_sets", force: :cascade do |t|
+  create_table "question_relations", force: :cascade do |t|
     t.bigint "deck_id", null: false
     t.bigint "user_id", null: false
+    t.bigint "question_id", null: false
+    t.bigint "card_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["deck_id"], name: "index_question_sets_on_deck_id"
-    t.index ["user_id"], name: "index_question_sets_on_user_id"
+    t.index ["card_id"], name: "index_question_relations_on_card_id"
+    t.index ["deck_id"], name: "index_question_relations_on_deck_id"
+    t.index ["question_id"], name: "index_question_relations_on_question_id"
+    t.index ["user_id"], name: "index_question_relations_on_user_id"
   end
 
   create_table "question_strings", force: :cascade do |t|
     t.string "language"
-    t.string "question"
+    t.string "title"
+    t.string "body"
     t.integer "field_type", default: 0
     t.bigint "question_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_id"], name: "index_question_strings_on_question_id"
+    t.index ["user_id"], name: "index_question_strings_on_user_id"
   end
 
   create_table "questions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.boolean "static", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_questions_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -239,18 +226,21 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
     t.bigint "card_id"
     t.bigint "collection_card_id"
     t.bigint "tag_relation_id"
-    t.bigint "question_set_id"
+    t.bigint "question_relation_id"
     t.bigint "user_group_id"
     t.bigint "deck_permission_id"
     t.bigint "membership_id"
     t.bigint "deck_string_id"
     t.bigint "collection_string_id"
-    t.bigint "question_set_string_id"
     t.bigint "card_string_id"
     t.bigint "tag_id"
     t.bigint "review_id"
+    t.bigint "question_id"
+    t.bigint "answer_id"
+    t.bigint "question_string_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["answer_id"], name: "index_user_logs_on_answer_id"
     t.index ["card_id"], name: "index_user_logs_on_card_id"
     t.index ["card_string_id"], name: "index_user_logs_on_card_string_id"
     t.index ["collection_card_id"], name: "index_user_logs_on_collection_card_id"
@@ -260,8 +250,9 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
     t.index ["deck_permission_id"], name: "index_user_logs_on_deck_permission_id"
     t.index ["deck_string_id"], name: "index_user_logs_on_deck_string_id"
     t.index ["membership_id"], name: "index_user_logs_on_membership_id"
-    t.index ["question_set_id"], name: "index_user_logs_on_question_set_id"
-    t.index ["question_set_string_id"], name: "index_user_logs_on_question_set_string_id"
+    t.index ["question_id"], name: "index_user_logs_on_question_id"
+    t.index ["question_relation_id"], name: "index_user_logs_on_question_relation_id"
+    t.index ["question_string_id"], name: "index_user_logs_on_question_string_id"
     t.index ["review_id"], name: "index_user_logs_on_review_id"
     t.index ["tag_id"], name: "index_user_logs_on_tag_id"
     t.index ["tag_relation_id"], name: "index_user_logs_on_tag_relation_id"
@@ -288,9 +279,6 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
   add_foreign_key "answers", "cards"
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
-  add_foreign_key "card_question_sets", "cards"
-  add_foreign_key "card_question_sets", "question_sets"
-  add_foreign_key "card_question_sets", "questions"
   add_foreign_key "card_strings", "cards"
   add_foreign_key "card_strings", "users"
   add_foreign_key "cards", "decks"
@@ -309,11 +297,13 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
   add_foreign_key "decks", "users"
   add_foreign_key "memberships", "user_groups"
   add_foreign_key "memberships", "users"
-  add_foreign_key "question_set_strings", "question_sets"
-  add_foreign_key "question_set_strings", "users"
-  add_foreign_key "question_sets", "decks"
-  add_foreign_key "question_sets", "users"
+  add_foreign_key "question_relations", "cards"
+  add_foreign_key "question_relations", "decks"
+  add_foreign_key "question_relations", "questions"
+  add_foreign_key "question_relations", "users"
   add_foreign_key "question_strings", "questions"
+  add_foreign_key "question_strings", "users"
+  add_foreign_key "questions", "users"
   add_foreign_key "reviews", "decks"
   add_foreign_key "reviews", "users"
   add_foreign_key "tag_relations", "cards"
@@ -321,6 +311,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
   add_foreign_key "user_group_decks", "decks"
   add_foreign_key "user_group_decks", "user_groups"
   add_foreign_key "user_groups", "users"
+  add_foreign_key "user_logs", "answers"
   add_foreign_key "user_logs", "card_strings"
   add_foreign_key "user_logs", "cards"
   add_foreign_key "user_logs", "collection_cards"
@@ -330,8 +321,9 @@ ActiveRecord::Schema.define(version: 2020_07_13_085803) do
   add_foreign_key "user_logs", "deck_strings"
   add_foreign_key "user_logs", "decks"
   add_foreign_key "user_logs", "memberships"
-  add_foreign_key "user_logs", "question_set_strings"
-  add_foreign_key "user_logs", "question_sets"
+  add_foreign_key "user_logs", "question_relations"
+  add_foreign_key "user_logs", "question_strings"
+  add_foreign_key "user_logs", "questions"
   add_foreign_key "user_logs", "reviews"
   add_foreign_key "user_logs", "tag_relations"
   add_foreign_key "user_logs", "tags"

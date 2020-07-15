@@ -4,13 +4,16 @@ DeckPermission.destroy_all
 Membership.destroy_all
 DeckString.destroy_all
 CollectionString.destroy_all
-QuestionSetString.destroy_all
+QuestionString.destroy_all
 CardString.destroy_all
 UserGroupDeck.destroy_all
 TagRelation.destroy_all
+QuestionRelation.destroy_all
 Tag.destroy_all
-QuestionSet.destroy_all
 CollectionCard.destroy_all
+Review.destroy_all
+Answer.destroy_all
+Question.destroy_all
 Card.destroy_all
 Collection.destroy_all
 Deck.destroy_all
@@ -77,7 +80,7 @@ def generate_permissions(**objects)
   end
 end
 
-def create_strings(user, deck, collection, question_set, cards, number)
+def create_strings(user, deck, collection, cards, number)
   strings = {
     en: ["title one #{number}", "description one #{number}", true],
     fr: ["titre premier #{number}", "description un #{number}", false]
@@ -99,8 +102,6 @@ def create_strings(user, deck, collection, question_set, cards, number)
     UserLog.create!(user: user, deck_string: string_hash[key].last, deck: deck, event: 'Deck string created')
     string_hash[key] << CollectionString.create!(user: user, collection: collection, language: key, title: "Collection #{value[0]} #{collection.id}", description: "Collection #{value[1]} #{collection.id}" )
     UserLog.create!(user: user, collection_string: string_hash[key].last, collection: collection, event: 'Collection string created')
-    string_hash[key] << QuestionSetString.create!(user: user, question_set: question_set, language: key, title: "Question Set #{value[0]} #{question_set.id}", description: "Question Set #{value[1]} #{question_set.id}" )
-    UserLog.create!(user: user, question_set_string: string_hash[key].last, question_set: question_set, event: 'Question Set string created')
   end
   string_hash
 end
@@ -129,7 +130,6 @@ languages = [:en, :fr]
     collection = Collection.create!(user: user, deck: deck, static: false)
     UserLog.create!(user: user, collection: collection, event: 'Collection created')
 
-
     card_list = []
     c = 4
     5.times do
@@ -142,6 +142,12 @@ languages = [:en, :fr]
     end
 
     card_list.each do |card|
+      # the default question that each card has. This is not editable. Custom questions are static false
+      question = Question.create!(user: user, static: true)
+      # when reviewing cards, each card has one question by default. This is an open-ended question where they can enter an answer.
+      QuestionString.create!(question: question, user: user, language: deck.default_language, title: 'Default', body: 'Your response to the card')
+      question_relation = QuestionRelation.create!(user: user, deck: deck, card: card, question: question)
+      UserLog.create!(user: user, question_relation: question_relation, event: 'Question set created')
       card_tags = Tag.all.sample(2)
       card_tags.each do |tag|
         tag_relation = TagRelation.create!(card: card, tag: tag)
@@ -149,9 +155,8 @@ languages = [:en, :fr]
       end
     end
 
-    question_set = QuestionSet.create!(user: user, deck: deck)
-    UserLog.create!(user: user, question_set: question_set, event: 'Question set created')
-    string_hash = create_strings(user, deck, collection, question_set, card_list, x)
+
+    string_hash = create_strings(user, deck, collection, card_list, x)
     x += 1
     user_group = UserGroup.create!(user: user, name: Faker::Book.title)
     UserLog.create!(user: user, user_group: user_group, event: 'User Group created')

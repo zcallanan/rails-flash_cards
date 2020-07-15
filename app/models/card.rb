@@ -6,7 +6,11 @@ class Card < ApplicationRecord
   has_many :tag_relations
   has_many :tags, through: :tag_relations
   has_many :answers
-  has_many :card_question_sets
-  has_many :questions, through: :card_question_sets
+  has_many :question_relations
+  has_many :questions, through: :question_relations
   has_many :user_logs
+
+  scope :total_cards, lambda { |deck|
+    where(deck: deck)
+  }
 end
