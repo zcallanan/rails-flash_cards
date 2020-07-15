@@ -9,7 +9,7 @@
 
 .deck-search-row-one {
   display: flex;
-  justify-content: space-around;
+  justify-content: start;
 
 }
 
@@ -24,5 +24,9 @@
 }
 
 .category-select {
-  width: 500px;
+  width: 400px;
+}
+
+.language-select {
+  width: 280px;
 }
