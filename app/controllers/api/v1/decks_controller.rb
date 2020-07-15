@@ -12,9 +12,6 @@ class Api::V1::DecksController < Api::V1::BaseController
     decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
     deck_strings = string_hash(decks, nil, value_hash[:language], 'deck_strings', :deck_id, nil)
 
-
-    #ratings = Rating.all.where()
-
     render json: { data: { partials: generate_partials(deck_strings, 'deck_panel'), formats: [:json], layout: false } }
   end
 
