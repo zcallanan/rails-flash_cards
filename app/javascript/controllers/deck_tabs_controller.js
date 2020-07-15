@@ -43,12 +43,10 @@ export default class extends Controller {
     let searchValues = {};
 
     if (isVisible(globalDiv)) {
-      console.log('yo')
       dest = 'global';
       searchValues['div'] = globalDiv
       destTwo = null;
     } else if (isVisible(myDecksDiv)) {
-      console.log('hi')
       dest = 'mydecks';
       searchValues['div'] = myDecksDiv
       destTwo = 'myarchived';
@@ -68,7 +66,6 @@ export default class extends Controller {
       dest: dest
     };
     searchValues['url'] = buildSearchUrl(search_url);
-    console.log(searchValues)
     this.search(searchValues);
 
     if (destTwo !== null) {
