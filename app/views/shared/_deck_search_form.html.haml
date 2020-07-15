@@ -3,11 +3,11 @@
     .deck-search-row-one
       - if params.key?('category')
         - params['category'].key?('name') ? name = params['category']['name'] : name = ''
-        = f.input :name, collection: Category.generate_categories, required: true, label: 'Category', selected: name, input_html: { multiple: true, data: { target: 'deck-tabs.nameField'}}, include_hidden: false, as: :grouped_select, group_method: :last
+        = f.input :name, collection: Category.generate_categories, required: true, label: 'Category', selected: name, input_html: { multiple: true, data: { target: 'deck-tabs.nameField category-select.select'}}, include_hidden: false, as: :grouped_select, group_method: :last
         - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
         = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: language, required: true, input_html: {data: { target: 'deck-tabs.languageField'}}
       - else
-        = f.input :name, collection: Category.generate_categories, required: true, label: 'Category', selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'deck-tabs.nameField'}}, include_hidden: false, as: :grouped_select, group_method: :last
+        = f.input :name, collection: Category.generate_categories, required: true, label: 'Category', selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'deck-tabs.nameField category-select.select'} }, include_hidden: false, as: :grouped_select, group_method: :last
         = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true, input_html: {data: { target: 'deck-tabs.languageField'}}
     .deck-search-row-two
       .deck-search-tags
