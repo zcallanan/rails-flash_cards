@@ -1,5 +1,5 @@
 // rendered by decks/show
-- if user_signed_in? && policy(@deck).user_can_update?
+- if user_signed_in? && policy(@deck).can_update?
   #deck-string-information{'data-controller' => 'deck-string-inline'}
     #deck-click-out{ 'data-action' => 'click@document->deck-string-inline#dclick' }
       %h1{id: 'deck-title', 'data-target' => 'deck-string-inline.titleinfo', 'data-action' => 'click->deck-string-inline#dclick' }= deck_string.title

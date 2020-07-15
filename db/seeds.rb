@@ -20,7 +20,7 @@ Category.destroy_all
 
 puts 'seeding...'
 
-tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog']
+tags = ['best', 'biggest', 'awesome', 'terrible', 'one', 'two', 'annie', 'dog', 'cat', 'squirrel']
 
 tags.each do |tag|
   Tag.create!(name: tag)
@@ -30,7 +30,7 @@ end
 category_list = {
   'All' => ['All Categories'],
   'Geography' => ['Countries'],
-  'Language' => ['English', 'Spanish', 'French'],
+  'Language' => ['English Language', 'Spanish Language', 'French Language'],
   'Mathematics' => ['Algebra', 'Linear Algebra', 'Calculus'],
   'Science' => ['Biology', 'Chemistry', 'Organic Chemistry']
 }
@@ -116,6 +116,10 @@ languages = [:en, :fr]
   languages.each do |language|
     n <= 14 ? deck = Deck.create!(user: user, default_language: language, category: Category.all.sample) : deck = Deck.create!(user: user, default_language: language, global_deck_read: true, category: Category.all.sample)
     UserLog.create!(user: user, deck: deck, event: 'Deck created')
+    5.times do
+      review = Review.create!(user: user, deck: deck, rating: (1..5).to_a.sample, title: Faker::Lorem.sentence(word_count: 5, supplemental: true, random_words_to_add: 8), body: Faker::Lorem.sentence(word_count: 15, supplemental: true, random_words_to_add: 12))
+      UserLog.create!(user: user, review: review, deck: deck, event: 'Review created')
+    end
     # default collection created for a deck
     collection = Collection.create!(user: user, deck: deck, static: true)
     UserLog.create!(user: user, collection: collection, event: 'All Cards collection created')

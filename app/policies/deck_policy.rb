@@ -31,9 +31,8 @@ class DeckPolicy < ApplicationPolicy
     user_owns_record? || user_is_admin? || user_can_read?
   end
 
-  def user_can_update?
-    # check if user can make updates to the deck
-    record.deck_permissions.where(user_id: user.id, deck_id: record.id, update_access: true).present?
+  def can_update?
+    user_can_update?
   end
 
   private
@@ -54,5 +53,10 @@ class DeckPolicy < ApplicationPolicy
   def user_can_read?
     # check if user can view the deck
     record.deck_permissions.where(user_id: user.id, deck_id: record.id, read_access: true).present?
+  end
+
+  def user_can_update?
+    # check if user can make updates to the deck
+    record.deck_permissions.where(user_id: user.id, deck_id: record.id, update_access: true).present?
   end
 end
