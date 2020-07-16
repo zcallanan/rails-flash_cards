@@ -14,7 +14,7 @@
           - params['category'].key?('tag') ? tag = params['category']['tag'] : tag = ''
           = f.input :tag, collection: Tag.search_select, label: 'Tags', include_hidden: false, input_html: { multiple: true, value: tag, data: { target: 'pages-search.tagSelect' } }
         - else
-          = f.input :tag, label: 'Tags', include_hidden: false, input_html: { multiple: true, data: { target: 'pages-search.tagSelect' } }
+          = f.input :tag, collection: Tag.search_select, label: 'Tags', include_hidden: false, input_html: { multiple: true, data: { target: 'pages-search.tagSelect' } }
         %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
       = f.submit 'Find cards to review', class: "btn btn-primary search-submit", data: { target: 'pages-search.searchSubmit' }
 
