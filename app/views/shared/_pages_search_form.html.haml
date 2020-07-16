@@ -9,7 +9,6 @@
       - else
         = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'} }, include_hidden: false, as: :grouped_select, group_method: :last
         = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true, input_html: {data: { target: 'pages-search.languageSelect'}}
-    .deck-search-row-two
       .deck-search-tags
         - if params.key?('category')
           - params['category'].key?('tag') ? tag = params['category']['tag'] : tag = ''
@@ -17,5 +16,5 @@
         - else
           = f.input :tag, label: 'Tags', include_hidden: false, input_html: { multiple: true, data: { target: 'pages-search.tagSelect' } }
         %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
-      = f.submit 'Find cards to review', class: "btn btn-primary", data: { target: 'pages-search.searchSubmit' }
+      = f.submit 'Find cards to review', class: "btn btn-primary search-submit", data: { target: 'pages-search.searchSubmit' }
 
