@@ -10,12 +10,7 @@
 .deck-search-row-one {
   display: flex;
   justify-content: start;
-
-}
-
-.deck-search-row-two {
-  display: flex;
-  justify-content: space-around;
+  align-items: end;
 
 }
 
@@ -29,4 +24,12 @@
 
 .language-select {
   width: 280px;
+}
+
+.tag-select {
+  width: 400px;
+}
+
+.search-submit {
+  height: 50%
 }

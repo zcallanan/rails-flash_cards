@@ -6,17 +6,17 @@ const buildSearchUrl = (searchUrl) => {
   let categoryValue = '';
   let tagValue = '';
   const options = Array.from(searchUrl.options)
-
   const languageValue = `&category%5Blanguage%5D=${searchUrl.language}`;
+
   for (let [index, option] of options.entries()) {
-    if (option.selected && index === 0) {
+    if (option.label === 'All Categories') {
       categoryArray.push(option.value);
       break;
-    } else if (option.selected) {
+    } else {
       categoryArray.push(option.value);
     }
   }
-  const tagArray = searchUrl.tag.split(', ');
+
   categoryArray.forEach(category => {
     if (categoryArray.indexOf(category) === 0) {
       categoryValue = `${categoryValue}${initCategoryString}${category}`
@@ -24,6 +24,8 @@ const buildSearchUrl = (searchUrl) => {
       categoryValue = `${categoryValue}${categoryString}${category}`
     }
   })
+
+  const tagArray = searchUrl.tag.split(', ');
   tagArray.forEach(tag => {
     tagValue = `${tagValue}${tagString}${tag}`
   })

@@ -23,7 +23,7 @@ class DeckSearchService
     # reduce deck list to those with child deck strings of @language
     @decks = @decks.search_by_language(@language) unless @language.nil? # should always have one value
     # reduce deck list by tags
-    @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be nil, one, or comma separated string
+    @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be nil or array
     @decks
   end
 end

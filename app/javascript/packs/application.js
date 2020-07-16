@@ -29,7 +29,6 @@ import "bootstrap";
 // import { initSelect2 } from '../components/init_select2';
 
 import { fetchWithToken } from '../utils/fetch_with_token'
-import '../utils/tag-picker.js'
 // import '../components/user_group_update_all'
 
 document.addEventListener('turbolinks:load', () => {
