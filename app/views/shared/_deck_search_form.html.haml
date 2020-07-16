@@ -1,21 +1,21 @@
 = simple_form_for(category, method: :get, url: decks_path) do |f|
-  .deck-search{'data-controller'=>'tags category-select language-select'}
+  .deck-search{'data-controller'=>'deck-search'}
     .deck-search-row-one
       - if params.key?('category')
         - params['category'].key?('name') ? name = params['category']['name'] : name = ''
-        = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: name, input_html: { multiple: true, data: { target: 'deck-tabs.nameField category-select.select'}}, include_hidden: false, as: :grouped_select, group_method: :last
+        = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: name, input_html: { multiple: true, data: { target: 'deck-tabs.categorySelect deck-search.categorySelect'}}, include_hidden: false, as: :grouped_select, group_method: :last
         - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
-        = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: language, required: true, input_html: {data: { target: 'deck-tabs.languageField language-select.element'}}
+        = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: language, required: true, input_html: {data: { target: 'deck-tabs.languageField deck-search.languageSelect'}}
       - else
-        = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'deck-tabs.nameField category-select.select'} }, include_hidden: false, as: :grouped_select, group_method: :last
-        = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true, input_html: {data: { target: 'deck-tabs.languageField language-select.element'}}
+        = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'deck-tabs.categorySelect deck-search.categorySelect'} }, include_hidden: false, as: :grouped_select, group_method: :last
+        = f.input :language, collection: languages.map { |key, value| [key, value] }, selected: 'en', required: true, input_html: {data: { target: 'deck-tabs.languageField deck-search.languageSelect'}}
     .deck-search-row-two
       .deck-search-tags
         - if params.key?('category')
           - params['category'].key?('tag') ? tag = params['category']['tag'] : tag = ''
-          = f.input :tag, label: 'Tags', input_html: { value: tag, data: { target: 'tags.tagField deck-tabs.tagField', action: 'keydown->tags#change change->tags#change' } }
+          = f.input :tag, collection: Tag.search_select, label: 'Tags', include_hidden: false, input_html: { multiple: true, value: tag, data: { target: 'deck-search.tagSelect deck-tabs.tagField' } }
         - else
-          = f.input :tag, label: 'Tags', input_html: { data: { target: 'tags.tagField deck-tabs.tagField', action: 'keydown->tags#change change->tags#change' } }
+          = f.input :tag, label: 'Tags', include_hidden: false, input_html: { multiple: true, data: { target: 'deck-search.tagSelect deck-tabs.tagField' } }
         %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
-      = f.submit 'Find cards to review', class: "btn btn-primary", data: { target: 'deck-tabs.searchSubmit', action: 'click->deck-tabs#tabclick' }
+      = f.submit 'Find cards to review', class: "btn btn-primary", data: { target: 'deck-tabs.searchSubmit deck-search.searchSubmit', action: 'click->deck-tabs#tabclick' }
 

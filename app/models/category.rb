@@ -10,7 +10,7 @@ class Category < ApplicationRecord
 
     themes.map do |theme|
       [theme, Category.where(theme: theme).map do |category|
-        [category.name, category.id, { data: { target: 'deck-tabs.option' } }]
+        [category.name, category.id]
       end]
     end
   end
