@@ -1,8 +1,8 @@
 class DeckSearchService
   def initialize(attrs = {})
     @decks = attrs[:decks] || Deck.all
-    @language = attrs[:language]
-    @categories = attrs[:categories]
+    @language = attrs[:language] || 'en'
+    @categories = attrs[:categories] || [Category.where(name: 'All Categories')]
     @tags = attrs[:tags]
     @user = attrs[:user]
   end
@@ -23,7 +23,7 @@ class DeckSearchService
     # reduce deck list to those with child deck strings of @language
     @decks = @decks.search_by_language(@language) unless @language.nil? # should always have one value
     # reduce deck list by tags
-    @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be nil or array
+    @decks = @decks.search_by_tags(@tags) unless @tags.empty? # can be empty or array
     @decks
   end
 end

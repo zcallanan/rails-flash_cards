@@ -55,9 +55,8 @@ class Deck < ApplicationRecord
   }
 
   scope :search_by_tags, lambda { |tags|
-    tag_array = tags.split(',')
     tag_hash = {}
-    tag_array.each { |tag| tag_hash[:tags] = { name: tag } }
+    tags.each { |tag| tag_hash[:tags] = { id: tag } }
     includes(cards: [tag_relations: :tag]).where(tag_hash).references(cards: [tag_relations: :tags])
   }
 

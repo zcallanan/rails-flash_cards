@@ -51,7 +51,6 @@ export default class extends Controller {
     let divTwo = '';
     let searchValues = {};
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
-
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
 
     // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
