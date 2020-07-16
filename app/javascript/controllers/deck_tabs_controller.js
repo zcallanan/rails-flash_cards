@@ -84,6 +84,7 @@ export default class extends Controller {
       urlRoute: urlRoute,
       dest: dest
     };
+
     searchValues['url'] = buildSearchUrl(search_url);
     this.search(searchValues);
 
@@ -102,6 +103,7 @@ export default class extends Controller {
 
     targets.forEach((target) => {
       target.addEventListener('click', (event) => {
+        event.preventDefault();
         if (event.target === listAll || event.target == linkAll && !listAll.classList.contains('active')) {
           globalDiv.style.display = 'block';
           myDecksDiv.style.display = 'none';
