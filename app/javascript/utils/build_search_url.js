@@ -24,7 +24,6 @@ const buildSearchUrl = (searchUrl) => {
   }
 
   const url = `${searchUrl.urlRoute}${searchUrl.dest}${categoryValue}${languageValue}${tagValue}`
-  console.log(url)
   return url
 }
 

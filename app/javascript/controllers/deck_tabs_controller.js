@@ -181,7 +181,6 @@ export default class extends Controller {
           };
 
           searchValues['url'] = buildSearchUrl(search_url);
-          console.log(searchValues)
           this.search(searchValues);
 
           if (destTwo !== null) {
@@ -196,7 +195,6 @@ export default class extends Controller {
             };
             searchValuesTwo['div'] = divTwo;
             searchValuesTwo['url'] = buildSearchUrl(search_url);
-            console.log(searchValuesTwo)
             this.search(searchValuesTwo);
           }
         }
@@ -214,7 +212,6 @@ export default class extends Controller {
     })
       .then(response => response.json())
       .then((data) => {
-        console.log(values.div)
         values.div.innerHTML = ''
         values.div.innerHTML = data['data']['partials'].join('')
       });
