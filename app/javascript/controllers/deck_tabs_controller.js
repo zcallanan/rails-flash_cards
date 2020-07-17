@@ -50,17 +50,11 @@ export default class extends Controller {
     let destTwo = '';
     let divTwo = '';
     let searchValues = {};
+    let searchValuesTwo = {}
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
-
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
-
-    // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
-    categoryChoices.passedElement.element.addEventListener('removeItem', () => {
-      setTimeout(() => {
-        if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
-      }, 100)
-
-    })
+    const tag_options = Array.from(tagSelect.children).map(option => option.value)
+    const category_options = Array.from(categorySelect.children).map(option => option.value)
 
     if (isVisible(globalDiv)) {
       dest = 'global';
@@ -79,30 +73,32 @@ export default class extends Controller {
     }
 
     let search_url = {
-      options: categoryChoices._currentState.items,
+      options: category_options,
       language: languageSelect.value,
-      tag: tagSelect.value,
+      tag: tag_options,
       urlRoute: urlRoute,
       dest: dest
     };
+
     searchValues['url'] = buildSearchUrl(search_url);
     this.search(searchValues);
 
     if (destTwo !== null) {
       search_url = {
-        options: categoryChoices._currentState.items,
+        options: category_options,
         language: languageSelect.value,
-        tag: tagSelect.value,
+        tag: tag_options,
         urlRoute: urlRoute,
         dest: destTwo
       };
-      searchValues['div'] = divTwo;
-      searchValues['url'] = buildSearchUrl(search_url);
-      this.search(searchValues);
+      searchValuesTwo['div'] = divTwo;
+      searchValuesTwo['url'] = buildSearchUrl(search_url);
+      this.search(searchValuesTwo);
     }
 
     targets.forEach((target) => {
       target.addEventListener('click', (event) => {
+        event.preventDefault();
         if (event.target === listAll || event.target == linkAll && !listAll.classList.contains('active')) {
           globalDiv.style.display = 'block';
           myDecksDiv.style.display = 'none';
@@ -157,6 +153,9 @@ export default class extends Controller {
           this.search(allTabValues)
         } else if (event.target === searchSubmit) {
 
+          const tag_options = Array.from(tagSelect.children).map(option => option.value)
+          const category_options = Array.from(categorySelect.children).map(option => option.value)
+
           if (isVisible(globalDiv)) {
             dest = 'global';
             searchValues['div'] = globalDiv;
@@ -174,26 +173,29 @@ export default class extends Controller {
           }
 
           let search_url = {
-            options: categoryChoices._currentState.items,
+            options: category_options,
             language: languageSelect.value,
-            tag: tagSelect.value,
+            tag: tag_options,
             urlRoute: urlRoute,
             dest: dest
           };
+
           searchValues['url'] = buildSearchUrl(search_url);
           this.search(searchValues);
 
           if (destTwo !== null) {
+            const tag_options = Array.from(tagSelect.children).map(option => option.value)
+            const category_options = Array.from(categorySelect.children).map(option => option.value)
             search_url = {
-              options: categoryChoices._currentState.items,
+              options: category_options,
               language: languageSelect.value,
-              tag: tagSelect.value,
+              tag: tag_options,
               urlRoute: urlRoute,
               dest: destTwo
             };
-            searchValues['div'] = divTwo;
-            searchValues['url'] = buildSearchUrl(search_url);
-            this.search(searchValues);
+            searchValuesTwo['div'] = divTwo;
+            searchValuesTwo['url'] = buildSearchUrl(search_url);
+            this.search(searchValuesTwo);
           }
         }
       })
@@ -215,3 +217,5 @@ export default class extends Controller {
       });
   }
 }
+
+
