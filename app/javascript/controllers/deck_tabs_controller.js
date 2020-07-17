@@ -50,8 +50,11 @@ export default class extends Controller {
     let destTwo = '';
     let divTwo = '';
     let searchValues = {};
+    let searchValuesTwo = {}
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
+    const tag_options = Array.from(tagSelect.children).map(option => option.value)
+    const category_options = Array.from(categorySelect.children).map(option => option.value)
 
     // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
     categoryChoices.passedElement.element.addEventListener('removeItem', () => {
@@ -78,9 +81,9 @@ export default class extends Controller {
     }
 
     let search_url = {
-      options: categoryChoices._currentState.items,
+      options: category_options,
       language: languageSelect.value,
-      tag: tagSelect.value,
+      tag: tag_options,
       urlRoute: urlRoute,
       dest: dest
     };
@@ -90,15 +93,15 @@ export default class extends Controller {
 
     if (destTwo !== null) {
       search_url = {
-        options: categoryChoices._currentState.items,
+        options: category_options,
         language: languageSelect.value,
-        tag: tagSelect.value,
+        tag: tag_options,
         urlRoute: urlRoute,
         dest: destTwo
       };
-      searchValues['div'] = divTwo;
-      searchValues['url'] = buildSearchUrl(search_url);
-      this.search(searchValues);
+      searchValuesTwo['div'] = divTwo;
+      searchValuesTwo['url'] = buildSearchUrl(search_url);
+      this.search(searchValuesTwo);
     }
 
     targets.forEach((target) => {
@@ -158,6 +161,9 @@ export default class extends Controller {
           this.search(allTabValues)
         } else if (event.target === searchSubmit) {
 
+          const tag_options = Array.from(tagSelect.children).map(option => option.value)
+          const category_options = Array.from(categorySelect.children).map(option => option.value)
+
           if (isVisible(globalDiv)) {
             dest = 'global';
             searchValues['div'] = globalDiv;
@@ -175,26 +181,31 @@ export default class extends Controller {
           }
 
           let search_url = {
-            options: categoryChoices._currentState.items,
+            options: category_options,
             language: languageSelect.value,
-            tag: tagSelect.value,
+            tag: tag_options,
             urlRoute: urlRoute,
             dest: dest
           };
+
           searchValues['url'] = buildSearchUrl(search_url);
+          console.log(searchValues)
           this.search(searchValues);
 
           if (destTwo !== null) {
+            const tag_options = Array.from(tagSelect.children).map(option => option.value)
+            const category_options = Array.from(categorySelect.children).map(option => option.value)
             search_url = {
-              options: categoryChoices._currentState.items,
+              options: category_options,
               language: languageSelect.value,
-              tag: tagSelect.value,
+              tag: tag_options,
               urlRoute: urlRoute,
               dest: destTwo
             };
-            searchValues['div'] = divTwo;
-            searchValues['url'] = buildSearchUrl(search_url);
-            this.search(searchValues);
+            searchValuesTwo['div'] = divTwo;
+            searchValuesTwo['url'] = buildSearchUrl(search_url);
+            console.log(searchValuesTwo)
+            this.search(searchValuesTwo);
           }
         }
       })
@@ -211,8 +222,11 @@ export default class extends Controller {
     })
       .then(response => response.json())
       .then((data) => {
+        console.log(values.div)
         values.div.innerHTML = ''
         values.div.innerHTML = data['data']['partials'].join('')
       });
   }
 }
+
+

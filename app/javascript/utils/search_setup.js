@@ -4,6 +4,7 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
   // category select setup
   const categoryChoices = new Choices(categorySelect, {
     removeItemButton: true,
+    duplicateItemsAllowed: false,
     maxItemCount: 5,
     classNames: {
       containerOuter: 'choices category-select'
