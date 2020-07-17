@@ -2,26 +2,24 @@ import Choices from "choices.js"
 import { fetchWithToken } from '../utils/fetch_with_token.js';
 
 const searchSetup = (categorySelect, languageSelect, tagSelect) => {
+  let url;
+  let selectedArray;
   // category select setup
   const categoryChoices = new Choices(categorySelect, {
     removeItemButton: true,
     duplicateItemsAllowed: false,
-    maxItemCount: 5,
+    maxItemCount: 3,
     classNames: {
       containerOuter: 'choices category-select'
     }
   });
   categoryChoices.passedElement.element.addEventListener('choice', function(e) {
+    selectedArray = categoryChoices.getValue()
+    console.log(selectedArray)
     if (e.detail.choice.label !== 'All Categories') {
+      console.log(e.detail.choice.label)
       // remove all categories if you select a specific category
-      categoryChoices._currentState.items.filter(function (item) {
-        for (let key in item) {
-          if (key === 'label' && item[key] === 'All Categories') {
-            categoryChoices.removeActiveItemsByValue(item.value);
-          }
-        }
-      })
-      fetchWithToken( 'http://localhost:3000/api/v1/categories/enabled_all', {
+      fetchWithToken( 'http://localhost:3000/api/v1/categories/enabled_all', { // all is a choice
         method: "GET",
         headers: {
           "Accept": "application/json",
@@ -30,26 +28,23 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
       })
         .then(response => response.json())
         .then((data) => {
-          const selectedArray = categoryChoices.getValue()
-          console.log(selectedArray)
-          if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
+          selectedArray = categoryChoices.getValue()
+          console.log('Not all categories selected')
           setTimeout(() => {
+            selectedArray.forEach(item => {
+              if (item.label === 'All Categories') {
+                categoryChoices.removeActiveItemsByValue(item.value);
+              }
+            })
             // repopulate choices with 'All Categories'
             let array = [];
             let n = 1;
             let obj;
             data.forEach(row => {
               row[1].forEach(item => {
-                console.log(item)
-                console.log(e.detail.choice.value)
-                // if (item.value === e.detail.choice.value ) {
-                //   item['disabled'] = true;
-                // }
                 selectedArray.forEach(currentlyDisabled => {
-                  console.log(currentlyDisabled.value, item.value, (currentlyDisabled.value === item.value), (item.value === e.detail.choice.value))
 
                   if (currentlyDisabled.value === item.value) {
-                    console.log('hi')
                     item['disabled'] = true;
                   }
                 })
@@ -62,18 +57,19 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
             })
             categoryChoices.setChoices(array, 'value', 'label', true);
           }, 100)
-          console.log(data)
         });
     } else if (e.detail.choice.label === 'All Categories') {
+
       // remove all other categories if all is selected
       categoryChoices._currentState.items.filter(function (item) {
+        console.log('All categories selected. Remove others')
         for (let key in item) {
           if (key === 'label' && item[key] !== 'All Categories') {
             categoryChoices.removeActiveItemsByValue(item.value);
           }
         }
       })
-      fetchWithToken( 'http://localhost:3000/api/v1/categories/removed_all', {
+      fetchWithToken( 'http://localhost:3000/api/v1/categories/removed_all', { // disable all as a choice
         method: "GET",
         headers: {
           "Accept": "application/json",
@@ -82,9 +78,9 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
       })
         .then(response => response.json())
         .then((data) => {
-          const selectedArray = categoryChoices.getValue()
-          console.log(selectedArray)
-          if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
+          console.log('All Categories selected')
+          selectedArray = categoryChoices.getValue()
+
           setTimeout(() => {
             // repopulate choices with 'All Categories'
             let array = [];
@@ -92,16 +88,9 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
             let obj;
             data.forEach(row => {
               row[1].forEach(item => {
-                console.log(item)
-                console.log(e.detail.choice.value)
-                // if (item.value === e.detail.choice.value ) {
-                //   item['disabled'] = true;
-                // }
                 selectedArray.forEach(currentlyDisabled => {
-                  console.log(currentlyDisabled.value, item.value, (currentlyDisabled.value === item.value), (item.value === e.detail.choice.value))
 
                   if (currentlyDisabled.value === item.value) {
-                    console.log('hi')
                     item['disabled'] = true;
                   }
                 })
@@ -114,47 +103,19 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
             })
             categoryChoices.setChoices(array, 'value', 'label', true);
           }, 100)
-          console.log(data)
         });
     }
   })
 
-  //     fetchWithToken( 'http://localhost:3000/api/v1/categories/enabled_all', {
-  //       method: "GET",
-  //       headers: {
-  //         "Accept": "application/json",
-  //         "Content-Type": "application/json"
-  //       }
-  //     })
-  //       .then(response => response.json())
-  //       .then((data) => {
-  //         console.log(data)
-  //         setTimeout(() => {
-  //           // add 'All Categories' back to the field
-  //           if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
-  //           // repopulate choices without 'All Categories'
-  //           let array = [];
-  //           let n = 1;
-  //           let obj;
-  //           data.forEach(row => {
-  //             if (row[0] === 'All') {
-  //               obj = {label: row[0], id: n, disabled: true, choices: row[1]}
-  //             } else {
-  //               obj = {label: row[0], id: n, disabled: false, choices: row[1]}
-  //             }
-  //             array.push(obj);
-  //             n = n + 1
-  //           })
-  //           categoryChoices.setChoices(array, 'value', 'label', true);
-  //         }, 100)
-  //       });
-  //   }
-  // })
 
   // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
     categoryChoices.passedElement.element.addEventListener('removeItem', (e) => {
-      console.log('hi')
-      fetchWithToken( 'http://localhost:3000/api/v1/categories/removed_all', {
+      if (Array.from(categoryChoices.passedElement.element.children).length === 0) {
+        url = 'http://localhost:3000/api/v1/categories/removed_all' // disable all categories as a choice
+      } else {
+        url = 'http://localhost:3000/api/v1/categories/enabled_all' // enable all categories as a choice
+      }
+      fetchWithToken( url, {
       method: "GET",
       headers: {
         "Accept": "application/json",
@@ -163,25 +124,17 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
     })
       .then(response => response.json())
       .then((data) => {
-        const selectedArray = categoryChoices.getValue()
-          console.log(selectedArray)
-          if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
+        selectedArray = categoryChoices.getValue()
           setTimeout(() => {
+            if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
             // repopulate choices with 'All Categories'
             let array = [];
             let n = 1;
             let obj;
             data.forEach(row => {
               row[1].forEach(item => {
-                console.log(item)
-                // if (item.value === e.detail.choice.value ) {
-                //   item['disabled'] = true;
-                // }
                 selectedArray.forEach(currentlyDisabled => {
-                  console.log(currentlyDisabled.value, item.value, (currentlyDisabled.value === item.value), (item.value === e.detail.choice.value))
-
                   if (currentlyDisabled.value === item.value) {
-                    console.log('hi')
                     item['disabled'] = true;
                   }
                 })
@@ -194,7 +147,6 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
             })
             categoryChoices.setChoices(array, 'value', 'label', true);
           }, 100)
-          console.log(data)
       });
 
 
@@ -214,7 +166,7 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
   // tag select setup
   const tagChoices = new Choices(tagSelect, {
     removeItemButton: true,
-    maxItemCount: 5,
+    maxItemCount: 3,
     searchEnabled: true,
     searchPlaceholderValue: 'Type here to find a tag.',
     classNames: {
