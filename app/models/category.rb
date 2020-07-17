@@ -14,4 +14,28 @@ class Category < ApplicationRecord
       end]
     end
   end
+
+  def self.disabled_all
+    themes = Category.pluck(:theme).sort.uniq
+
+    themes.map do |theme|
+      [theme, Category.where(theme: theme).map do |category|
+        if theme == 'All'
+          { value: category.id, label: category.name, disabled: true }
+        else
+          { value: category.id.to_s, label: category.name }
+        end
+      end]
+    end
+  end
+
+  def self.enabled_all
+    themes = Category.pluck(:theme).sort.uniq
+
+    themes.map do |theme|
+      [theme, Category.where(theme: theme).map do |category|
+        { value: category.id.to_s, label: category.name }
+      end]
+    end
+  end
 end

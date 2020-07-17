@@ -17,6 +17,13 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      resources :categories, only: %i[index] do
+        collection do
+          get 'removed_all'
+          get 'enabled_all'
+        end
+
+      end
       resources :tags, only: %i[index]
       resources :decks, only: %i[index update] do
         collection do

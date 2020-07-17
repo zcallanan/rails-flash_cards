@@ -56,14 +56,6 @@ export default class extends Controller {
     const tag_options = Array.from(tagSelect.children).map(option => option.value)
     const category_options = Array.from(categorySelect.children).map(option => option.value)
 
-    // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
-    categoryChoices.passedElement.element.addEventListener('removeItem', () => {
-      setTimeout(() => {
-        if (Array.from(categoryChoices.passedElement.element.children).length === 0) categoryChoices.setValue(['All Categories'])
-      }, 100)
-
-    })
-
     if (isVisible(globalDiv)) {
       dest = 'global';
       searchValues['div'] = globalDiv
