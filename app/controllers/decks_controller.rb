@@ -20,7 +20,7 @@ class DecksController < ApplicationController
       skip_policy_scope
     end
     # search form
-    @languages = Languages.list
+    @languages = Languages.search
     @category = Category.new
     @categories = Category.all
   end
