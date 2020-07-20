@@ -1,8 +1,6 @@
-#deck-index{ 'data-controller'=>'index-scroll deck-tabs', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
+#deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
   .deck-tabs
     = render 'shared/deck_nav', decks_owned: @decks_owned
-    #search-bar
-      = render 'shared/deck_index_search_form', category: @category, languages: @languages
     #top-bar{'data-target'=>'deck-create.topbardiv'}
     .deck-tabs
     - if user_signed_in?

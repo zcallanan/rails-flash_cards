@@ -103,7 +103,7 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
     removeItemButton: true,
     maxItemCount: 3,
     searchEnabled: true,
-    searchPlaceholderValue: 'Type here to find a tag.',
+    // placeholderValue: 'Type here to find a tag.',
     classNames: {
       containerOuter: 'choices tag-select'
     }
