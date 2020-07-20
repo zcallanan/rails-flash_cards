@@ -29,7 +29,6 @@ export default class extends Controller {
   ]
 
   connect() {
-    console.log('hello')
 
     const globalDiv = this.globalTarget;
     const myDecksDiv = this.mydecksTarget;
@@ -54,7 +53,6 @@ export default class extends Controller {
     let searchValuesTwo = {}
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
-    console.log(categoryChoices)
     const tag_options = Array.from(tagSelect.children).map(option => option.value)
     const category_options = Array.from(categorySelect.children).map(option => option.value)
 

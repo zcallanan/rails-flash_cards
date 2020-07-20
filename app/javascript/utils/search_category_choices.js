@@ -1,6 +1,6 @@
 const searchCategoryChoices = (data, selectedArray, categoryChoices) => {
   /* After the user makes a selection in the category select,
-  this generates choices excluding all currently selected categories */
+  this generates choices. Currently selected choices are disabled. */
   let array = [];
   let n = 1;
   let obj;
