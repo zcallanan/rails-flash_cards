@@ -1,4 +1,4 @@
-.deck-panel {
+.deck-card {
   overflow: hidden;
   height: 120px;
   background: white;
@@ -7,20 +7,21 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-}
 
-.deck-panel h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-}
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
 
-.deck-panel p {
-  font-size: 12px;
-  line-height: 1.4;
-  opacity: .7;
-  margin-bottom: 0;
-  margin-top: 8px;
+  p {
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: .7;
+    margin-bottom: 0;
+    margin-top: 8px;
+  }
+
 }
 
 .deck-tags {

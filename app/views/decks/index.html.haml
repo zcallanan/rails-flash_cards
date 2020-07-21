@@ -1,19 +1,28 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
   .deck-tabs
     = render 'shared/deck_nav', decks_owned: @decks_owned
-    #top-bar{'data-target'=>'deck-create.topbardiv'}
-    .deck-tabs
-    - if user_signed_in?
-      #deck-create{'data-target'=>'deck-create.deckcreatediv'}
-        = render 'create_deck_form', deck: @deck, user: @user
-      .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
-    - else
-      .global-decks{'data-target'=>'deck-tabs.global'}
-    .my-decks{'data-target'=>'deck-tabs.mydecks'}
+    .row
+      #deck-side-panel.col-4
+        #deck-search-form
+          - if controller_name == 'decks'
+            #search-side-panel{'data-target'=>'index-scroll.panel' }
+              = render 'shared/deck_search_form', category: @category, languages: @languages
+          - else
+            = render 'shared/deck_search_form', category: @category, languages: @languages
+      #deck-list.col-8
+        #top-bar{'data-target'=>'deck-create.topbardiv'}
+        .deck-tabs
+        - if user_signed_in?
+          #deck-create{'data-target'=>'deck-create.deckcreatediv'}
+            = render 'create_deck_form', deck: @deck, user: @user
+          .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
+        - else
+          .global-decks{'data-target'=>'deck-tabs.global'}
+        .my-decks{'data-target'=>'deck-tabs.mydecks'}
 
-    .my-archived{'data-target'=>'deck-tabs.myArchived'}
+        .my-archived{'data-target'=>'deck-tabs.myArchived'}
 
-    .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
+        .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
 
-    .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
+        .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
 

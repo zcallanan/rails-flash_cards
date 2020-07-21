@@ -5,9 +5,7 @@ import { searchCategoryChoices } from '../utils/search_category_choices.js'
 const searchSetup = (categorySelect, languageSelect, tagSelect) => {
   // category select setup
   const categoryChoices = new Choices(categorySelect, {
-    removeItemButton: true,
     duplicateItemsAllowed: false,
-    maxItemCount: 3,
     classNames: {
       containerOuter: 'choices category-select-outer',
       containerInner: 'choices__inner category-select-inner'
@@ -102,10 +100,8 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
   });
   // tag select setup
   const tagChoices = new Choices(tagSelect, {
-    removeItemButton: true,
-    maxItemCount: 3,
+    // removeItemButton: true,
     searchEnabled: true,
-    // placeholderValue: 'Type here to find a tag.',
     classNames: {
       containerOuter: 'choices tag-select-outer',
       containerInner: 'choices__inner tag-select-inner'
