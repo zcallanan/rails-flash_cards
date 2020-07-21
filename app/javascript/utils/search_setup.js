@@ -2,15 +2,59 @@ import Choices from "choices.js"
 import { fetchWithToken } from '../utils/fetch_with_token.js';
 import { searchCategoryChoices } from '../utils/search_category_choices.js'
 
-const searchSetup = (categorySelect, languageSelect, tagSelect) => {
+const searchSetup = (categorySelect, languageSelect, tagSelect, controller) => {
   // category select setup
-  const categoryChoices = new Choices(categorySelect, {
-    duplicateItemsAllowed: false,
-    classNames: {
-      containerOuter: 'choices category-select-outer',
-      containerInner: 'choices__inner category-select-inner'
-    }
-  });
+  let categoryChoices;
+  let languageChoices;
+  let tagChoices;
+  if (controller === 'pages') {
+    categoryChoices = new Choices(categorySelect, {
+      duplicateItemsAllowed: false,
+      classNames: {
+        containerOuter: 'choices pages-category-select-outer',
+        containerInner: 'choices__inner pages-category-select-inner'
+      }
+    });
+    languageChoices = new Choices(languageSelect, {
+      classNames: {
+        containerOuter: 'choices pages-language-select-outer',
+        containerInner: 'choices__inner pages-language-select-inner'
+      },
+      searchEnabled: true,
+      searchPlaceholderValue: 'Type here to find a language.'
+    });
+    tagChoices = new Choices(tagSelect, {
+      searchEnabled: true,
+      classNames: {
+        containerOuter: 'choices pages-tag-select-outer',
+        containerInner: 'choices__inner pages-tag-select-inner'
+      }
+    });
+  } else if (controller === 'decks') {
+    categoryChoices = new Choices(categorySelect, {
+      duplicateItemsAllowed: false,
+      classNames: {
+        containerOuter: 'choices decks-category-select-outer',
+        containerInner: 'choices__inner decks-category-select-inner'
+      }
+    });
+    languageChoices = new Choices(languageSelect, {
+      classNames: {
+        containerOuter: 'choices decks-language-select-outer',
+        containerInner: 'choices__inner decks-language-select-inner'
+      },
+      searchEnabled: true,
+      searchPlaceholderValue: 'Type here to find a language.'
+    });
+    tagChoices = new Choices(tagSelect, {
+      searchEnabled: true,
+      classNames: {
+        containerOuter: 'choices decks-tag-select-outer',
+        containerInner: 'choices__inner decks-tag-select-inner'
+      }
+    });
+  }
+  console.log(categoryChoices)
   let selectedArray;
   const url_enabled_all = 'http://localhost:3000/api/v1/categories/enabled_all'
   const url_removed_all = 'http://localhost:3000/api/v1/categories/removed_all'
@@ -88,25 +132,6 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
         }, 100)
     });
   })
-
-  // language select setup
-  const languageChoices = new Choices(languageSelect, {
-    classNames: {
-      containerOuter: 'choices language-select-outer',
-      containerInner: 'choices__inner language-select-inner'
-    },
-    searchEnabled: true,
-    searchPlaceholderValue: 'Type here to find a language.'
-  });
-  // tag select setup
-  const tagChoices = new Choices(tagSelect, {
-    // removeItemButton: true,
-    searchEnabled: true,
-    classNames: {
-      containerOuter: 'choices tag-select-outer',
-      containerInner: 'choices__inner tag-select-inner'
-    }
-  });
   return [categoryChoices, languageChoices, tagChoices]
 }
 

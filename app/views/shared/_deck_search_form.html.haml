@@ -3,7 +3,7 @@
     - if controller_name == 'pages'
       - # Landing page uses pages controller as content is not separated by tabs as in the deck index.
       .deck-search{'data-controller'=>'pages-search'}
-        .deck-search-row-one
+        .deck-search-row-one{ 'data-con' => controller_name, 'data-target'=>'pages-search.searchForm' }
           - if params.key?('category')
             - category_name = params['category']['name'] if params['category'].key?('name')
             = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: category_name, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'}}, include_hidden: false, as: :grouped_select, group_method: :last

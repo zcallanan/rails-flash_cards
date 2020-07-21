@@ -5,7 +5,7 @@
       #deck-side-panel.col-4
         #deck-search-form
           - if controller_name == 'decks'
-            #search-side-panel{'data-target'=>'index-scroll.panel' }
+            #search-side-panel{'data-target'=>'index-scroll.panel deck-tabs.searchForm', 'data-con' => controller_name }
               = render 'shared/deck_search_form', category: @category, languages: @languages
           - else
             = render 'shared/deck_search_form', category: @category, languages: @languages
