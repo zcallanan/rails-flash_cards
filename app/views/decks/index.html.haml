@@ -9,8 +9,9 @@
               = render 'shared/deck_search_form', category: @category, languages: @languages
           - else
             = render 'shared/deck_search_form', category: @category, languages: @languages
-      #deck-list.col-8
+      #deck-list.col-8{'data-target'=>'index-scroll.deckList'}
         #top-bar{'data-target'=>'deck-create.topbardiv'}
+          %p Top bar content
         .deck-tabs
         - if user_signed_in?
           #deck-create{'data-target'=>'deck-create.deckcreatediv'}
