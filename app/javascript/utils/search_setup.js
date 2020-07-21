@@ -9,7 +9,8 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
     duplicateItemsAllowed: false,
     maxItemCount: 3,
     classNames: {
-      containerOuter: 'choices category-select'
+      containerOuter: 'choices category-select-outer',
+      containerInner: 'choices__inner category-select-inner'
     }
   });
   let selectedArray;
@@ -93,7 +94,8 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
   // language select setup
   const languageChoices = new Choices(languageSelect, {
     classNames: {
-      containerOuter: 'choices language-select'
+      containerOuter: 'choices language-select-outer',
+      containerInner: 'choices__inner language-select-inner'
     },
     searchEnabled: true,
     searchPlaceholderValue: 'Type here to find a language.'
@@ -105,7 +107,8 @@ const searchSetup = (categorySelect, languageSelect, tagSelect) => {
     searchEnabled: true,
     // placeholderValue: 'Type here to find a tag.',
     classNames: {
-      containerOuter: 'choices tag-select'
+      containerOuter: 'choices tag-select-outer',
+      containerInner: 'choices__inner tag-select-inner'
     }
   });
   return [categoryChoices, languageChoices, tagChoices]

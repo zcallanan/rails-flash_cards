@@ -1,4 +1,4 @@
-// rendered by deck_strings/deck_string_information
+- # rendered by deck_strings/deck_string_information
 = simple_form_for(deck_string, method: :patch, url: deck_deck_string_path(deck, deck_string)) do |f|
   = f.input :language, collection: @languages.map { |key, value| [key, value] }
   = f.input :title
