@@ -1,4 +1,3 @@
-
 - if controller_name == 'pages' || controller_name == 'decks' # don't display navbar search in views such as users or user groups
   = simple_form_for(category, method: :get, url: decks_path) do |f|
     - if controller_name == 'pages'
@@ -19,7 +18,6 @@
               = f.input :tag, collection: Tag.search_select, label: false, include_hidden: false, input_html: { multiple: true, value: tag, data: { target: 'pages-search.tagSelect' } }
             - else
               = f.input :tag, collection: Tag.search_select, label: false, include_hidden: false, input_html: { multiple: true, data: { target: 'pages-search.tagSelect' } }
-            %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
           = f.submit 'Find cards to review', class: "btn btn-primary search-submit", data: { target: 'pages-search.searchSubmit' }
     - elsif controller_name == 'decks'
       - if params.key?('category')
@@ -36,7 +34,6 @@
           = f.input :tag, collection: Tag.search_select, label: 'Tags', selected: tag, include_hidden: false, input_html: { multiple: true, data: { target: 'deck-tabs.tagSelect' } }
         - else
           = f.input :tag, collection: Tag.search_select, label: 'Tags', include_hidden: false, input_html: { multiple: true, data: { target: 'deck-tabs.tagSelect' } }
-        %ul{class: 'suggestions', 'data-target'=>'tags.suggestions'}
       = f.submit 'Find cards to review', class: "btn btn-primary", data: { target: 'deck-tabs.searchSubmit' }
 
 
