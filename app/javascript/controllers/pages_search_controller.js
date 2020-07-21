@@ -5,15 +5,17 @@ export default class extends Controller {
   static targets = [
   'categorySelect',
   'languageSelect',
-  'tagSelect'
+  'tagSelect',
+  'searchForm'
   ]
 
   connect() {
     const categorySelect = this.categorySelectTarget;
     const languageSelect = this.languageSelectTarget;
     const tagSelect = this.tagSelectTarget;
+    const searchForm = this.searchFormTarget;
 
-    const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
+    const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect, searchForm.dataset.con)
     // ensure the categories selector is not empty. There's a delay to avoid this firing if you're selecting another category
     categoryChoices.passedElement.element.addEventListener('removeItem', () => {
       setTimeout(() => {

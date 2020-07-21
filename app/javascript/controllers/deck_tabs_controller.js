@@ -25,11 +25,13 @@ export default class extends Controller {
     'tagSelect',
     'option',
     'indexDiv',
-    'categorySelect'
+    'categorySelect',
+    'searchForm'
   ]
 
   connect() {
 
+    const searchForm = this.searchFormTarget;
     const globalDiv = this.globalTarget;
     const myDecksDiv = this.mydecksTarget;
     const myArchivedDiv = this.myArchivedTarget;
@@ -52,7 +54,7 @@ export default class extends Controller {
     let searchValues = {};
     let searchValuesTwo = {}
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
-    const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect)
+    const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect, searchForm.dataset.con)
     const tag_options = Array.from(tagSelect.children).map(option => option.value)
     const category_options = Array.from(categorySelect.children).map(option => option.value)
 
