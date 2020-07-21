@@ -1,4 +1,4 @@
-// rendered by decks/show
+- # rendered by decks/show
 %h4 Add deck information in another language
 = simple_form_for(deck_string, method: :post, url: deck_deck_strings_path(deck)) do |f|
   = f.input :language, collection: @reduced_languages.map { |key, value| [key, value] }

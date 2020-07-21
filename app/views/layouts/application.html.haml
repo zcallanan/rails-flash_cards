@@ -8,13 +8,15 @@
     %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true
-  - if user_signed_in?
-    %body{'data-controller'=>'deck-create'}
-      = render 'shared/navbar'
-      = render 'shared/flashes'
-      = yield
-  - else
+  - if user_signed_in? && controller_name == 'decks'
+    %body{'data-controller'=>'deck-create deck-tabs'}
+  - elsif user_signed_in?
     %body
-      = render 'shared/navbar'
-      = render 'shared/flashes'
-      = yield
+  - else
+    - if controller_name == 'decks'
+      %body{'data-controller'=>'deck-tabs'}
+    - else
+      %body
+  = render 'shared/navbar'
+  = render 'shared/flashes'
+  = yield

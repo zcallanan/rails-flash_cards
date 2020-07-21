@@ -3,6 +3,7 @@
     = image_tag "https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/logo.png"
   %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
     %span.navbar-toggler-icon
+  = render 'shared/deck_search_form', category: @category, languages: @languages
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
       - if user_signed_in?

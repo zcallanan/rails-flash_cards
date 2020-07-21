@@ -1,4 +1,4 @@
-// rendered by collection_strings/collection_string_information
+- # rendered by collection_strings/collection_string_information
 - if policy(collection_string).update?
   #collection-string-inline-form{style: 'display: none', 'data-target' => 'collection-string-inline.div'}
     = simple_form_for(collection_string, remote: true, method: :patch, url: deck_collection_collection_string_path(deck, collection, collection_string)) do |f|
@@ -8,4 +8,4 @@
         %i{class: "far fa-check-square", 'data-collection_id' => collection.id, 'data-id' => collection_string.id, 'data-deck_id' => collection.deck.id, 'data-target' => 'collection-string-inline.submit', 'data-action' => 'click->collection-string-inline#cclick'}
 
 
-// Handle case where there is no description
+- # Handle case where there is no description

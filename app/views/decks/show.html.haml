@@ -18,6 +18,6 @@
     = render 'collections/collection_select', deck: @deck
 
     %hr
-    // check if the user has a right to create a collection
+    - # check if the user has a right to create a collection
     - if policy(@collection).create?
       = render 'collections/create_collection_form', deck: @deck, collection: @collection

@@ -1,5 +1,6 @@
 const searchCategoryChoices = (data, selectedArray, categoryChoices) => {
-  // repopulate choices with 'All Categories'
+  /* After the user makes a selection in the category select,
+  this generates choices. Currently selected choices are disabled. */
   let array = [];
   let n = 1;
   let obj;
