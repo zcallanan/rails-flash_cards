@@ -54,7 +54,6 @@ const searchSetup = (categorySelect, languageSelect, tagSelect, controller) => {
       }
     });
   }
-  console.log(categoryChoices)
   let selectedArray;
   const url_enabled_all = 'http://localhost:3000/api/v1/categories/enabled_all'
   const url_removed_all = 'http://localhost:3000/api/v1/categories/removed_all'

@@ -26,11 +26,13 @@ export default class extends Controller {
     'option',
     'indexDiv',
     'categorySelect',
-    'searchForm'
+    'searchForm',
+    'titleString'
   ]
 
   connect() {
 
+    const titleString = this.titleStringTarget;
     const searchForm = this.searchFormTarget;
     const globalDiv = this.globalTarget;
     const myDecksDiv = this.mydecksTarget;
@@ -54,6 +56,7 @@ export default class extends Controller {
     let searchValues = {};
     let searchValuesTwo = {}
     const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
+    // initializes deck index Choices.js fields
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect, searchForm.dataset.con)
     const tag_options = Array.from(tagSelect.children).map(option => option.value)
     const category_options = Array.from(categorySelect.children).map(option => option.value)
@@ -77,6 +80,7 @@ export default class extends Controller {
     let search_url = {
       options: category_options,
       language: languageSelect.value,
+      string: titleString.value,
       tag: tag_options,
       urlRoute: urlRoute,
       dest: dest
@@ -89,6 +93,7 @@ export default class extends Controller {
       search_url = {
         options: category_options,
         language: languageSelect.value,
+        string: titleString.value,
         tag: tag_options,
         urlRoute: urlRoute,
         dest: destTwo
@@ -177,6 +182,7 @@ export default class extends Controller {
           let search_url = {
             options: category_options,
             language: languageSelect.value,
+            string: titleString.value,
             tag: tag_options,
             urlRoute: urlRoute,
             dest: dest
@@ -191,6 +197,7 @@ export default class extends Controller {
             search_url = {
               options: category_options,
               language: languageSelect.value,
+              string: titleString.value,
               tag: tag_options,
               urlRoute: urlRoute,
               dest: destTwo

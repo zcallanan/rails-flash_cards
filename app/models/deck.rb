@@ -50,8 +50,12 @@ class Deck < ApplicationRecord
     end
   }
 
-  scope :search_by_language, lambda { |language|
-    includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+  scope :search_by_title_and_language, lambda { |language, string|
+    if string.nil? # then return all decks of a specific language
+      includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+    else # then return all decks of a specific language that includes the searched for string
+      includes(:deck_strings).where("deck_strings.language = ? AND deck_strings.title ILIKE ('%' || ? || '%')", language, string).references(:deck_strings)
+    end
   }
 
   scope :search_by_tags, lambda { |tags|

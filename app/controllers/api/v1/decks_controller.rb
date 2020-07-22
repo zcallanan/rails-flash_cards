@@ -20,7 +20,7 @@ class Api::V1::DecksController < Api::V1::BaseController
       user = current_user
       # curl -i -X GET \
       # -H 'X-User-Email: pups0@example.com' \
-      # -H 'X-User-Token: SzRrzWThqfnd2aK7t67C' \
+      # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
       # http://localhost:3000/api/v1/decks/mydecks
 
       value_hash = search_values(params)
@@ -34,6 +34,10 @@ class Api::V1::DecksController < Api::V1::BaseController
   end
 
   def myarchived
+    # curl -i -X GET \
+    # -H 'X-User-Email: pups0@example.com' \
+    # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
+    # http://localhost:3000/api/v1/decks/myarchived?category%5Btitle%5D=one&category%5Bname%5D%5B%5D=1&category%5Blanguage%5D=en
     if user_signed_in?
       user = current_user
 
@@ -152,14 +156,16 @@ class Api::V1::DecksController < Api::V1::BaseController
 
   def search_values(params)
     if params.key?('category')
+      string = params['category']['title']
       language = params['category']['language']
       category_ids = params['category']['name']
       tags = params['category']['tag']
     else # account for going straight to /shared_decks
+      string = nil
       language = 'en'
       category = Category.find_by(name: 'All Categories')
       category_ids = [category.id]
     end
-    { language: language, categories: category_ids, tags: tags }
+    { string: string, language: language, categories: category_ids, tags: tags }
   end
 end
