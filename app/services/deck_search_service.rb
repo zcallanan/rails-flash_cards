@@ -25,10 +25,11 @@ class DeckSearchService
     end
     # if search string is not nil, then remove all whitespaces and see if there's anything left to search
     @string.nil? ? whitespaces_removed = '' : whitespaces_removed = @string.gsub(/\s+/, "")
-    unless whitespaces_removed.empty?
-      # reduce deck list to those with child deck strings of @language
-      @decks = @decks.search_by_title_and_language(@language, @string) unless @language.nil? # should always have one value
-    end
+    @string = nil if whitespaces_removed == ''
+
+    # reduce deck list to those with child deck strings of @language
+    @decks = @decks.search_by_title_and_language(@language, @string) unless @language.nil? # should always have one value
+
     # reduce deck list by tags
 
     @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be empty or array
