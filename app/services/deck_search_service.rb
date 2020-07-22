@@ -2,6 +2,7 @@ class DeckSearchService
   def initialize(attrs = {})
     @decks = attrs[:decks] || Deck.all
     @language = attrs[:language] || 'en'
+    @string = attrs[:string] || nil
     @categories = attrs[:categories] || [Category.where(name: 'All Categories')]
     @tags = attrs[:tags] || nil
     @user = attrs[:user]
@@ -23,8 +24,12 @@ class DeckSearchService
       @decks = @decks.shared_search_by_categories(@categories, @user, true) unless @categories.nil?
     end
 
-    # reduce deck list to those with child deck strings of @language
-    @decks = @decks.search_by_language(@language) unless @language.nil? # should always have one value
+    # if search string is not nil, then remove all whitespaces and see if there's anything left to search
+    whitespaces_removed = @string.gsub(/\s+/, "") unless @string.nil?
+    unless whitespaces_removed.empty?
+      # reduce deck list to those with child deck strings of @language
+      @decks = @decks.search_by_title_and_language(@language, @string) unless @language.nil? # should always have one value
+    end
     # reduce deck list by tags
 
     @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be empty or array

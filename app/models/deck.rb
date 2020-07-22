@@ -50,8 +50,12 @@ class Deck < ApplicationRecord
     end
   }
 
-  scope :search_by_language, lambda { |language|
-    includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+  scope :search_by_title_and_language, lambda { |language, string|
+    if string.nil?
+      includes(:deck_strings).where('deck_strings.language = ?', language).references(:deck_strings)
+    else
+      includes(:deck_strings).where('deck_strings.language = ? AND deck_strings.title ILIKE CONCAT("%", "?", "%")', language, string).references(:deck_strings)
+    end
   }
 
   scope :search_by_tags, lambda { |tags|
