@@ -1,5 +1,4 @@
 const buildSearchUrl = (searchUrl) => {
-  // const initCategoryString = '\?category%5Bname%5D%5B%5D=';
   const categoryString = '&category%5Bname%5D%5B%5D=';
   const tagString = '&category%5Btag%5D%5B%5D=';
   let categoryValue = '';
