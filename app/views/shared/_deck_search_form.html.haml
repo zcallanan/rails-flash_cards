@@ -5,13 +5,15 @@
       .deck-search{'data-controller'=>'pages-search'}
         .deck-search-row-one{ 'data-con' => controller_name, 'data-target'=>'pages-search.searchForm' }
           - if params.key?('category')
-            - category_name = params['category']['name'] if params['category'].key?('name')
-            = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: category_name, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'}}, include_hidden: false, as: :grouped_select, group_method: :last
+            = f.input :title, input_html: {data: { target: 'pages-search.titleString'}}
             - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
             = f.input :language, collection: languages.map { |key, value| [key, value] }, label: false, selected: language, required: true, input_html: {data: { target: 'pages-search.languageSelect'}}
+            - category_name = params['category']['name'] if params['category'].key?('name')
+            = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: category_name, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'}}, include_hidden: false, as: :grouped_select, group_method: :last
           - else
-            = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'} }, include_hidden: false, as: :grouped_select, group_method: :last
+            = f.input :title, input_html: {data: { target: 'pages-search.titleString'}}
             = f.input :language, collection: languages.map { |key, value| [key, value] }, label: false, selected: 'en', required: true, input_html: {data: { target: 'pages-search.languageSelect'}}
+            = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'pages-search.categorySelect'} }, include_hidden: false, as: :grouped_select, group_method: :last
           .deck-search-tags
             - if params.key?('category')
               - params['category'].key?('tag') ? tag = params['category']['tag'] : tag = ''
@@ -21,11 +23,13 @@
           = f.submit 'Find cards to review', class: "btn btn-primary search-submit", data: { target: 'pages-search.searchSubmit' }
     - elsif controller_name == 'decks'
       - if params.key?('category')
+        = f.input :title, input_html: {data: { target: 'deck-tabs.titleString'}}
         - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
         = f.input :language, collection: languages.map { |key, value| [key, value] }, label: 'Language', selected: language, required: true, input_html: {data: { target: 'deck-tabs.languageSelect'}}
         - category_name = params['category']['name'] if params['category'].key?('name')
         = f.input :name, collection: Category.generate_categories, required: true, label: 'Categories', selected: category_name, input_html: { multiple: true, data: { target: 'deck-tabs.categorySelect'}}, include_hidden: false, as: :grouped_select, group_method: :last
       - else
+        = f.input :title, input_html: {data: { target: 'deck-tabs.titleString'}}
         = f.input :language, collection: languages.map { |key, value| [key, value] }, label: 'Language', selected: 'en', required: true, input_html: {data: { target: 'deck-tabs.languageSelect'}}
         = f.input :name, collection: Category.generate_categories, required: true, label: false, selected: Category.find_by(name: 'All Categories').id, input_html: { multiple: true, data: { target: 'deck-tabs.categorySelect'} }, include_hidden: false, as: :grouped_select, group_method: :last
       .deck-search-tags

@@ -23,9 +23,8 @@ class DeckSearchService
     elsif kwargs[:shared_update]
       @decks = @decks.shared_search_by_categories(@categories, @user, true) unless @categories.nil?
     end
-
     # if search string is not nil, then remove all whitespaces and see if there's anything left to search
-    whitespaces_removed = @string.gsub(/\s+/, "") unless @string.nil?
+    @string.nil? ? whitespaces_removed = '' : whitespaces_removed = @string.gsub(/\s+/, "")
     unless whitespaces_removed.empty?
       # reduce deck list to those with child deck strings of @language
       @decks = @decks.search_by_title_and_language(@language, @string) unless @language.nil? # should always have one value

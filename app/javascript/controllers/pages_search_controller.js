@@ -10,6 +10,7 @@ export default class extends Controller {
   ]
 
   connect() {
+    // initializes langing page Choices.js fields
     const categorySelect = this.categorySelectTarget;
     const languageSelect = this.languageSelectTarget;
     const tagSelect = this.tagSelectTarget;
