@@ -1,29 +1,36 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
   = render 'shared/deck_nav', decks_owned: @decks_owned
   .deck-tabs
-    #deck-side-panel.col-4
+    .col-4#deck-side-panel
       - if user_signed_in?
         #deck-create-form.sticky-top{'data-target'=>'deck-create.deckCreateDiv index-scroll.deckCreate', style: 'display: none'}
           #deck-create
             = render 'create_deck_form', deck: @deck, user: @user
-      #deck-search-form.sticky-top{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm deck-create.deckSearchDiv', 'data-con' => controller_name }
-        - if controller_name == 'decks'
-          #search-side-panel
+        #deck-search-form.sticky-top{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm deck-create.deckSearchDiv', 'data-con' => controller_name }
+          - if controller_name == 'decks'
+            #search-side-panel
+              = render 'shared/deck_search_form', category: @category, languages: @languages
+          - else
             = render 'shared/deck_search_form', category: @category, languages: @languages
-        - else
-          = render 'shared/deck_search_form', category: @category, languages: @languages
-    #deck-list.col-8{'data-target'=>'index-scroll.deckList'}
+      - else
+        #deck-search-form.sticky-top{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm', 'data-con' => controller_name }
+          - if controller_name == 'decks'
+            #search-side-panel
+              = render 'shared/deck_search_form', category: @category, languages: @languages
+          - else
+            = render 'shared/deck_search_form', category: @category, languages: @languages
+    .col-8#deck-list{'data-target'=>'index-scroll.deckList'}
       #top-bar
         %p Top bar content
       - if user_signed_in?
-        .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
+        .my-global-decks{'data-target'=>'deck-tabs.globalDiv', style: 'display: none'}
       - else
-        .global-decks{'data-target'=>'deck-tabs.global'}
-      .my-decks{'data-target'=>'deck-tabs.mydecks'}
+        .global-decks{'data-target'=>'deck-tabs.globalDiv'}
+      .my-decks{'data-target'=>'deck-tabs.myDecksDiv'}
 
-      .my-archived{'data-target'=>'deck-tabs.myArchived'}
+      .my-archived{'data-target'=>'deck-tabs.myArchivedDiv'}
 
-      .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
+      .shared-read-decks{'data-target'=>'deck-tabs.sharedReadDiv'}
 
-      .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
+      .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdateDiv'}
 
