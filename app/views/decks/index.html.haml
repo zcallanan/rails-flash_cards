@@ -1,12 +1,12 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
   = render 'shared/deck_nav', decks_owned: @decks_owned
   .deck-tabs
-    .col-4#deck-side-panel
+    .col-4#deck-side-panel.sticky-top
       - if user_signed_in?
-        #deck-create-form.sticky-top{'data-target'=>'deck-create.deckCreateDiv index-scroll.deckCreate', style: 'display: none'}
+        #deck-create-form{'data-target'=>'deck-create.deckCreateDiv index-scroll.deckCreate', style: 'display: none'}
           #deck-create
             = render 'create_deck_form', deck: @deck, user: @user
-        #deck-search-form.sticky-top{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm deck-create.deckSearchDiv', 'data-con' => controller_name }
+        #deck-search-form{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm deck-create.deckSearchDiv', 'data-con' => controller_name }
           - if controller_name == 'decks'
             #search-side-panel
               = render 'shared/deck_search_form', category: @category, languages: @languages
