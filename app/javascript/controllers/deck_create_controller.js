@@ -3,40 +3,29 @@ import { Controller } from "stimulus"
 
 export default class extends Controller {
   static targets = [
-    'indexbutton',
-    'indexlink',
-    'deckcreatediv',
-    'topbardiv',
-    'cancel',
-    'listall',
-    'listshared',
-    'linkall',
-    'linkshared'
+    'createDeckInput',
+    'deckSearchInput',
+    'deckCreateDiv',
+    'deckSearchDiv',
+    'cancelButton'
   ]
 
-  createdeck(event) {
-    event.preventDefault();
+  toggleSearchCreate(e) {
+    e.preventDefault();
 
-    const indexButton = this.indexbuttonTarget;
-    const indexLink = this.indexlinkTarget;
-    const deckCreateDiv = this.deckcreatedivTarget;
-    const topBarDiv = this.topbardivTarget;
-    const cancel = this.cancelTarget;
-    const allDecksTab = this.listallTarget;
-    const sharedDecksTab = this.listsharedTarget;
-    const allLink = this.linkallTarget;
-    const sharedLink = this.linksharedTarget;
+    const createDeckInput = this.createDeckInputTarget;
+    const deckSearchInput = this.deckSearchInputTarget;
+    const deckCreateDiv = this.deckCreateDivTarget;
+    const deckSearchDiv = this.deckSearchDivTarget;
+    const cancelButton = this.cancelButtonTarget;
 
-    if (isVisible(topBarDiv) && !isVisible(deckCreateDiv) && (event.target === indexButton || event.target === indexLink || event.target === document)) {
+    if (e.target === createDeckInput && !isVisible(deckCreateDiv)) {
       deckCreateDiv.style.display = 'block';
-      topBarDiv.style.display = 'none';
-    } else if (!isVisible(topBarDiv) && isVisible(deckCreateDiv) && (event.target === cancel || event.target === allDecksTab || event.target === sharedDecksTab || event.target === allLink || event.target === sharedLink)) {
+      deckSearchDiv.style.display = 'none';
+    } else if (e.target === deckSearchInput || (e.target === cancelButton) && !isVisible(deckSearchDiv)) {
       deckCreateDiv.style.display = 'none';
-      topBarDiv.style.display = 'block';
+      deckSearchDiv.style.display = 'block';
     }
-  }
 
-  click(event) {
-    this.createdeck(event)
   }
 }

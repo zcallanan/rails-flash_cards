@@ -6,19 +6,11 @@ import { searchSetup } from "../utils/search_setup.js"
 
 export default class extends Controller {
   static targets = [
-    'global',
-    'mydecks',
-    'myArchived',
-    'sharedRead',
-    'sharedUpdate',
-    'listall',
-    'listmydecks',
-    'listshared',
-    'linkall',
-    'linkmydecks',
-    'linkshared',
-    'link',
-    'list',
+    'globalDiv',
+    'myDecksDiv',
+    'myArchivedDiv',
+    'sharedReadDiv',
+    'sharedUpdateDiv',
     'searchSubmit',
     'categorySelect',
     'languageSelect',
@@ -27,27 +19,27 @@ export default class extends Controller {
     'indexDiv',
     'categorySelect',
     'searchForm',
-    'titleString'
+    'titleString',
+    'allDecks',
+    'myDecks',
+    'sharedDecks'
   ]
 
   connect() {
 
+    const allDecks = this.allDecksTarget;
+    const myDecks = this.myDecksTarget;
+    const sharedDecks = this.sharedDecksTarget;
     const titleString = this.titleStringTarget;
     const searchForm = this.searchFormTarget;
-    const globalDiv = this.globalTarget;
-    const myDecksDiv = this.mydecksTarget;
-    const myArchivedDiv = this.myArchivedTarget;
-    const sharedReadDiv = this.sharedReadTarget;
-    const sharedUpdateDiv = this.sharedUpdateTarget;
+    const globalDiv = this.globalDivTarget;
+    const myDecksDiv = this.myDecksDivTarget;
+    const myArchivedDiv = this.myArchivedDivTarget;
+    const sharedReadDiv = this.sharedReadDivTarget;
+    const sharedUpdateDiv = this.sharedUpdateDivTarget;
     const categorySelect = this.categorySelectTarget;
     const languageSelect = this.languageSelectTarget;
     const tagSelect = this.tagSelectTarget;
-    const listAll = this.listallTarget;
-    const listMyDecks = this.listmydecksTarget;
-    const listShared = this.listsharedTarget;
-    const linkAll = this.linkallTarget;
-    const linkMyDecks = this.linkmydecksTarget;
-    const linkShared = this.linksharedTarget;
     const searchSubmit = this.searchSubmitTarget;
     const urlRoute = 'http://localhost:3000/api/v1/decks/';
     let dest = '';
@@ -55,7 +47,7 @@ export default class extends Controller {
     let divTwo = '';
     let searchValues = {};
     let searchValuesTwo = {}
-    const targets = [linkAll, linkMyDecks, linkShared, searchSubmit, listAll, listMyDecks, listShared]
+    const targets = [allDecks, myDecks, sharedDecks, searchSubmit]
     // initializes deck index Choices.js fields
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect, searchForm.dataset.con)
     const tag_options = Array.from(tagSelect.children).map(option => option.value)
@@ -106,29 +98,30 @@ export default class extends Controller {
     targets.forEach((target) => {
       target.addEventListener('click', (event) => {
         event.preventDefault();
-        if (event.target === listAll || event.target == linkAll && !listAll.classList.contains('active')) {
+        if (event.target === allDecks && !allDecks.classList.contains('active')) {
+          // if user clicks on All Decks and it is not the active tab
           globalDiv.style.display = 'block';
           myDecksDiv.style.display = 'none';
           myArchivedDiv.style.display = 'none';
           sharedReadDiv.style.display = 'none';
           sharedUpdateDiv.style.display = 'none';
-          if (listMyDecks.classList.contains('active')) listMyDecks.classList.remove('active')
-          if (listShared.classList.contains('active')) listShared.classList.remove('active')
-          listAll.classList.add('active');
+          if (myDecks.classList.contains('active')) myDecks.classList.remove('active')
+          if (sharedDecks.classList.contains('active')) sharedDecks.classList.remove('active')
+          allDecks.classList.add('active');
           const allTabValues = {
             url: 'http://localhost:3000/api/v1/decks/global', // click on the tab and you get all global items available
             div: globalDiv
           }
           this.search(allTabValues)
-        } else if ((event.target === listMyDecks || event.target == linkMyDecks) && !listMyDecks.classList.contains('active')) {
+        } else if (event.target === myDecks && !myDecks.classList.contains('active')) {
           globalDiv.style.display = 'none';
           myDecksDiv.style.display = 'block';
           myArchivedDiv.style.display = 'block';
           sharedReadDiv.style.display = 'none';
           sharedUpdateDiv.style.display = 'none';
-          if (listAll.classList.contains('active')) listAll.classList.remove('active')
-          if (listShared.classList.contains('active')) listShared.classList.remove('active')
-          listMyDecks.classList.add('active');
+          if (allDecks.classList.contains('active')) allDecks.classList.remove('active')
+          if (sharedDecks.classList.contains('active')) sharedDecks.classList.remove('active')
+          myDecks.classList.add('active');
           let allTabValues = {
             url: 'http://localhost:3000/api/v1/decks/mydecks', // click on the tab and you get all mydeck items available
             div: myDecksDiv
@@ -139,15 +132,15 @@ export default class extends Controller {
             div: myArchivedDiv
           }
           this.search(allTabValues)
-        } else if ((event.target === listShared || event.target == linkShared) && !listShared.classList.contains('active')) {
+        } else if (event.target === sharedDecks && !sharedDecks.classList.contains('active')) {
           globalDiv.style.display = 'none';
           myDecksDiv.style.display = 'none';
           myArchivedDiv.style.display = 'none';
           sharedReadDiv.style.display = 'block';
           sharedUpdateDiv.style.display = 'block';
-          if (listAll.classList.contains('active')) listAll.classList.remove('active')
-          if (listMyDecks.classList.contains('active')) listMyDecks.classList.remove('active')
-          listShared.classList.add('active');
+          if (allDecks.classList.contains('active')) allDecks.classList.remove('active')
+          if (myDecks.classList.contains('active')) myDecks.classList.remove('active')
+          sharedDecks.classList.add('active');
           let allTabValues = {
             url: 'http://localhost:3000/api/v1/decks/shared_read', // click on the tab and you get all shared items available
             div: sharedReadDiv

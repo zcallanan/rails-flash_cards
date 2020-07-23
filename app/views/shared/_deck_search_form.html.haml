@@ -5,7 +5,8 @@
       .deck-search{'data-controller'=>'pages-search'}
         .deck-search-row-one{ 'data-con' => controller_name, 'data-target'=>'pages-search.searchForm' }
           - if params.key?('category')
-            = f.input :title, input_html: {data: { target: 'pages-search.titleString'}}
+            - params['category'].key?('title') ? title = params['category']['title'] : title = ''
+            = f.input :title, input_html: { value: title, data: { target: 'pages-search.titleString'} }
             - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
             = f.input :language, collection: languages.map { |key, value| [key, value] }, label: false, selected: language, required: true, input_html: {data: { target: 'pages-search.languageSelect'}}
             - category_name = params['category']['name'] if params['category'].key?('name')
@@ -23,7 +24,8 @@
           = f.submit 'Find cards to review', class: "btn btn-primary search-submit", data: { target: 'pages-search.searchSubmit' }
     - elsif controller_name == 'decks'
       - if params.key?('category')
-        = f.input :title, input_html: {data: { target: 'deck-tabs.titleString'}}
+        - params['category'].key?('title') ? title = params['category']['title'] : title = ''
+        = f.input :title, input_html: {value: title, data: { target: 'deck-tabs.titleString'}}
         - params['category'].key?('language') ? language = params['category']['language'] : language = 'en'
         = f.input :language, collection: languages.map { |key, value| [key, value] }, label: 'Language', selected: language, required: true, input_html: {data: { target: 'deck-tabs.languageSelect'}}
         - category_name = params['category']['name'] if params['category'].key?('name')

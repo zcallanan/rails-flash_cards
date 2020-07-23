@@ -1,8 +1,22 @@
 #deck-side-panel {
   position: relative;
+  background-color: $side-panel;
+  padding-right: 0;
+  padding-left: 0;
+
 }
 
-.search-side-panel {
+.fixed {
   position: fixed;
+
+}
+
+#deck-search-form, #deck-create-form {
+  padding: 32px;
+}
+
+#side-panel-column {
+  padding-left: 0;
+  padding-right: 0;
 }
 
