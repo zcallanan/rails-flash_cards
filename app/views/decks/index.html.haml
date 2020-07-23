@@ -1,29 +1,29 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
+  = render 'shared/deck_nav', decks_owned: @decks_owned
   .deck-tabs
-    = render 'shared/deck_nav', decks_owned: @decks_owned
-    .row
-      #deck-side-panel.col-4
-        #deck-search-form
-          - if controller_name == 'decks'
-            #search-side-panel{'data-target'=>'index-scroll.panel deck-tabs.searchForm', 'data-con' => controller_name }
-              = render 'shared/deck_search_form', category: @category, languages: @languages
-          - else
-            = render 'shared/deck_search_form', category: @category, languages: @languages
-      #deck-list.col-8{'data-target'=>'index-scroll.deckList'}
-        #top-bar{'data-target'=>'deck-create.topbardiv'}
-          %p Top bar content
-        .deck-tabs
-        - if user_signed_in?
-          #deck-create{'data-target'=>'deck-create.deckcreatediv'}
+    #deck-side-panel.col-4
+      - if user_signed_in?
+        #deck-create-form.sticky-top{'data-target'=>'deck-create.deckCreateDiv index-scroll.deckCreate', style: 'display: none'}
+          #deck-create
             = render 'create_deck_form', deck: @deck, user: @user
-          .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
+      #deck-search-form.sticky-top{'data-target'=>'index-scroll.searchPanel deck-tabs.searchForm deck-create.deckSearchDiv', 'data-con' => controller_name }
+        - if controller_name == 'decks'
+          #search-side-panel
+            = render 'shared/deck_search_form', category: @category, languages: @languages
         - else
-          .global-decks{'data-target'=>'deck-tabs.global'}
-        .my-decks{'data-target'=>'deck-tabs.mydecks'}
+          = render 'shared/deck_search_form', category: @category, languages: @languages
+    #deck-list.col-8{'data-target'=>'index-scroll.deckList'}
+      #top-bar
+        %p Top bar content
+      - if user_signed_in?
+        .my-global-decks{'data-target'=>'deck-tabs.global', style: 'display: none'}
+      - else
+        .global-decks{'data-target'=>'deck-tabs.global'}
+      .my-decks{'data-target'=>'deck-tabs.mydecks'}
 
-        .my-archived{'data-target'=>'deck-tabs.myArchived'}
+      .my-archived{'data-target'=>'deck-tabs.myArchived'}
 
-        .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
+      .shared-read-decks{'data-target'=>'deck-tabs.sharedRead'}
 
-        .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
+      .shared-update-decks{'data-target'=>'deck-tabs.sharedUpdate'}
 

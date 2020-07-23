@@ -1,23 +1,39 @@
-%nav{id: 'deck-nav-main', 'data-target'=>'index-scroll.nav' }
-  - if user_signed_in?
-    %ul
-      - if decks_owned.empty?
-        %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'load@window->deck-create#click click->deck-create#createdeck'    }
-          = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
-      - else
-        %li{id: 'create-deck', 'data-target'=>'deck-create.indexbutton', 'data-action'=>'click->deck-create#createdeck'}
-          = link_to 'Create Deck', '', data: { target: 'deck-create.indexlink', action: 'click->deck-create#createdeck'}
-      %li{id: 'all-decks-user', 'data-target'=>'deck-tabs.listall deck-create.listall', 'data-action'=>'click->deck-create#createdeck' }
-        = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall deck-create.linkall', action: 'click->deck-create#createdeck' }
-      %li{id: 'my-decks-user', class: 'active', 'data-target'=>'deck-tabs.listmydecks' }
-        = link_to 'My Decks', '', data: { target: 'deck-tabs.linkmydecks' }
-      %li{id: 'shared-decks-user', 'data-target'=>'deck-tabs.listshared deck-create.listshared', 'data-action'=>'click->deck-create#createdeck' }
-        = link_to 'Shared Decks', '', data: { target: 'deck-tabs.linkshared deck-create.linkshared', action: 'click->deck-create#createdeck' }
-  - else
-    %ul
-      %li{id: 'all-decks-global', class: 'active', 'data-target'=>'deck-tabs.listall' }
-        = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall' }
-      %li{id: 'my-decks-global', 'data-target'=>'deck-tabs.listmydecks'}
-        = link_to 'My Decks', new_user_session_path, data: { target: 'deck-tabs.linkmydecks' }
-      %li{id: 'shared-decks-global', 'data-target'=>'deck-tabs.listshared'}
-        = link_to 'Shared Decks', new_user_session_path, data: { target: 'deck-tabs.linkshared' }
+.deck-nav
+  %nav{id: 'deck-nav-main', 'data-target'=>'index-scroll.nav' }
+    - if user_signed_in?
+      .col-4#sidebar-tabs.deck-index-tab
+        %ul
+        - if decks_owned.empty? # default to create if user owns no decks
+          %li
+            .btn-group.btn-group-toggle{'data-toggle'=>'buttons'}
+              %label.btn.btn-secondary.active
+                %input{type: "radio", name: "options", id: "search-decks-nav", autocomplete: "off", 'data-target'=>'deck-create.deckSearchInput', 'data-action'=>'click->deck-create#toggleSearchCreate' } Deck Search
+              %label.btn.btn-secondary
+                %input{type: "radio", name: "options", id: "create-deck", autocomplete: "off", checked: true, focus: true, 'data-target'=>'deck-create.createDeckInput', 'data-action'=>'click->deck-create#toggleSearchCreate'} Create Deck
+        - else
+          %li
+            .btn-group.btn-group-toggle{'data-toggle'=>'buttons'}
+              %label.btn.btn-secondary.active
+                %input{type: "radio", name: "options", id: "search-decks-nav", autocomplete: "off", checked: true, focus: true, 'data-target'=>'deck-create.deckSearchInput', 'data-action'=>'click->deck-create#toggleSearchCreate' } Deck Search
+              %label.btn.btn-secondary
+                %input{type: "radio", name: "options", id: "create-deck", autocomplete: "off", 'data-target'=>'deck-create.createDeckInput', 'data-action'=>'click->deck-create#toggleSearchCreate'} Create Deck
+      .col-8#decks-tabs.deck-index-tab
+        %ul
+          %li{id: 'all-decks-user', 'data-target'=>'deck-tabs.listall' }
+            = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall' }
+          %li{id: 'my-decks-user', class: 'active', 'data-target'=>'deck-tabs.listmydecks' }
+            = link_to 'My Decks', '', data: { target: 'deck-tabs.linkmydecks' }
+          %li{id: 'shared-decks-user', 'data-target'=>'deck-tabs.listshared' }
+            = link_to 'Shared Decks', '', data: { target: 'deck-tabs.linkshared' }
+    - else
+      .col-4
+        %ul
+          %li Deck Search
+      .col-8
+        %ul
+          %li{id: 'all-decks-global', class: 'active', 'data-target'=>'deck-tabs.listall' }
+            = link_to 'All Decks', '', data: { target: 'deck-tabs.linkall' }
+          %li{id: 'my-decks-global', 'data-target'=>'deck-tabs.listmydecks'}
+            = link_to 'My Decks', new_user_session_path, data: { target: 'deck-tabs.linkmydecks' }
+          %li{id: 'shared-decks-global', 'data-target'=>'deck-tabs.listshared'}
+            = link_to 'Shared Decks', new_user_session_path, data: { target: 'deck-tabs.linkshared' }

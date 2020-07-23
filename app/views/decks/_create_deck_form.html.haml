@@ -7,4 +7,4 @@
     = ds.input :title, placeholder: 'My deck of cards.', hint: 'You can change this title at any time.'
     = ds.input :description
   = f.submit class: "btn btn-primary"
-  = f.button :button, 'Cancel', type: 'reset', class: 'btn', data: { target: 'deck-create.cancel', action: 'click->deck-create#createdeck' }
+  = f.button :button, 'Cancel', type: 'reset', class: 'btn btn-warning', data: { target: 'deck-create.cancelButton', action: 'click->deck-create#toggleSearchCreate' }
