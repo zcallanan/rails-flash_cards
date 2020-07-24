@@ -1,0 +1,4 @@
+.recent_deck.small-card
+  %h5{class: 'recent-deck-title'}= deck_string.title
+  %p{class: 'recent-deck-category'}= deck_string.deck.category.name
+  = render 'shared/stars', rating_value: rating_value, rating_count: rating_count, deck: deck_string.deck

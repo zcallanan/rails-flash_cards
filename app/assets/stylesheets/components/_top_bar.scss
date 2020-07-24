@@ -1,5 +1,12 @@
 #top-bar {
   position: relative;
-  height: 30vh;
-  top: 104px;
+  height: 100px;
+  top: 66px;
+  z-index: 30;
+
+  #recent-decks {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 }

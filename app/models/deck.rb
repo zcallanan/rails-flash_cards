@@ -68,6 +68,10 @@ class Deck < ApplicationRecord
     where(user: user, archived: archived)
   }
 
+  scope :recent_decks, lambda { |user, event, count|
+    includes(:user_logs).where(user_logs: { user: user, event: event }).references(:user_logs).order(created_at: :desc).limit(count)
+  }
+
   def owner
     user
   end

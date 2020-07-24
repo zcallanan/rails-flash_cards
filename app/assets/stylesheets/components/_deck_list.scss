@@ -1,8 +1,11 @@
 #deck-list {
+  position: relative;
+  top: 104px;
   background-color: $back;
   padding-right: 32px;
   padding-left: 32px;
   margin-left: 33%;
+  z-index: 1;
 }
 
 

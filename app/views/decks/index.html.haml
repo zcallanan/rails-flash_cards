@@ -1,4 +1,16 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
+  #top-bar
+    - if user_signed_in?
+      %h6 Recently Visited Decks
+      #recent-decks{'data-controller'=>'most-recent'}
+
+        #recent-one{'data-target'=>'most-recent.recentOneDiv'}
+        #recent-two{'data-target'=>'most-recent.recentTwoDiv'}
+        #recent-three{'data-target'=>'most-recent.recentThreeDiv'}
+    - else
+      #rated-one{'data-target'=>'recommended.ratedOne'}
+      #rated-two{'data-target'=>'recommended.ratedTwo'}
+      #rated-three{'data-target'=>'recommended.ratedThree'}
   = render 'shared/deck_nav', decks_owned: @decks_owned
   .deck-tabs
     .col-4#deck-side-panel.sticky-top
@@ -20,8 +32,6 @@
           - else
             = render 'shared/deck_search_form', category: @category, languages: @languages
     .col-8#deck-list{'data-target'=>'index-scroll.deckList'}
-      #top-bar
-        %p Top bar content
       - if user_signed_in?
         .my-global-decks{'data-target'=>'deck-tabs.globalDiv', style: 'display: none'}
       - else

@@ -80,14 +80,24 @@ class Api::V1::DecksController < Api::V1::BaseController
   end
 
   def recent_decks
+    # curl -i -X GET \
+    # -H 'X-User-Email: pups0@example.com' \
+    # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
+    # http://localhost:3000/api/v1/decks/recent_decks
     if user_signed_in?
       user = current_user
 
-      decks = Deck.includes(:user_logs).where(user_logs: { user: user, event: 'Deck viewed' }).references(:user_logs).order(created_at: :desc).limit(3)
-
+      decks = policy_scope(Deck.recent_decks(user, 'Deck viewed', 3))
+      size = decks.size
+      if size == 3
+        partial = 'recent_deck_small'
+      elsif size == 2
+        partial = 'recent_deck_mid'
+      elsif size == 1
+        partial = 'recent_deck_large'
+      end
       deck_strings = string_hash(decks, user, user.language, 'deck_strings', :deck_id, nil)
-
-      render json: { data: { partials: generate_partials(deck_strings, 'recent_decks'), formats: [:json], layout: false } }
+      render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
     end
   end
 
