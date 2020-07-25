@@ -3,6 +3,7 @@ import { fetchWithToken } from '../utils/fetch_with_token.js';
 import { isVisible } from '../utils/is_visible.js';
 import { buildSearchUrl } from '../utils/build_search_url.js';
 import { searchSetup } from "../utils/search_setup.js"
+import { mostRecentDecks } from "../utils/most_recent_decks.js"
 
 export default class extends Controller {
   static targets = [
@@ -22,7 +23,10 @@ export default class extends Controller {
     'titleString',
     'allDecks',
     'myDecks',
-    'sharedDecks'
+    'sharedDecks',
+    'recentOneDiv',
+    'recentTwoDiv',
+    'recentThreeDiv'
   ]
 
   connect() {
@@ -41,12 +45,17 @@ export default class extends Controller {
     const languageSelect = this.languageSelectTarget;
     const tagSelect = this.tagSelectTarget;
     const searchSubmit = this.searchSubmitTarget;
+    const recentOneDiv = this.recentOneDivTarget;
+    const recentTwoDiv = this.recentTwoDivTarget;
+    const recentThreeDiv = this.recentThreeDivTarget;
     const urlRoute = 'http://localhost:3000/api/v1/decks/';
     let dest = '';
     let destTwo = '';
     let divTwo = '';
+    let most_recent_decks;
     let searchValues = {};
     let searchValuesTwo = {}
+    let urlRecent;
     const targets = [allDecks, myDecks, sharedDecks, searchSubmit]
     // initializes deck index Choices.js fields
     const [categoryChoices, languageChoices, tagChoices] = searchSetup(categorySelect, languageSelect, tagSelect, searchForm.dataset.con)
@@ -69,18 +78,33 @@ export default class extends Controller {
       divTwo = sharedUpdateDiv;
     }
 
+    // fetch first url result
     let search_url = {
       options: category_options,
       language: languageSelect.value,
       string: titleString.value,
       tag: tag_options,
       urlRoute: urlRoute,
-      dest: dest
+      dest: dest,
+      recent: null
     };
 
     searchValues['url'] = buildSearchUrl(search_url);
     this.search(searchValues);
 
+    // fetch recent decks
+    search_url['recent'] = 'recent_decks';
+    urlRecent = buildSearchUrl(search_url);
+
+    most_recent_decks = {
+      url: urlRecent,
+      recentOneDiv: recentOneDiv,
+      recentTwoDiv: recentTwoDiv,
+      recentThreeDiv: recentThreeDiv
+    };
+    mostRecentDecks(most_recent_decks);
+
+    // fetch second url result
     if (destTwo !== null) {
       search_url = {
         options: category_options,
@@ -88,7 +112,8 @@ export default class extends Controller {
         string: titleString.value,
         tag: tag_options,
         urlRoute: urlRoute,
-        dest: destTwo
+        dest: destTwo,
+        recent: null
       };
       searchValuesTwo['div'] = divTwo;
       searchValuesTwo['url'] = buildSearchUrl(search_url);
@@ -108,8 +133,18 @@ export default class extends Controller {
           if (myDecks.classList.contains('active')) myDecks.classList.remove('active')
           if (sharedDecks.classList.contains('active')) sharedDecks.classList.remove('active')
           allDecks.classList.add('active');
+
+          dest = 'global';
+          most_recent_decks = {
+            url: `${urlRecentDecksRoute}${dest}`,
+            recentOneDiv: recentOneDiv,
+            recentTwoDiv: recentTwoDiv,
+            recentThreeDiv: recentThreeDiv
+          };
+          mostRecentDecks(most_recent_decks);
+
           const allTabValues = {
-            url: 'http://localhost:3000/api/v1/decks/global', // click on the tab and you get all global items available
+            url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all global items available
             div: globalDiv
           }
           this.search(allTabValues)
@@ -122,13 +157,25 @@ export default class extends Controller {
           if (allDecks.classList.contains('active')) allDecks.classList.remove('active')
           if (sharedDecks.classList.contains('active')) sharedDecks.classList.remove('active')
           myDecks.classList.add('active');
+
+          dest = 'mydecks';
+          most_recent_decks = {
+            url: `${urlRecentDecksRoute}${dest}`,
+            recentOneDiv: recentOneDiv,
+            recentTwoDiv: recentTwoDiv,
+            recentThreeDiv: recentThreeDiv
+          };
+          mostRecentDecks(most_recent_decks);
+
           let allTabValues = {
-            url: 'http://localhost:3000/api/v1/decks/mydecks', // click on the tab and you get all mydeck items available
+            url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all mydeck items available
             div: myDecksDiv
           }
           this.search(allTabValues)
+
+          dest = 'myarchived';
           allTabValues = {
-            url: 'http://localhost:3000/api/v1/decks/myarchived',
+            url: `http://localhost:3000/api/v1/decks/${dest}`,
             div: myArchivedDiv
           }
           this.search(allTabValues)
@@ -141,13 +188,25 @@ export default class extends Controller {
           if (allDecks.classList.contains('active')) allDecks.classList.remove('active')
           if (myDecks.classList.contains('active')) myDecks.classList.remove('active')
           sharedDecks.classList.add('active');
+
+          dest = 'shared_read';
+          most_recent_decks = {
+            url: `${urlRecentDecksRoute}${dest}`,
+            recentOneDiv: recentOneDiv,
+            recentTwoDiv: recentTwoDiv,
+            recentThreeDiv: recentThreeDiv
+          };
+          mostRecentDecks(most_recent_decks);
+
           let allTabValues = {
-            url: 'http://localhost:3000/api/v1/decks/shared_read', // click on the tab and you get all shared items available
+            url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all shared items available
             div: sharedReadDiv
           }
           this.search(allTabValues)
+
+          dest = 'shared_update'
           allTabValues = {
-            url: 'http://localhost:3000/api/v1/decks/shared_update',
+            url: `http://localhost:3000/api/v1/decks/${dest}`,
             div: sharedUpdateDiv
           }
           this.search(allTabValues)
@@ -178,11 +237,23 @@ export default class extends Controller {
             string: titleString.value,
             tag: tag_options,
             urlRoute: urlRoute,
-            dest: dest
+            dest: dest,
+            recent: null
           };
 
           searchValues['url'] = buildSearchUrl(search_url);
           this.search(searchValues);
+
+          search_url['recent'] = 'recent_decks';
+          urlRecent = buildSearchUrl(search_url);
+
+          most_recent_decks = {
+            url: urlRecent,
+            recentOneDiv: recentOneDiv,
+            recentTwoDiv: recentTwoDiv,
+            recentThreeDiv: recentThreeDiv
+          };
+          mostRecentDecks(most_recent_decks);
 
           if (destTwo !== null) {
             const tag_options = Array.from(tagSelect.children).map(option => option.value)
@@ -193,7 +264,8 @@ export default class extends Controller {
               string: titleString.value,
               tag: tag_options,
               urlRoute: urlRoute,
-              dest: destTwo
+              dest: destTwo,
+              recent: null
             };
             searchValuesTwo['div'] = divTwo;
             searchValuesTwo['url'] = buildSearchUrl(search_url);

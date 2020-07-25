@@ -1,6 +1,6 @@
 #deck-list {
   position: relative;
-  top: 104px;
+  top: 224px;
   background-color: $back;
   padding-right: 32px;
   padding-left: 32px;
@@ -17,4 +17,5 @@
 #deck-list-column {
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
 }

@@ -2,19 +2,19 @@
   #top-bar
     - if user_signed_in?
       %h6 Recently Visited Decks
-      #recent-decks{'data-controller'=>'most-recent'}
-
-        #recent-one{'data-target'=>'most-recent.recentOneDiv'}
-        #recent-two{'data-target'=>'most-recent.recentTwoDiv'}
-        #recent-three{'data-target'=>'most-recent.recentThreeDiv'}
+      #recent-decks
+        #recent-one{'data-target'=>'deck-tabs.recentOneDiv'}
+        #recent-two{'data-target'=>'deck-tabs.recentTwoDiv'}
+        #recent-three{'data-target'=>'deck-tabs.recentThreeDiv'}
     - else
       #rated-one{'data-target'=>'recommended.ratedOne'}
       #rated-two{'data-target'=>'recommended.ratedTwo'}
       #rated-three{'data-target'=>'recommended.ratedThree'}
-  = render 'shared/deck_nav', decks_owned: @decks_owned
+  = render 'shared/deck_nav'
   .deck-tabs
-    .col-4#deck-side-panel.sticky-top
+    .col-4#deck-side-panel
       - if user_signed_in?
+        = render 'side_panel_radio', decks_owned: @decks_owned
         #deck-create-form{'data-target'=>'deck-create.deckCreateDiv index-scroll.deckCreate', style: 'display: none'}
           #deck-create
             = render 'create_deck_form', deck: @deck, user: @user

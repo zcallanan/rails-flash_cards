@@ -10,12 +10,10 @@ export default class extends Controller {
 
   fixNav() {
     const index_nav = this.navTarget;
-    console.log(index_nav.offsetTop)
     const searchPanel = this.searchPanelTarget;
     const deckList = this.deckListTarget;
     const deckCreate = this.deckCreateTarget;
     const navHeight = index_nav.getBoundingClientRect().height;
-     console.log(navHeight)
 
     if (index_nav.dataset.topNav !== undefined) {
       const topOfNav = index_nav.dataset.topNav;

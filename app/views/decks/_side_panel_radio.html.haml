@@ -1,0 +1,13 @@
+#side-panel-column
+  - if decks_owned.empty? # default to create if user owns no decks
+    .btn-group.btn-group-toggle.radio{'data-toggle'=>'buttons'}
+      %label.btn.btn-info.active
+        %input{type: "radio", name: "options", id: "search-decks-nav", autocomplete: "off", 'data-target'=>'deck-create.deckSearchInput', 'data-action'=>'click->deck-create#toggleSearchCreate' } Deck Search
+      %label.btn.btn-info
+        %input{type: "radio", name: "options", id: "create-deck", autocomplete: "off", checked: true, 'data-target'=>'deck-create.createDeckInput', 'data-action'=>'click->deck-create#toggleSearchCreate'} Create Deck
+  - else
+    .btn-group.btn-group-toggle.radio{'data-toggle'=>'buttons'}
+      %label.btn.btn-info.active
+        %input{type: "radio", name: "options", id: "search-decks-nav", autocomplete: "off", checked: true, 'data-target'=>'deck-create.deckSearchInput', 'data-action'=>'click->deck-create#toggleSearchCreate' } Deck Search
+      %label.btn.btn-info
+        %input{type: "radio", name: "options", id: "create-deck", autocomplete: "off", 'data-target'=>'deck-create.createDeckInput', 'data-action'=>'click->deck-create#toggleSearchCreate'} Create Deck

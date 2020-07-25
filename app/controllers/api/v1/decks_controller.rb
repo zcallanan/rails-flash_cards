@@ -83,11 +83,25 @@ class Api::V1::DecksController < Api::V1::BaseController
     # curl -i -X GET \
     # -H 'X-User-Email: pups0@example.com' \
     # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
-    # http://localhost:3000/api/v1/decks/recent_decks
+    # http://localhost:3000/api/v1/decks/recent_decks?dest=global
     if user_signed_in?
       user = current_user
 
-      decks = policy_scope(Deck.recent_decks(user, 'Deck viewed', 3))
+      dest = params[:dest]
+
+      if dest == 'global'
+        search_hash = { global: true }
+      elsif dest == 'mydecks'
+        search_hash = { allmydecks: true }
+      elsif dest == 'shared_read'
+        search_hash = { allshared: true }
+      end
+
+      value_hash = search_values(params)
+      value_hash[:user] = user
+      value_hash[:recent_decks] = true
+
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
       size = decks.size
       if size == 3
         partial = 'recent_deck_small'

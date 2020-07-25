@@ -15,6 +15,7 @@ class Deck < ApplicationRecord
   accepts_nested_attributes_for :deck_strings, :collections
 
   scope :global_search_by_categories, lambda { |categories|
+    # search for decks marked as global read
     if Category.find(categories).first.name == 'All Categories'
       where(global_deck_read: true)
     else
@@ -26,6 +27,7 @@ class Deck < ApplicationRecord
   }
 
   scope :mydecks_search_by_categories, lambda { |categories, user, archived|
+    # search for active or archived decks owned
     if Category.find(categories).first.name == 'All Categories'
       where(user: user, archived: archived)
     else
@@ -37,7 +39,20 @@ class Deck < ApplicationRecord
     end
   }
 
+  scope :allmydecks_search_by_categories, lambda { |categories, user|
+    # search for most recently viewed owned and archived decks
+    if Category.find(categories).first.name == 'All Categories'
+      where(user: user)
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:user] = user
+      where(category_hash)
+    end
+  }
+
   scope :shared_search_by_categories, lambda { |categories, user, update|
+    # search for decks user does not own that has read or update access to
     if Category.find(categories).first.name == 'All Categories'
       includes(:deck_permissions).where(deck_permissions: { user_id: user.id, read_access: true, update_access: update }).where.not(user: user).references(:deck_permissions).distinct
     else
@@ -48,6 +63,20 @@ class Deck < ApplicationRecord
       category_hash[:update_access] = update
       includes(:deck_permissions).where(category_hash).where.not(user: user).references(:deck_permissions).distinct
     end
+  }
+
+  scope :allshared_search_by_categories, lambda { |categories, user|
+    # search for most recently viewed decks that the user does own but has read or update access to
+    if Category.find(categories).first.name == 'All Categories'
+      includes(:deck_permissions).where(deck_permissions: { user_id: user.id, read_access: true }).where.not(user: user).references(:deck_permissions).distinct
+    else
+      category_hash = {}
+      categories.each { |category_id| category_hash[:category_id] = category_id }
+      category_hash[:user] = user
+      category_hash[:read_access] = true
+      includes(:deck_permissions).where(category_hash).where.not(user: user).references(:deck_permissions).distinct
+    end
+
   }
 
   scope :search_by_title_and_language, lambda { |language, string|
