@@ -8,6 +8,7 @@ const buildSearchUrl = (searchUrl) => {
   if (searchUrl.string === undefined) searchUrl.string = ''
   const titleString = `\?category%5Btitle%5D=${searchUrl.string}`
   const languageValue = `&category%5Blanguage%5D=${searchUrl.language}`;
+  let url;
 
   categories.forEach(category => {
     categoryValue = `${categoryValue}${categoryString}${category}`
@@ -18,8 +19,14 @@ const buildSearchUrl = (searchUrl) => {
       tagValue = `${tagValue}${tagString}${tag}`
     })
   }
+  if (searchUrl.recent === null) {
+    // assemble search url
+    url = `${searchUrl.urlRoute}${searchUrl.dest}${titleString}${categoryValue}${languageValue}${tagValue}`
+  } else {
+    // assemble recent decks search url
+    url = `${searchUrl.urlRoute}${searchUrl.recent}${titleString}${categoryValue}${languageValue}${tagValue}&dest=${searchUrl.dest}`
+  }
 
-  const url = `${searchUrl.urlRoute}${searchUrl.dest}${titleString}${categoryValue}${languageValue}${tagValue}`
   return url
 }
 

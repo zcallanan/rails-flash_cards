@@ -47,5 +47,14 @@
 }
 
 .choices__list {
-  z-index: 100;
+  z-index: 50;
+}
+
+.choices__list--multiple {
+  .choices__item--selectable {
+    border: none;
+    font-weight: 700;
+    background-color: $deck-nav;
+    border-radius: 4px;
+  }
 }

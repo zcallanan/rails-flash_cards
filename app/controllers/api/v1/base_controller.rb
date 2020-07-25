@@ -1,7 +1,7 @@
 class Api::V1::BaseController < ActionController::API
   include Pundit
 
-  after_action :verify_authorized, except: %i[index global mydecks myarchived shared_read shared_update removed_all enabled_all]
+  after_action :verify_authorized, except: %i[index global mydecks myarchived shared_read shared_update removed_all enabled_all recent_decks]
   after_action :verify_policy_scoped, only: %i[index global mydecks myarchived shared_read shared_update]
 
   rescue_from StandardError,                with: :internal_server_error

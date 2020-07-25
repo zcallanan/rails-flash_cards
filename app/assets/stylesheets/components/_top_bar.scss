@@ -1,3 +1,28 @@
 #top-bar {
-  height: 30vh;
+  position: fixed;
+  height: 120px;
+  top: 104px;
+  z-index: 30;
+  background-color: $top-bar;
+  width: 100%;
+
+  #recent-decks {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+}
+
+.recent_deck {
+  background-color: $card;
+  overflow: hidden;
+  height: 80px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-right: 0;
+  z-index: 1;
 }

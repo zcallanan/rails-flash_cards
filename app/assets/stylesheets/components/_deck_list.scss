@@ -1,8 +1,13 @@
 #deck-list {
+  position: relative;
+  top: 224px;
   background-color: $back;
-  padding-right: 0;
-  padding-left: 0;
+  padding-right: 32px;
+  padding-left: 32px;
+  margin-left: 33%;
+  z-index: 1;
 }
+
 
 .radio {
   display: flex;
@@ -12,4 +17,5 @@
 #deck-list-column {
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
 }

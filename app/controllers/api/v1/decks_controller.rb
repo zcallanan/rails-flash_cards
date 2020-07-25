@@ -80,14 +80,38 @@ class Api::V1::DecksController < Api::V1::BaseController
   end
 
   def recent_decks
+    # curl -i -X GET \
+    # -H 'X-User-Email: pups0@example.com' \
+    # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
+    # http://localhost:3000/api/v1/decks/recent_decks?dest=global
     if user_signed_in?
       user = current_user
 
-      decks = Deck.includes(:user_logs).where(user_logs: { user: user, event: 'Deck viewed' }).references(:user_logs).order(created_at: :desc).limit(3)
+      dest = params[:dest]
 
+      if dest == 'global'
+        search_hash = { global: true }
+      elsif dest == 'mydecks'
+        search_hash = { allmydecks: true }
+      elsif dest == 'shared_read'
+        search_hash = { allshared: true }
+      end
+
+      value_hash = search_values(params)
+      value_hash[:user] = user
+      value_hash[:recent_decks] = true
+
+      decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+      size = decks.size
+      if size == 3
+        partial = 'recent_deck_small'
+      elsif size == 2
+        partial = 'recent_deck_mid'
+      elsif size == 1
+        partial = 'recent_deck_large'
+      end
       deck_strings = string_hash(decks, user, user.language, 'deck_strings', :deck_id, nil)
-
-      render json: { data: { partials: generate_partials(deck_strings, 'recent_decks'), formats: [:json], layout: false } }
+      render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
     end
   end
 

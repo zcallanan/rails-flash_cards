@@ -1,9 +1,10 @@
 #deck-side-panel {
-  position: relative;
+  position: fixed;
+  height: 100%;
   background-color: $side-panel;
   padding-right: 0;
   padding-left: 0;
-
+  top: 224px;
 }
 
 .fixed {
