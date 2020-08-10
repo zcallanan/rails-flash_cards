@@ -80,6 +80,7 @@ class Api::V1::DecksController < Api::V1::BaseController
   end
 
   def recent_decks
+    # get 1, 2, or 3 of the most recently viewed decks of the respective tab
     # curl -i -X GET \
     # -H 'X-User-Email: pups0@example.com' \
     # -H 'X-User-Token: vxpCgEw8q9Tp2_UTLvvs' \
@@ -87,21 +88,26 @@ class Api::V1::DecksController < Api::V1::BaseController
     if user_signed_in?
       user = current_user
 
+      # respective tab
       dest = params[:dest]
 
+      # determine what type of search
       if dest == 'global'
         search_hash = { global: true }
       elsif dest == 'mydecks'
-        search_hash = { allmydecks: true }
+        search_hash = { allmydecks: true } # this covers all mydecks and myarchiveddecks
       elsif dest == 'shared_read'
-        search_hash = { allshared: true }
+        search_hash = { allshared: true } # this covers all shared read and update decks
       end
 
       value_hash = search_values(params)
       value_hash[:user] = user
       value_hash[:recent_decks] = true
 
+      # call search service
       decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+
+      # return different partials according to number of decks recently viewed
       size = decks.size
       if size == 3
         partial = 'recent_deck_small'
