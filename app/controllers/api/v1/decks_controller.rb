@@ -110,11 +110,11 @@ class Api::V1::DecksController < Api::V1::BaseController
       # return different partials according to number of decks recently viewed
       size = decks.size
       if size == 3
-        partial = 'recent_deck_small'
+        partial = 'top_deck_small'
       elsif size == 2
-        partial = 'recent_deck_mid'
+        partial = 'top_deck_mid'
       elsif size == 1
-        partial = 'recent_deck_large'
+        partial = 'top_deck_large'
       end
       deck_strings = string_hash(decks, user, user.language, 'deck_strings', :deck_id, nil)
       render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
@@ -135,11 +135,11 @@ class Api::V1::DecksController < Api::V1::BaseController
     # return different partials according to number of decks rated
     size = decks.size
     if size == 3
-      partial = 'recent_deck_small'
+      partial = 'top_deck_small'
     elsif size == 2
-      partial = 'recent_deck_mid'
+      partial = 'top_deck_mid'
     elsif size == 1
-      partial = 'recent_deck_large'
+      partial = 'top_deck_large'
     end
     deck_strings = string_hash(decks, nil, value_hash[:language], 'deck_strings', :deck_id, nil)
     render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
