@@ -6,6 +6,7 @@ class DeckSearchService
     @categories = attrs[:categories] || [Category.where(name: 'All Categories')]
     @tags = attrs[:tags] || nil
     @recent_decks = attrs[:recent_decks] || nil
+    @rated_decks = attrs[:rated_decks] || nil
     @user = attrs[:user]
   end
 
@@ -34,12 +35,19 @@ class DeckSearchService
     # reduce deck list to those with child deck strings of @language
     @decks = @decks.search_by_title_and_language(@language, @string) unless @language.nil? # should always have one value
 
-    # handle recent decks request
-    @decks = @decks.recent_decks(@user, 'Deck viewed', 3) unless @recent_decks.nil?
-
     # reduce deck list by tags
 
     @decks = @decks.search_by_tags(@tags) unless @tags.nil? # can be empty or array
+
+    # handle recent decks request
+    @decks = @decks.recent_decks(@user, 'Deck viewed', 3) unless @recent_decks.nil?
+
+    # handle rated decks request
+    unless @rated_decks.nil?
+      @decks = @decks.rated_decks(4.0) # recommend decks with a rating > 4
+      @decks.size <= 3 ? @decks : @decks.sample(3) # return a random set of 3 if there are more than 3
+    end
+
     @decks
   end
 end

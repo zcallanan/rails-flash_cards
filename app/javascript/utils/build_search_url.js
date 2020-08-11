@@ -19,12 +19,15 @@ const buildSearchUrl = (searchUrl) => {
       tagValue = `${tagValue}${tagString}${tag}`
     })
   }
-  if (searchUrl.recent === null) {
+  if (searchUrl.topDecks === null) {
     // assemble search url
     url = `${searchUrl.urlRoute}${searchUrl.dest}${titleString}${categoryValue}${languageValue}${tagValue}`
-  } else {
+  } else if (searchUrl.topDecks === 'recent_decks') {
     // assemble recent decks search url
-    url = `${searchUrl.urlRoute}${searchUrl.recent}${titleString}${categoryValue}${languageValue}${tagValue}&dest=${searchUrl.dest}`
+    url = `${searchUrl.urlRoute}${searchUrl.topDecks}${titleString}${categoryValue}${languageValue}${tagValue}&dest=${searchUrl.dest}`
+  } else if (searchUrl.topDecks === 'rated_decks') {
+    // assemble rated decks search url
+    url = `${searchUrl.urlRoute}${searchUrl.topDecks}${titleString}${categoryValue}${languageValue}${tagValue}&dest=${searchUrl.dest}`
   }
 
   return url

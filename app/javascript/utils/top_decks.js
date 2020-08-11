@@ -1,6 +1,6 @@
 import { fetchWithToken } from '../utils/fetch_with_token.js';
 
-const mostRecentDecks = (obj) => {
+const topDecks = (obj) => {
   fetchWithToken( obj.url, {
         method: "GET",
         headers: {
@@ -10,20 +10,20 @@ const mostRecentDecks = (obj) => {
       })
         .then(response => response.json())
         .then((data) => {
-          console.log(data)
-          obj.recentOneDiv.innerHTML = '';
-          obj.recentTwoDiv.innerHTML = '';
-          obj.recentThreeDiv.innerHTML = '';
+          console.log(data);
+          obj.topOneDiv.innerHTML = '';
+          obj.topTwoDiv.innerHTML = '';
+          obj.topThreeDiv.innerHTML = '';
           data.data.partials.forEach((partial, index) => {
             if (index === 0) {
-              obj.recentOneDiv.innerHTML = partial;
+              obj.topOneDiv.innerHTML = partial;
             } else if (index === 1) {
-              obj.recentTwoDiv.innerHTML = partial;
+              obj.topTwoDiv.innerHTML = partial;
             } else if (index === 2) {
-              obj.recentThreeDiv.innerHTML = partial;
+              obj.topThreeDiv.innerHTML = partial;
             }
           })
         });
 }
 
-export { mostRecentDecks }
+export { topDecks }

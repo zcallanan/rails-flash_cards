@@ -11,7 +11,7 @@ class Deck < ApplicationRecord
   has_many :collections
   has_many :cards
   has_many :user_logs
-  has_many :ratings
+  has_many :reviews
   accepts_nested_attributes_for :deck_strings, :collections
 
   scope :global_search_by_categories, lambda { |categories|
@@ -99,6 +99,10 @@ class Deck < ApplicationRecord
 
   scope :recent_decks, lambda { |user, event, count|
     includes(:user_logs).where(user_logs: { user: user, event: event }).references(:user_logs).order(created_at: :desc).limit(count)
+  }
+
+  scope :rated_decks, lambda { |rating|
+    includes(:reviews).where('reviews.rating > ?', rating).references(:reviews).order(rating: :desc)
   }
 
   def owner
