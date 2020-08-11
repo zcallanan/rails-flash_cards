@@ -33,6 +33,7 @@ Rails.application.routes.draw do
           get 'shared_read'
           get 'shared_update'
           get 'recent_decks'
+          get 'rated_decks'
         end
         resources :collections, only: %i[create] do
           get 'collection_contents', on: :collection

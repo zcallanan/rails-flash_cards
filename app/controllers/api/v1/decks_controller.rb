@@ -1,6 +1,6 @@
 class Api::V1::DecksController < Api::V1::BaseController
-  acts_as_token_authentication_handler_for User, except: %i[global]
-  before_action :authenticate_user!, except: %i[global]
+  acts_as_token_authentication_handler_for User, except: %i[global rated_decks]
+  before_action :authenticate_user!, except: %i[global rated_decks]
   before_action :set_deck, only: %i[update]
 
   def global
@@ -119,6 +119,30 @@ class Api::V1::DecksController < Api::V1::BaseController
       deck_strings = string_hash(decks, user, user.language, 'deck_strings', :deck_id, nil)
       render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
     end
+  end
+
+  def rated_decks
+    # respective tab is always global when not logged in
+    dest = params[:dest]
+    search_hash = { global: true }
+    value_hash = search_values(params)
+    value_hash[:user] = nil
+    value_hash[:rated_decks] = true
+
+    # call search service
+    decks = policy_scope(deck_search(value_hash, search_hash)).order(updated_at: :desc)
+
+    # return different partials according to number of decks rated
+    size = decks.size
+    if size == 3
+      partial = 'recent_deck_small'
+    elsif size == 2
+      partial = 'recent_deck_mid'
+    elsif size == 1
+      partial = 'recent_deck_large'
+    end
+    deck_strings = string_hash(decks, nil, value_hash[:language], 'deck_strings', :deck_id, nil)
+    render json: { data: { partials: generate_partials(deck_strings, partial), formats: [:json], layout: false } }
   end
 
   def update

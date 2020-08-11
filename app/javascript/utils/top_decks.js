@@ -1,6 +1,6 @@
 import { fetchWithToken } from '../utils/fetch_with_token.js';
 
-const mostRecentDecks = (obj) => {
+const topDecks = (obj) => {
   fetchWithToken( obj.url, {
         method: "GET",
         headers: {
@@ -26,4 +26,4 @@ const mostRecentDecks = (obj) => {
         });
 }
 
-export { mostRecentDecks }
+export { topDecks }
