@@ -1,15 +1,19 @@
 #deck-index{ 'data-controller'=>'index-scroll', 'data-action'=>'scroll@window->index-scroll#fixNav', 'data-target'=>'deck-tabs.indexDiv' }
   #top-bar
     - if user_signed_in?
-      %h6 Recently Visited Decks
-      #recent-decks
-        #recent-one{'data-target'=>'deck-tabs.recentOneDiv'}
-        #recent-two{'data-target'=>'deck-tabs.recentTwoDiv'}
-        #recent-three{'data-target'=>'deck-tabs.recentThreeDiv'}
+      %h6 Recently Visited
+      #top-decks{'data-target'=>'deck-tabs.topDeckDiv', 'data-status'=>'in'}
+        #top-one{'data-target'=>'deck-tabs.topOneDiv'}
+        #top-two{'data-target'=>'deck-tabs.topTwoDiv'}
+        #top-three{'data-target'=>'deck-tabs.topThreeDiv'}
     - else
-      #rated-one{'data-target'=>'recommended.ratedOne'}
-      #rated-two{'data-target'=>'recommended.ratedTwo'}
-      #rated-three{'data-target'=>'recommended.ratedThree'}
+      #top-decks{'data-target'=>'deck-tabs.topDeckDiv', 'data-status'=>'out'}
+        #top-one{'data-target'=>'deck-tabs.topOneDiv'}
+        #top-two{'data-target'=>'deck-tabs.topTwoDiv'}
+        #top-three{'data-target'=>'deck-tabs.topThreeDiv'}
+    / #rated-one{'data-target'=>'recommended.ratedOne'}
+    / #rated-two{'data-target'=>'recommended.ratedTwo'}
+    / #rated-three{'data-target'=>'recommended.ratedThree'}
   = render 'shared/deck_nav'
   .deck-tabs
     .col-4#deck-side-panel

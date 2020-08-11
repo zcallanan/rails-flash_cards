@@ -24,9 +24,10 @@ export default class extends Controller {
     'allDecks',
     'myDecks',
     'sharedDecks',
-    'recentOneDiv',
-    'recentTwoDiv',
-    'recentThreeDiv'
+    'topOneDiv',
+    'topTwoDiv',
+    'topThreeDiv',
+    'topDeckDiv'
   ]
 
   connect() {
@@ -45,9 +46,10 @@ export default class extends Controller {
     const languageSelect = this.languageSelectTarget;
     const tagSelect = this.tagSelectTarget;
     const searchSubmit = this.searchSubmitTarget;
-    const recentOneDiv = this.recentOneDivTarget;
-    const recentTwoDiv = this.recentTwoDivTarget;
-    const recentThreeDiv = this.recentThreeDivTarget;
+    const topOneDiv = this.topOneDivTarget;
+    const topTwoDiv = this.topTwoDivTarget;
+    const topThreeDiv = this.topThreeDivTarget;
+    const topDeckDiv = this.topDeckDivTarget;
     const urlRoute = 'http://localhost:3000/api/v1/decks/';
     let dest = '';
     let destTwo = '';
@@ -92,17 +94,18 @@ export default class extends Controller {
     searchValues['url'] = buildSearchUrl(search_url);
     this.search(searchValues);
 
-    // fetch recent decks
-    search_url['recent'] = 'recent_decks';
-    urlRecent = buildSearchUrl(search_url);
+    if (topDeckDiv.dataset.status === 'in') { // if user is logged in, fetch recent decks
+      search_url['recent'] = 'recent_decks';
+      urlRecent = buildSearchUrl(search_url);
 
-    most_recent_decks = {
-      url: urlRecent,
-      recentOneDiv: recentOneDiv,
-      recentTwoDiv: recentTwoDiv,
-      recentThreeDiv: recentThreeDiv
-    };
-    mostRecentDecks(most_recent_decks);
+      most_recent_decks = {
+        url: urlRecent,
+        topOneDiv: topOneDiv,
+        topTwoDiv: topTwoDiv,
+        topThreeDiv: topThreeDiv
+      };
+      mostRecentDecks(most_recent_decks);
+    }
 
     // fetch second url result
     if (destTwo !== null) {
@@ -139,17 +142,18 @@ export default class extends Controller {
 
           dest = 'global';
 
-          // fetch recent decks
-          search_url['recent'] = 'recent_decks';
-          search_url['dest'] = dest;
+          if (topDeckDiv.dataset.status === 'in') { // if user is logged in, fetch recent decks
+            search_url['recent'] = 'recent_decks';
+            search_url['dest'] = dest;
 
-          most_recent_decks = {
-            url: buildSearchUrl(search_url),
-            recentOneDiv: recentOneDiv,
-            recentTwoDiv: recentTwoDiv,
-            recentThreeDiv: recentThreeDiv
-          };
-          mostRecentDecks(most_recent_decks);
+            most_recent_decks = {
+              url: buildSearchUrl(search_url),
+              topOneDiv: topOneDiv,
+              topTwoDiv: topTwoDiv,
+              topThreeDiv: topThreeDiv
+            };
+            mostRecentDecks(most_recent_decks);
+          }
 
           const allTabValues = {
             url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all global items available
@@ -171,17 +175,18 @@ export default class extends Controller {
 
           dest = 'mydecks';
 
-          // fetch recent decks
-          search_url['recent'] = 'recent_decks';
-          search_url['dest'] = dest;
+          if (topDeckDiv.dataset.status === 'in') { // if user is logged in, fetch recent decks
+            search_url['recent'] = 'recent_decks';
+            search_url['dest'] = dest;
 
-          most_recent_decks = {
-            url: buildSearchUrl(search_url),
-            recentOneDiv: recentOneDiv,
-            recentTwoDiv: recentTwoDiv,
-            recentThreeDiv: recentThreeDiv
-          };
-          mostRecentDecks(most_recent_decks);
+            most_recent_decks = {
+              url: buildSearchUrl(search_url),
+              topOneDiv: topOneDiv,
+              topTwoDiv: topTwoDiv,
+              topThreeDiv: topThreeDiv
+            };
+            mostRecentDecks(most_recent_decks);
+          }
 
           let allTabValues = {
             url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all mydeck items available
@@ -209,17 +214,18 @@ export default class extends Controller {
           sharedDecks.classList.add('active');
 
           dest = 'shared_read';
-          // fetch recent decks
-          search_url['recent'] = 'recent_decks';
-          search_url['dest'] = dest;
+          if (topDeckDiv.dataset.status === 'in') { // if user is logged in, fetch recent decks
+            search_url['recent'] = 'recent_decks';
+            search_url['dest'] = dest;
 
-          most_recent_decks = {
-            url: buildSearchUrl(search_url),
-            recentOneDiv: recentOneDiv,
-            recentTwoDiv: recentTwoDiv,
-            recentThreeDiv: recentThreeDiv
-          };
-          mostRecentDecks(most_recent_decks);
+            most_recent_decks = {
+              url: buildSearchUrl(search_url),
+              topOneDiv: topOneDiv,
+              topTwoDiv: topTwoDiv,
+              topThreeDiv: topThreeDiv
+            };
+            mostRecentDecks(most_recent_decks);
+          }
 
           let allTabValues = {
             url: `http://localhost:3000/api/v1/decks/${dest}`, // click on the tab and you get all shared items available
@@ -270,15 +276,17 @@ export default class extends Controller {
           searchValues['url'] = buildSearchUrl(search_url);
           this.search(searchValues);
 
-          search_url['recent'] = 'recent_decks';
+          if (topDeckDiv === 'in') { // if user is logged in, fetch recent decks
+            search_url['recent'] = 'recent_decks';
 
-          most_recent_decks = {
-            url: buildSearchUrl(search_url),
-            recentOneDiv: recentOneDiv,
-            recentTwoDiv: recentTwoDiv,
-            recentThreeDiv: recentThreeDiv
-          };
-          mostRecentDecks(most_recent_decks);
+            most_recent_decks = {
+              url: buildSearchUrl(search_url),
+              topOneDiv: topOneDiv,
+              topTwoDiv: topTwoDiv,
+              topThreeDiv: topThreeDiv
+            };
+            mostRecentDecks(most_recent_decks);
+          }
 
           if (destTwo !== null) {
             const tag_options = Array.from(tagSelect.children).map(option => option.value)
